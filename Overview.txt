@@ -1,0 +1,49 @@
+Rabbit Manager
+
+A system through which The Corporation will be managed and run. The design will specifically employ a 
+modular system so modules can be added and removed without affecting other portions. As a result, 
+interop between the sections is not permitted, unless via "extensions". These extensions will be 
+declared as extensions, and treated as interop only. They will check if they should be loaded, and if
+if it is not appropriate to load the extension, it will cancel loading, and let the rest of the 
+section carry on.
+
+Modules:
+
+Customers {
+    Function: To create new customers, and to manage the existing customer base
+    Key Features {
+        New Customer
+        Browse Customers
+        Search
+    }
+}
+Work Orders {
+    Function: Lists all customer inflow/outflow activity. If it is not related to customers, it does NOT belong here. Specifically work related.
+    Key Features {
+        New Sale
+        Recent
+        Search
+        Browse
+    }
+}
+Records {
+    Functions: Lists all necessary records, including all Invoicing (read only). 
+    Key Features {
+        Document Upload
+        Document Tagging (tax, investment, design, etc)        
+    }
+}
+Accounting {
+    Function: Pulls data from whole database with regards to flow of funds to build relevant results. 
+    Key Features {
+        Inflow
+         `- Donations
+         `- Investments
+        Outflow
+         `- Operating Expenses
+         `- Tax Documents
+         `- 
+    }
+}
+Inventory
+Inbox

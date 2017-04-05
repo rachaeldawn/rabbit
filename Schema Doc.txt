@@ -1,0 +1,417 @@
+================================
+============= Note =============
+================================
+
+    Tagging System: 
+        - Tags are all stored within a massive pool of tags, globally. If a sub-section of the application wishes to make use of the tag, a table for that specific type of tag must be bound. A tag is bound through the Id of the table entry to be bound, and the Id of the tag that is to be bound. 
+    Transaction System:
+        Much like the tagging system, every transaction is in a pool. For every section of the application, if a transaction needs to be supported, another table must be created to track what transaction belongs to what. TransactionId + EntryId.
+    Permissions:
+        Permissions may in the future be switched over to an enum once they're all defined. Either that, or the permissions will be defined in the 'SQL init.sql' script, along with other default information.
+
+================================
+========= Enumerations =========
+================================
+
+transaction_method
+    Purpose: Indicates what method of payment was used on any inflow/outflow transaction
+    Values {
+        online:     Stripe was used
+        cheque:     Cheque was used
+        deposit:    Direct deposit (payroll, generally) was used
+        cash:       Cash was used
+        credit:     Credit card was used
+    }
+
+payroll_entry_type
+    Purpose: Indicates the "kind" of payroll unit.
+    Values {
+        time-1.0:   Regular time, hourly
+        time-1.5:   Time and a half, hourly
+        time-2.0:   Double time, hourly
+        time-2.5:   Double time and a half, hourly
+        stat:       Stat holiday pay
+        salary:     Salary pay
+        bonus:      Bonus pay
+        deduction:  Deductions such as benefits, CPP, EI, Income Tax
+        vacation:   Vacation pay accrued
+    }
+
+
+================================
+============ Tables ============
+================================
+
+asset
+    Purpose: A means through which assets can be tracked. 
+    Fields: {
+        id:             The Id of the asset to be tracked
+        name:           A 64 character name of the asset being tracked
+        description:    A max 340 character description of the asset
+        purchase_value: What the asset cost to purchase
+        serial_key:     An optional string for the serial, or serial key, that was purchased.
+    }
+    
+asset_tag
+    Purpose: A tag of an asset for easier categorizing.
+    Fields: {
+        id:         Id of the asset binding
+        asset_id:   The id of the asset to be bound with the tag
+        tag_id:     The id of the tag to be bound
+    }
+
+bill
+    Purpose: An instance of an expense, generally something recurring. 
+    Fields: {
+        id:             The id of this instance
+        expense_id:     A required field linking to an expense 
+        amount:         The cost of the bill on this instance
+        billing_date:   The date of the bill
+    }
+    
+bill_transaction
+    Purpose: A binding between a bill and a transaction. One transaction per bill.
+    Fields: {
+        id:             The id of the bill being referenced.
+        transaction_id: The id of the transaction to be bound.
+    }
+    
+bullet
+    Purpose: A "sticky note" to be used on the global bulletin-board
+    Fields: {
+        id:             The id of the specfic sticky note
+        user_id:        The id of the user that made the sticky note
+        message:        A max 1200 character message for the bulletin board. Minimum 5 characters
+        time_stamp:     A timestamp of when the sticky note was created
+    }
+    
+calendar_event
+    Purpose: An event on either a personal calendar, or globally amongst all employees.
+    Fields: {
+        id          The id of a specific calendar event
+        user_id     References a specific user. This is null if it is a global event for employees.
+        title       The title of the event, max 80 characters.
+        message     Optional message of the event, minimum 5 characters, maximum 1200 characters.
+        occurs_on   The date the event occurs on
+        start_time  Optional "Start time" of the event. 
+        end_time    Optional "End time" of the event. If null, and start time does exist, it means it starts at start_time and ends at 23:59 of occurs_on.
+    }
+
+conversation
+    Purpose: A conversation between one or more users.
+    Fields: {
+        id:         Identifier of a Conversation
+        creator_id: The Id matching a user_account table entry
+    }
+
+conversation_participant
+    Purpose: Participant within a conversation. Allows for multi-user chat.
+    Fields: {
+        id:                 Identifier of a single participant within a conversation
+        user_id:            Id matching a single user_account table value
+        conversation_id:    Id matching a single conversation table value
+    }
+
+customer
+    Purpose: A customer account for estimates, invoices, and other related customer interactions.
+    Fields: {
+        id:                     Identifier for a Customer
+        company_name:           Name of the customer company
+        mailing_address:        Mailing address of customer company
+        mailing_postal_code:    Mailing address postal code of customer company
+        mailing_country:        Default country is Canada. This will need updating if we are to expand beyond Canada.
+        physical_address:       Null to match mailing address, or physical address of customer company.
+        physical_postal_code:   Null to match mailing address, or physical address postal code of customer company
+        physical_country:       Null to match mailing address, or physical address country of customer company
+        phone:                  Full phone number of customer company
+        start_date:             The date and time that the customer's account is created
+    }
+    
+customer_contact
+    Purpose: Provides us with specific contacts and associates that can work with us on behalf of a company. Usually, most companies will have only one contact, but if we are integrating teams that want to use Rabbit, many logins can be associated with a single company.
+    Fields: {
+        id:                 References the user account associated with this contact. 1-1 Relationship. 
+        first_name:         First name of the contact
+        last_name:          Last name of the contact
+        phone:              Phone number of the contact
+        phone_extension:    The phone extension of the contact
+        about:              A max 2000 character length "about" to describe who the contact is, what they're permitted to authorize/do, and any other relevant details.
+    }
+employee
+    Purpose: An employee's file on record. This WILL require encryption eventually. We do not want hackers getting a hold of our employee files.
+    Fields: {
+        id:             Id of a user_account relating to this employee. 1-1 relationship.
+        first_name:     First name of employee (max 180 characters)
+        middle_name:    Middle name of employee (max 180 characters)
+        last_name:      Last name of employee (max 180 characters)
+        phone:          String representation of employee's phone number
+        about:          "About me" for employee (max 2500 characters)
+        home_address:   Home street address of employee
+        postal_code:    Postal code of employee
+        sin:            SIN of employee
+        birthday:       Birthday of employee
+        is_active:      Whether or not the employee is with us.
+    }
+    
+employment_period
+    Purpose: Describes a period of time that an employee is working with us. If they leave and return, a new employment period will open.
+    Fields: {
+        id:             Id of an employment period.
+        employee_id:    Id of the employee table entry
+        start_date:     Date the employee's employment period started
+        end_date:       Date the employee's employment period ends (or null for still here)
+    }
+    
+employee_workday
+    Purpose: Describes a single workday for an employee to be used for payroll.
+    Fields: {
+        id:                     Id of a single workday 
+        employee_id:            The Id of the employee
+        clock_in timestamp:     When the employee clocks in
+        clock_out timestamp:    When the employee clocks out
+    }
+    
+employee_workjournal
+    Purpose: Work journal is a written rubber duck debugging. It is strongly encouraged to use this, but not required. An employee can use this to keep note of everything that they are doing, and to remember where they were the previous day. Eventually this will be replaced by storing the files as XML in files, then referencing the locations of the files.
+    Fields: {
+        id:             Id of a single work-journal (employees can have many)
+        employee_id:    Id of the employee that owns the work journal
+        name:           The name of the work journal
+    }
+
+-- Tagging a workday means that the entry will be visible by management. 
+employee_workjournal_entry
+    Purpose: A single entry within a journal. Tagging an entry with a workday means that this entry will be visible to management.
+    Field: {
+        id:             Id of a single entry
+        journal_id:     Id of the workjournal this entry belongs in
+        message:        The message in the work journal. Must be at least 15 characters.
+        time_stamp:     Default of NOW(), timestamp of when the journal was created. This is not updateable.
+        -- OPTIONAL --
+        workday_id:     Id of a workday, in case an employee wishes to tag what they're working on for payroll purposes.
+    }
+    
+employee_journal_entry_tag
+    Purpose: Permits a tagging system for employees to use for future searching. 
+    Fields: {
+        id:         Id of a single tag binding
+        entry_id:   Id of the entry to be bound
+        tag_id:     Id of the tag to be bound
+    }
+    
+expense
+    Purpose: Describes a generalized expense (outflow) that is not payroll. Bills, vehicle expenses, etc
+    Fields: {
+        id:             The id of the expense
+        name:           A max 64 character long name of the expense/bill
+        description:    A max 300 character long description of the expense/bill
+    }
+    
+expense_tag
+    Purpose: The tags are treated like categories of expenses, such as Cost of Goods Sold, Goodwill, etc
+    Fields: {
+        id:         The id of the tag-expense pair    
+        expense_id: The id of the expense to be tagged
+        tag_id:     The tag id to be bound
+    }
+
+message
+    Purpose: A message for a conversation from a user.
+    Fields: {
+        id:                 Identifier of a single message
+        conversation_id:    Id of the conversation this message is in.
+        sender_id:          The user_account id of the person who sent the message
+        message:            The message (max 2400 characters)
+    }
+    
+message_receipt
+    Purpose: Receipts to indicate a message's status on behalf of other users. If a single receipt for a message exists, the message was received by the server.
+    Fields: {
+        message_id:     References the message this receipt belongs to. First part to composite key.
+        recipient_id:   The recipient receiving the message. Second part to composite key.
+        received:       Timestamp of when the message was "received" by the user. Null if not received by them.
+        read:           Timestamp of when the message was read by the user. Null if not read.,
+        
+        Id is a composite between message_id and recipient_id. Since a receipt will only need to be looked up when both the message and receipient are known, a composite key is used here.
+    }
+
+pay_period
+    Purpose: Describes a pay period for employees
+    Fields: {
+        id:         serial PRIMARY KEY,
+        start_date  The starting date of the pay-period
+        end_date:   The ending date of the pay-period
+        pay_date:   The date the pay is to be provided to employees
+    }
+    
+payroll
+    Purpose: Describes a recorded instance of an employee's pay
+    Fields: {
+        id serial PRIMARY KEY,
+        employee_id integer REFERENCES employee(id) NOT NULL,
+        pay_period_id integer REFERENCES pay_period(id) NOT NULL
+    }
+    
+payroll_item
+    Purpose: Describes a single entry on an employees pay (deduction/pay/bonus/etc)
+    Fields: {
+        id:         The id of an entry on a payroll    
+        payroll_id: The id of the payroll instance for an employee
+        name:       A max 50-character length name of the transaction
+        amount:     The unit of money being paid/deducted ($x / quantity)
+        quantity:   The quantity of the amount to be paid/deducted (multiplier)
+    }
+    
+payroll_transaction
+    Purpose: Describes the payment of an employee
+    Fields: {
+        id:             Id of the employee payroll instance
+        transaction_id: Id of the transaction of the employee being paid
+        memo:           Optional memo for the transaction. (max 400 characters)
+    }
+    
+permission
+    Purpose: A specific permission to be referenced in permission sets. To be populated on database initialize, and never changed. May adjust this to enum in the future.
+    Fields: {
+        id:     The Id of the permission
+        name:   A max 32 character long name of the permission. Eg: CREATE_INVOICE, READ_ALL_INVOICE, READ_OWNED_INVOICES
+    }
+  
+purchase_order
+    Purpose: A recording of a purchase order for assets to be acquired. This is a finalized agreement between another company and us 
+    Fields: {
+        id:             The id of a purchase order
+        creator_id:     The id of the employee that created the purchase order.
+        opened_on:      When the purchase order was opened. This is not to be editable client side.
+        completed_on:   Null if incomplete, or the timestamp of when it was closed.
+    }
+
+purchase_order_tag
+    Purpose: A tag bound with a purchase order for easier categorical tracking of purchase orders. One tag per purchase order.
+    Fields: {
+        id:         The Id of the purchase order that this tag is attached to.
+        tag_id:     The id of the tag to be bound
+    }
+    
+purchase_order_item
+    Purpose: Provides support for an itemized purchase order.
+    Fields: {
+        id:                 The Id of the item on a purchase order
+        purchase_order_id:  The Id of the purchase order 
+        name:               The SKU of the item to be purchased
+        description:        A description of the item. Max 360 characters.
+        quantity:           The amount of the item to be purchased in the quantity * price equation
+        price:              The price of the item to be purchased in the quantity * price equation
+    }
+    
+purchase_order_transaction
+    Purpose: A transaction binding for a purchase order. Supports multiple transactions.
+    Fields: {
+        id:                 The id of a transaction for the purchase order.
+        purchase_order_id:  The Id of the purchase order
+        transaction_id:     The id of the transaction made
+    }
+
+service
+    Purpose: Describes a service that we as a company offer.
+    Fields: {
+        id:                 Id of the service entry
+        name:               A max 64 character long "code" for the service. (SKU)
+        description:        A max 360 character long description of what the service is. 
+        price:              The default price to be used in the price * quantity equation.
+        default_quantity:   The default quantity of the service to be used in the price * quantity equation.
+    }
+
+tag
+    Purpose: Global tagging system. Anything that can be tagged references here.
+    Fields: {
+        id:         The identifier of the tag 
+        name:       A string, max length 140 characters, of a tag. Required.
+        color:      Optional hex code of a tag color. "#FFFFFF" is an example.
+        opacity:    A decimal between 0 and 1 indicating the A in RGBA.
+    }
+
+transaction
+    Purpose: Describes a single transaction. It is the responsibility of other sections of the application to track why a transaction was made. When an adjustment is made, the original is to be kept. 
+    Fields: {
+        id:         The Id of the single transaction
+        amount:     The amount of the transaction (positive or negative).
+        method:     One of the enum values of transaction_method are stored in here. Describes what method of payment was used to process the transaction.
+        paid_on:    The timestamp of when the transaction was made
+    }
+    
+transaction_tag
+    Purpose: Describes a tag to a transaction, in case there is a specific need to categorize transactions (tagging employee name in the payroll transaction, etc)
+    Fields: {
+        id:         The Id of the transaction (1-1 relation). No support for multiple tags on a transaction.
+        tag_id:     The bound tag Id
+    }
+    
+transaction_adjustment
+    Purpose: Provides an audit-trail automatically when a transaction is updated.
+    Fields: {
+        id:                         References the new transaction
+        original_transaction_id:    References the origin transaction
+        memo:                       A required reason why the transaction was made. Max 400 characters
+    }
+    
+user_account 
+    Purpose: Gives customers, employees, and the CRA an account to log in through.
+    Fields: {
+        id:         Identifier of a User Account
+        username:   What a user will use to log into the system
+        is_active:  Indicator of whether or not a user account is active
+    }
+
+user_account_password
+    Purpose: Special field referring to passwords.
+    Fields: {
+        id:         Identifier matching a User Account Id. One-To-One relationship.
+        hash:       Hash of the password
+        salt:       Salt added to the original
+        iterations: The amount of times the hashing algo was ran.
+    }
+
+user_permission
+    Purpose: Provides a true/false value for whether or not a user has a permission. Uses composite key between user/permission. 
+    Usage:   Loop through all the "permissions", and return a permission set by referencing composite perm/user keys
+    Fields: {
+        user_id:    The id of the user this permission belongs to. Part 1 of composite key
+        perm_id:    The id of the permission. Part 2 of composite key 
+        perm:       The true/false value for the user
+    }
+
+workorder
+    Purpose: Provides a workorder that
+    Fields: {
+        id:             The Id of a specific workorder
+        customer_id:    The customer_id attached to the workorder
+        rep_id:         The id of the employee that opened the workorder
+        open_date:      Timestamp that defaults to now 
+    }
+    
+workorder_contact
+    Purpose: Provides a contact on behalf of a company we can work with. Supports many contacts per workorder.
+    Fields: {
+        id:             Id of an entry for contact to be bound with the workorder
+        workorder_id:   Id of the workorder to be bound
+        contact_id:     The id of the customer contact to be bound
+    }
+    
+workorder_item
+    Purpose: Provides support for an itemized workorder 
+    Fields: {
+        id:             Id of an item on a workorder
+        workorder_id:   Id of the workorder this item belongs to
+        service_id:     Id of this item
+        quantity:       The quantity of this item
+    }
+
+workorder_transaction
+    Purpose: A transaction binding for a workorder. Supports multiple transactions.
+    Fields: {
+        id:             Id of a transaction for a workorder.
+        workorder_id:   The id of the workorder this transaction is bound to
+        contact_id:     The id of the contact that made the transaction
+        transaction_id: The id of the transaction that is bound to the workorder
+    }

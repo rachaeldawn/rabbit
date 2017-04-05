@@ -1,0 +1,120 @@
+APP STRUCTURE
+
+
+INDEX 
+
+=> Webpack outputs { ... }
+text/ indicates a code folder
+text { } indicates a module folder
+: "text" indicates a purpose
+
+src {
+    cl {
+        js {
+            components {
+                ... -- React components here
+            }
+            components.js: "Imports all components for re-export and easier usage and compiling. Allows for custom-loading"
+            networking.js: "AJAX calls, and other networking-related calls"
+        }
+        less/ {
+
+        }
+    } => { rabbit.js: "Rabbit SPA for clients", scripts.js: "Website scripts for styling", }
+    sv {
+        app/ {
+            assets.js
+                DB Tables:
+                    asset
+                    asset_tag
+
+            expenses.js
+                DB Tables: 
+                    bill
+                    bill_transaction
+                    expense
+                    expense_tag
+                
+            bulletin.js
+                DB Tables: 
+                    bullet
+
+            calendar.js
+                DB Tables: 
+                    calendar_event
+
+            communication.js
+                DB Tables: 
+                    conversation
+                    conversation_participant
+                    message
+                    message_receipt
+                
+            customer.js
+                DB Tables: 
+                    customer
+                    customer_contact
+                
+            employee.js
+                DB Tables: 
+                    employee
+                    employee_workjournal
+                    employee_workjournal_entry
+                    employee_journal_entry_tag
+                
+            payroll.js
+                DB Tables: 
+                    pay_period
+                    payroll
+                    payroll_item
+                    payroll_transaction
+                    employee_workday
+                    employment_period
+                
+            transaction.js
+                DB Tables: 
+                    transaction
+                    transaction_tag
+                    transaction_adjustment
+                
+            purchaseorder.js
+                DB Tables: 
+                    purchase_order
+                    purchase_order_tag
+                    purchase_order_item
+                    purchase_order_transaction
+                
+            workorder.js
+                DB Tables: 
+                    service
+                    workorder
+                    workorder_contact
+                    workorder_item
+                    workorder_transaction
+                
+            user.js
+                DB Tables: 
+                    permission
+                    user_account 
+                    user_account_password
+                    user_permission
+                
+            tag.js
+                DB Tables: 
+                    tag
+                
+        }
+        Util/: "Populate as necessary"
+        Rabbit/
+            auth.js
+            msg.js
+
+        util.js: "Re-export file"
+        rabbitjs: "Re-export file for everything in app/"
+    } => { server.js }
+    tests {
+        cl/
+        sv/
+    } => { cl_tests.js, sv_tests.js }
+
+}
