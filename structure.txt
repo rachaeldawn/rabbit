@@ -118,3 +118,6 @@ src {
     } => { cl_tests.js, sv_tests.js }
 
 }
+
+config.js
+ - Any application-wide configurations belong here
