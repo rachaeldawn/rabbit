@@ -1,0 +1,41 @@
+{
+    "private": {
+        "serialize": {
+            "description": "Serialize a search result to many objects",
+            "params": {
+                "result": "Must be a result from a query"
+            },
+            "returns": "Many objects of T"
+        },
+        "convert": {
+            "description": "Convert a single row to a single object",
+            "params": {
+                "row": "A row result from a query"
+            },
+            "returns": "An object of T"
+        },
+        "search": {
+            "description": "Search for a unique or partial",
+            "params": {
+                "search": "A table following the key: { value, partial/whole } pattern",
+                "max": "A max amount of results to return",
+                "typed": "Default true. Returns serialized if true, rows if false."
+            },
+            "returns": "Many rows or objects of T"
+        },
+        "add": {
+            "description": "Add a new object to the database",
+            "params": {
+                "obj": "An object of the type desired"
+            },
+            "returns": "Nothing if successful, error if unsuccessful"
+        },
+        "remove": {
+            "description": "Remove or archive an object from/in the database",
+            "params": {
+                "obj": "An object with 1 key/value pair eg(id: value) or an instance of T"
+            },
+            "returns": "Nothing if successful, error if unsuccessful"
+        }
+    }
+}

@@ -329,3 +329,5 @@ CREATE TABLE taskboard_participant (
     can_delete boolean DEFAULT FALSE NOT NULL,
     can_invite boolean DEFAULT FALSE NOT NULL
 );
+
+GRANT ALL ON SCHEMA "RabbitSchema" TO "Developer";
