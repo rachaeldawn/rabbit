@@ -1,5 +1,6 @@
 class Asset {
     constructor(name, description, purchase_value, serial = null) {
+        this.id = -1
         this.name = name
         this.description = description
         this.purchase_value = purchase_value
@@ -8,8 +9,6 @@ class Asset {
 }
 
 const supportsTagging = true
-const tableName = 'asset'
 
 module.exports = Asset
 module.exports.supportsTagging = supportsTagging
-module.exports.tableName = tableName

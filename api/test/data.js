@@ -1,28 +1,14 @@
-var Models = require('../data')
+var RegisterModel = require('../data').RegisterModel
 var assert = require('assert')
 
 class TestClass{constructor(){}}
 class TagClass {constructor(){}}
 TagClass.prototype.supportsTagging = true
-Models.RegisterModel(TagClass)
-/*
-describe('Models', function() {
-    for(var k in Models) {
-        describe(k, function() {
-            var Class = Models[k]
-            it('is a class', function() {
-                assert.ok(typeof Class == typeof TestClass, 'Should be a function: Is a ' + typeof Models[k])
-            })
-            it('has been bolted', function() {
-                assert.ok(new Class().IsDataModel != undefined, 'IsBolted needs to be set by bolting the Model type')
-            })
-        })
-    }
-})*/
 
-Models.RegisterModel(TestClass)
+RegisterModel(TagClass)
+RegisterModel(TestClass)
 
-describe('DataModel', function() {
+describe('Data', function() {
     describe('Bolting', function() {
         it('adds Convert', function() {
             var q = new TestClass()

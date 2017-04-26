@@ -13,19 +13,20 @@ var Pool = new pg.Pool({
 class Blank {constructor(){}}
 
 var models = {
-    Asset:          require('./data/asset'),
-    Bulletin:       require('./data/bulletin'),
-    Calendar:       require('./data/calendar'),
-    Communication:  require('./data/communication'),
-    Customer:       require('./data/customer'),
-    Employee:       require('./data/employee'),
-    Expenses:       require('./data/expenses'),
-    Payroll:        require('./data/payroll'),
-    PurchaseOrder:  require('./data/purchaseorder'),
-    Tag:            require('./data/tag'),
-    Transaction:    require('./data/transaction'),
-    User:           require('./data/user'),
-    Workorder:      require('./data/workorder')
+    Asset:              require('./data/asset'),
+    AssetTag:           require('./data/asset_tag'),
+    Bullet:             require('./data/bullet'),
+    CalendarEvent:      require('./data/calendar_event'),
+    Communication:      require('./data/communication'),
+    Customer:           require('./data/customer'),
+    Employee:           require('./data/employee'),
+    Expenses:           require('./data/expenses'),
+    Payroll:            require('./data/payroll'),
+    PurchaseOrder:      require('./data/purchaseorder'),
+    Tag:                require('./data/tag'),
+    Transaction:        require('./data/transaction'),
+    User:               require('./data/user'),
+    Workorder:          require('./data/workorder')
 }
 
 function RegisterModel(model) {
@@ -33,7 +34,8 @@ function RegisterModel(model) {
         for(var k in DataFunctions) {
             model.prototype[k] = DataFunctions[k].bind(DataFunctions[k], model.name)
         }
-        model.IsDataModel = true
+        model.prototype.isDataModel = true
+        model.tableName = model.tableName || model.name.toLowerCase()
         if(model.supportsTagging || model.prototype.supportsTagging) {
             model.prototype.Tag = Tag.bind(Tag, model.name)
             model.prototype.Untag = Untag.bind(Untag, model.name)
