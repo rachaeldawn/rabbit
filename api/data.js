@@ -1,4 +1,7 @@
 var pg = require('pg')
+var fs = require('fs')
+
+class Blank {constructor(){}}
 
 var Pool = new pg.Pool({
     database: "Rabbit",
@@ -10,24 +13,23 @@ var Pool = new pg.Pool({
     idleTimeoutMillis: 30000
 })
 
-class Blank {constructor(){}}
+var dataDirectory = __dirname + '/data'
+var models = {}
 
-var models = {
-    Asset:              require('./data/asset'),
-    AssetTag:           require('./data/asset_tag'),
-    Bullet:             require('./data/bullet'),
-    CalendarEvent:      require('./data/calendar_event'),
-    Communication:      require('./data/communication'),
-    Customer:           require('./data/customer'),
-    Employee:           require('./data/employee'),
-    Expenses:           require('./data/expenses'),
-    Payroll:            require('./data/payroll'),
-    PurchaseOrder:      require('./data/purchaseorder'),
-    Tag:                require('./data/tag'),
-    Transaction:        require('./data/transaction'),
-    User:               require('./data/user'),
-    Workorder:          require('./data/workorder')
+var files = fs.readdirSync(dataDirectory)
+for(var k in files) {
+    var Name = files[k].substr(0, files[k].length - 3).split('_').reduce(
+        (prev, cur) => {
+            cur = cur[0].toUpperCase() + cur.substr(1)
+            prev += cur
+            return prev
+        }, ''
+    )
+    models[Name] = require(__dirname + '/data/' + files[k].substr(0, files[k].length - 3))
+    RegisterModel(models[Name])
 }
+
+
 
 function RegisterModel(model) {
     if(typeof model == typeof Blank) {
