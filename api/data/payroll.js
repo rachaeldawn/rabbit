@@ -1,7 +1,7 @@
 /*
  * @property id: The id of the payroll instance
- * @property employee_id: integer REFERENCES employee(id) NOT NULL,
- * @property pay_period_id: integer REFERENCES pay_period(id) NOT NULL
+ * @property employee_id: The id of the employee for this pay
+ * @property pay_period_id: The pay period of this pay
  */
 class Payroll {
 	constructor(id, employee_id, pay_period_id){

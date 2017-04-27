@@ -223,8 +223,8 @@
         "Purpose": "Describes a recorded instance of an employee's pay",
         "Fields": {
             "id": "The id of the payroll instance",
-            "employee_id": "integer REFERENCES employee(id) NOT NULL,",
-            "pay_period_id": "integer REFERENCES pay_period(id) NOT NULL"
+            "employee_id": "The id of the employee for this pay",
+            "pay_period_id": "The pay period of this pay"
         }
     },
         
