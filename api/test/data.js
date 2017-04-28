@@ -1,4 +1,5 @@
-var RegisterModel = require('../data').RegisterModel
+var Models = require('../data')
+var RegisterModel = Models.RegisterModel
 var assert = require('assert')
 
 class TestClass{constructor(){}}
@@ -42,22 +43,12 @@ describe('Data', function() {
             var q = new TestClass()
             assert.ok(typeof q.Save == typeof (function(){}), 'Save needs to be added')
         })
-        it('adds Tag when necessary', function() {
-            var q = new TestClass()
-            assert.ok(q.Tag == undefined, 'Should not add Tag unless .supportsTagging is specified')
-            q = new TagClass()
-            assert.ok(typeof q.Tag == typeof (function(){}), 'Should add Tag when .supportsTagging is specified')
-        })
-        it('adds Untag when necessary', function() {
-            var q = new TestClass()
-            assert.ok(q.Tag == undefined, 'Should not add UnTag unless .supportsTagging is specified')
-            q = new TagClass()
-            assert.ok(typeof q.Tag == typeof (function(){}), 'Should add UnTag when .supportsTagging is specified')
-        })
     })
     describe('Functionality', function() {
         describe('Convert', function() {
-            it('Errors on invalid')
+            it('Errors on invalid', function() {
+                //var q = new Models.
+            })
             it('Returns expectedly')
         })
         describe('Serialize', function() {

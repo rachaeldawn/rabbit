@@ -1,5 +1,6 @@
 var pg = require('pg')
 var fs = require('fs')
+var Promise = require('promise')
 
 class Blank {constructor(){}}
 
@@ -29,8 +30,6 @@ for(var k in files) {
     RegisterModel(models[Name])
 }
 
-
-
 function RegisterModel(model) {
     if(typeof model == typeof Blank) {
         for(var k in DataFunctions) {
@@ -38,18 +37,7 @@ function RegisterModel(model) {
         }
         model.prototype.isDataModel = true
         model.tableName = model.tableName || model.name.toLowerCase()
-        if(model.supportsTagging || model.prototype.supportsTagging) {
-            model.prototype.Tag = Tag.bind(Tag, model.name)
-            model.prototype.Untag = Untag.bind(Untag, model.name)
-        }
     }
-}
-
-function Tag() {
-
-}
-function Untag() {
-
 }
 
 var DataFunctions = {
@@ -77,10 +65,6 @@ var DataFunctions = {
     Save: function() {
         
     }
-}
-
-for(var k in models) {
-    RegisterModel(models[k])
 }
 
 module.exports = models

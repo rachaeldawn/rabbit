@@ -1,0 +1,155 @@
+{
+    "Assets": {
+        "filename": "asset",
+        "folder": "src",
+        "type": "class",
+        "functions": {
+            "constructor": {
+                "purpose": "Serves as a complex class for the tables asset and asset_tag",
+                "params": {
+                    "name": "The name of the asset",
+                    "description": "The description of the asset",
+                    "purchase_value": "The purchase value of the asset",
+                    "serial_key": {
+                        "default": "undefined",
+                        "comment": "The serial key of the asset"
+                    },
+                    "tags": {
+                        "default": "undefined",
+                        "comment": "An array of the tags associated with the Asset"
+                    }
+                }
+            },
+            "Create": {
+                "purpose": "To create new Asset objects and load them into the Database",
+                "static": true,
+                "params": {
+                    "name": "Name of the asset to create and add to the database. Generally short, and not reading-friendly",
+                    "desc": "Reading friendly description of what the asset is",
+                    "purVal": "The original purchase price of the asset acquired",
+                    "serKey": "The optional serial key that is associated with the Asset",
+                    "tags": "The tags of the asset to be created"
+                },
+                "tests": [
+                    "rejects request with missing required parameters",
+                    "rejects duplicate name",
+                    "rejects invalid parameter forms",
+                    "creates new asset",
+                    "creates tags"
+                ]
+            },
+            "Update": {
+                "purpose": "To update an existing Asset object with new fields",
+                "static": "both",
+                "params": {
+                    "obj": "The object to operate on",
+                    "name": "New name for the asset. Undefined for no change",
+                    "desc": "New description for the asset. Undefined for no change",
+                    "purVal": "New original purchase price of the asset acquired",
+                    "serKey": "New serial key for the object",
+                    "tags": "New tags for the object. Missing tags are to be removed"
+                },
+                "tests": [
+                    "rejects when all params undefined",
+                    "ignores updating no-change parameters",
+                    "updates asset",
+                    "updates tags"
+                ]
+            },
+            "Search": {
+                "purpose": "To search for assets",
+                "static": true,
+                "params": {
+                    "searchObj": "The search object takes the form { field: { value: '', *optional* exact: true/false} } where field is id/key, name, desc/description, serial/serialkey"
+                },
+                "tests": [
+                    "rejects empty search object",
+                    "logs invalid fields in search object",
+                    "rejects no valid fields in search object",
+                    "searches partials appropriately",
+                    "searches exacts appropriately",
+                    "supports multiple-field search",
+                    "refines search using all fields (filtering locally)",
+                    "rejects invalid search object form"
+                ]
+            },
+            "List": {
+                "purpose": "Lists X assets (max 100)",
+                "static": true,
+                "params": {
+                    "amt": "Undefined for 25, or amt for amount to list",
+                    "ascending": {
+                        "default": false,
+                        "comment": "false for most recent, true for oldest"
+                    }
+                },
+                "tests": [
+                    "max list 100",
+                    "returns array of Asset objects",
+                    "ascending functions as intended"
+                ]
+            },
+            "Page": {
+                "purpose": "Lists X assets on Y page, skipping (X * (Y - 1))",
+                "static": true,
+                "params": {
+                    "amt": "The amount of Assets (with tags attached) to return (max 100)",
+                    "page": "How many pages of assets to skip",
+                    "ascending": {
+                        "default": false,
+                        "comment": "false for most recent, true for oldest"
+                    }
+                },
+                "tests": [
+                    "skips proper amount",
+                    "returns expected quantity",
+                    "tags are attached"
+                ]
+            },
+            "Tag": {
+                "purpose": "To add tags to an asset",
+                "static": "both",
+                "params": {
+                    "obj": "The object to operate on",
+                    "tags": "A single tag, or an array of tags."
+                },
+                "tests": [
+                    "ignores already-existing tags",
+                    "adds tag",
+                    "updates object"
+                ]
+            },
+            "Untag": {
+                "purpose": "To remove tags from an asset",
+                "static": "both",
+                "params": {
+                    "obj": "The object to operate on",
+                    "tags": "A single tag, or an array of tags."
+                },
+                "tests": [
+                    "ignores non-existent tags",
+                    "removes tags",
+                    "updates object"
+                ]
+            },
+            "Privacy": {
+                "purpose": "To get the private in generator working",
+                "static": false,
+                "visibility": "private",
+                "params": {
+
+                },
+                "tests": [
+
+                ]
+
+            }
+        },
+        "dependencies": {
+            "lodash": "lodash",
+            "data": "../data",
+            "Asset": "../data/asset",
+            "AssetTag": "../data/asset_tag"
+        }
+    }
+}

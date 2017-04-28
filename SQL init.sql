@@ -4,6 +4,8 @@ DROP SCHEMA "RabbitSchema" CASCADE;
 
 CREATE SCHEMA "RabbitSchema"
     AUTHORIZATION postgres;
+CREATE SCHEMA "RabbitSchema_Tests" 
+    AUTHORIZATION postgres;
 
 GRANT ALL ON SCHEMA "RabbitSchema" TO postgres;
 
@@ -35,6 +37,8 @@ CREATE TABLE tag (
     color varchar(7),
     opacity numeric(4, 3) CONSTRAINT opacity CHECK (opacity >= 1) DEFAULT 1
 );
+
+
 CREATE TABLE user_account ( 
     id serial PRIMARY KEY, 
     username varchar(140) UNIQUE NOT NULL,
@@ -224,7 +228,7 @@ CREATE TABLE purchase_order_transaction (
 );
 CREATE TABLE asset (
     id serial PRIMARY KEY,
-    name varchar(64) NOT NULL,
+    name varchar(64) UNIQUE NOT NULL,
     description varchar(340),
     purchase_value money NOT NULL CONSTRAINT purchase_value CHECK (purchase_value > '-1.00'),
     serial_key varchar(300)

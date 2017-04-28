@@ -3,7 +3,7 @@
         "Purpose": "A means through which assets can be tracked.",
         "Fields": {
             "id":             "The Id of the asset to be tracked",
-            "name":           "A 64 character name of the asset being tracked",
+            "name":           "A 64 character name of the asset being tracked. Must be unique.",
             "description":    "A max 340 character description of the asset",
             "purchase_value": "What the asset cost to purchase",
             "serial_key":     "An optional string for the serial, or serial key, that was purchased."
