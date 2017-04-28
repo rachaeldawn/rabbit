@@ -204,7 +204,7 @@ payroll_entry_type
     }
 },
     
-"employee_journal_entry_tag": {
+"employee_workjournal_entry_tag": {
     "Purpose": "Permits a tagging system for employees to use for future searching. ",
     "Fields": {
         "id":         "Id of a single tag binding",

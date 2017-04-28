@@ -2,6 +2,8 @@ var Models = require('../data')
 var RegisterModel = Models.RegisterModel
 var assert = require('assert')
 
+
+
 class TestClass{constructor(){}}
 class TagClass {constructor(){}}
 TagClass.prototype.supportsTagging = true
@@ -42,6 +44,37 @@ describe('Data', function() {
         it('adds Save', function() {
             var q = new TestClass()
             assert.ok(typeof q.Save == typeof (function(){}), 'Save needs to be added')
+        })
+        it('adds Tag when appropriate', function(done) {
+            var Supporters = []
+            Models.Pool.query(`SELECT * FROM pg_tables WHERE tablename LIKE '%_tag'`)
+                .then(function(res) {
+                    Supporters = res.rows
+                    Supporters = Supporters.reduce(function(prev, cur) {
+                        if(prev == undefined){
+                            prev = []
+                        }
+                        prev.push(cur.tablename.substr(0, cur.tablename.length - 4))
+                        return prev
+                    }, []).reduce(function(prev, cur) {
+                        if(prev == undefined) {
+                            prev = []
+                        }
+                        prev.push(cur.split('_').reduce(function(prev, cur) {
+                            prev += cur[0].toUpperCase() + cur.substr(1)
+                            return prev
+                        }, ''))
+                        return prev
+                    }, []).reduce(function(prev, cur) {
+                        console.log(cur)
+                        if(Models[cur].Tag == undefined)
+                            prev.push(cur)
+                        return prev
+                    }, [])
+                    
+                    assert.ok(Supporters == undefined || Supporters.length == 0, `Tag needs to be added to ${Supporters}`)
+                 }).catch(err => done(err))
+    
         })
     })
     describe('Functionality', function() {

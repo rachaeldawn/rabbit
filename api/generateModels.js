@@ -40,6 +40,7 @@ function GetClassNames(arr) {
 function SerializeJsonData(data) {
     var tableNames = []
     for(var k in data) {
+        if(!k.endsWith('_tag'))
         tableNames.push(k)
     }
     classNames = GetClassNames(tableNames)
@@ -65,7 +66,8 @@ function WriteClassFiles(Classes) {
 
     for(var k in Classes) {
         var v = Classes[k]
-        fs.writeFile(`${__dirname}/data/${v.Table}.js`, GenerateClassText(v), (err) => { if(err) throw err })
+        if(v.Table.substr('_tag') != undefined)
+            fs.writeFile(`${__dirname}/data/${v.Table}.js`, GenerateClassText(v), (err) => { if(err) throw err })
     }
 }
 

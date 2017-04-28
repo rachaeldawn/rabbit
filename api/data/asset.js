@@ -1,6 +1,6 @@
 /*
  * @property id: The Id of the asset to be tracked
- * @property name: A 64 character name of the asset being tracked
+ * @property name: A 64 character name of the asset being tracked. Must be unique.
  * @property description: A max 340 character description of the asset
  * @property purchase_value: What the asset cost to purchase
  * @property serial_key: An optional string for the serial, or serial key, that was purchased.

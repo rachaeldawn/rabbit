@@ -5,8 +5,8 @@ var Promise = require('promise')
 class Blank {constructor(){}}
 
 var Pool = new pg.Pool({
-    database: "Rabbit",
-    host: "localhost",
+    database: "rabbit",
+    host: "192.168.1.189",
     max: 50,
     password: "Fluffeh9985",
     user: "Developer",
@@ -23,7 +23,11 @@ for(var k in files) {
         (prev, cur) => {
             cur = cur[0].toUpperCase() + cur.substr(1)
             prev += cur
-            return prev
+            if(cur.toLowerCase() == 'tag') {
+                prev = undefined
+            } else {
+                return prev
+            }
         }, ''
     )
     models[Name] = require(__dirname + '/data/' + files[k].substr(0, files[k].length - 3))
@@ -37,6 +41,14 @@ function RegisterModel(model) {
         }
         model.prototype.isDataModel = true
         model.tableName = model.tableName || model.name.toLowerCase()
+        Pool.query(`SELECT * FROM pg_tables WHERE tablename='${model.tableName}'`)
+            .then(function(result) {
+                if(result.rows[0] != undefined) {
+                    model.prototype.Tag = Tag.bind(model)
+                    model.prototype.UnTag = UnTag.bind(model)
+                }
+            })
+
     }
 }
 
@@ -67,5 +79,14 @@ var DataFunctions = {
     }
 }
 
+var Tag = function() {
+
+}
+
+var UnTag = function() {
+    
+}
+
 module.exports = models
 module.exports.RegisterModel = RegisterModel
+module.exports.Pool = Pool

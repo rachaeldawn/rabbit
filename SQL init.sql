@@ -133,7 +133,7 @@ CREATE TABLE employee_workjournal_entry (
     workday_id integer REFERENCES employee_workday(id),
     CONSTRAINT message CHECK (char_length(message) > 15)
 );
-CREATE TABLE employee_journal_entry_tag (
+CREATE TABLE employee_workjournal_entry_tag (
     id serial PRIMARY KEY,
     entry_id integer REFERENCES employee_workjournal_entry(id) NOT NULL,
     tag_id integer REFERENCES tag(id) NOT NULL
