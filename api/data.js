@@ -41,7 +41,7 @@ function RegisterModel(model) {
 }
 
 var DataFunctions = {
-    Convert: function() {
+    Convert: function(obj, row) {
         
     },
     Serialize: function() {
