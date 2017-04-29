@@ -34,6 +34,7 @@ for(var k in files) {
     RegisterModel(models[Name])
 }
 
+
 function RegisterModel(model) {
     if(typeof model == typeof Blank) {
         for(var k in DataFunctions) {
@@ -41,7 +42,7 @@ function RegisterModel(model) {
         }
         model.prototype.isDataModel = true
         model.tableName = model.tableName || model.name.toLowerCase()
-        Pool.query(`SELECT * FROM pg_tables WHERE tablename='${model.tableName}'`)
+        Pool.query(`SELECT * FROM pg_tables WHERE tablename='${model.tableName}_tag'`)
             .then(function(result) {
                 if(result.rows[0] != undefined) {
                     model.prototype.Tag = Tag.bind(model)
