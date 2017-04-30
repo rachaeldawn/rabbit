@@ -1,7 +1,7 @@
 {
     "Assets": {
         "filename": "asset",
-        "folder": "src",
+        "folder": "routers",
         "type": "router",
         "post": {
             "/Create": "Creates a new asset"
@@ -9,7 +9,7 @@
         "get": {
             "/GetReq": "GetRequ"
         },
-        "both": {
+        "all": {
             "/BothReq": "Both request"
         },
         "dependencies": {
@@ -21,19 +21,9 @@
     "Expenses": {
         "filename": "expenses",
         "folder": "src",
-        "type": "class",
-        "functions": {
-            "constructor": {
-                "purpose": "To create new Expense objects (with tags)",
-                "params": {
-                    "name": "Max 64 characters name of the expense or bill",
-                    "description": "Max 300 character long description of expense or bill",
-                    "id": {
-                        "default": -1,
-                        "comment": "The id of the expense. -1 means not loaded from DB"
-                    }
-                }
-            }
+        "type": "router",
+        "post": {
+            "/Create"
         }
     },
     "DataAccess": {
@@ -177,8 +167,5 @@
                 ]
             }
         }
-    },
-    "Calendar": {
-
     }
 }

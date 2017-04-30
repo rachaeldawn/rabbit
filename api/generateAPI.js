@@ -122,7 +122,10 @@ function generateClassFile(obj, key) {
     for(var k in obj.dependencies) {
         Lines.push(`const ${k} = require("${obj.dependencies[k]}")`)
     }
-    Lines.push('\n\n')
+    if(obj.type == 'router') {
+        Lines.push(`\nvar route = require('express').Router()`)
+    }
+    Lines.push('\n')
     if(obj.type == 'class') {
         Lines.push('/*')
         Lines.push(` * Class: ${key}`)
@@ -216,8 +219,27 @@ function generateClassFile(obj, key) {
                 Lines.push(`module.exports.${funcName} = ${funcName}`)
         }
     } else if(obj.type == 'router') {
-        Lines.push(`var route = require("express").Router()`)
-        
+        var RenderRoute = function(method, route, comment) {
+            Lines.push(`/*\n * ${route}`)
+            Lines.push(` * Method: ${method}`)
+            Lines.push(` * Remarks: ${comment}`)
+            Lines.push(` */`)
+            Lines.push(`route.${method}('${route}', function(response, request) {\n\tthrow "Route yet to be defined"\n})`)
+        }
+        for(var k in obj.post) {
+            RenderRoute('post', k, obj.post[k])
+            Lines.push("\n")
+        }
+        for(var k in obj.get) {
+            RenderRoute('get', k, obj.get[k])
+            Lines.push("\n")
+            
+        }
+        for(var k in obj.all) {
+            RenderRoute('all', k, obj.all[k])
+            Lines.push("\n")            
+        }
+        Lines.push("module.exports = route")
     }
     
     return LinesToString(Lines)
