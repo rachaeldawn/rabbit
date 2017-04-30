@@ -215,6 +215,9 @@ function generateClassFile(obj, key) {
             if(obj.functions[funcName].visibility != 'private')
                 Lines.push(`module.exports.${funcName} = ${funcName}`)
         }
+    } else if(obj.type == 'router') {
+        Lines.push(`var route = require("express").Router()`)
+        
     }
     
     return LinesToString(Lines)

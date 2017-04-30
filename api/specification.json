@@ -2,34 +2,20 @@
     "Assets": {
         "filename": "asset",
         "folder": "src",
-        "type": "class",
-        "functions": {
-            "constructor": {
-                "purpose": "Serves as a complex class for the tables asset and asset_tag",
-                "params": {
-                    "name": "The name of the asset",
-                    "description": "The description of the asset",
-                    "purchase_value": "The purchase value of the asset",
-                    "serial_key": {
-                        "default": "undefined",
-                        "comment": "The serial key of the asset"
-                    },
-                    "tags": {
-                        "default": "undefined",
-                        "comment": "An array of the tags associated with the Asset"
-                    },
-                    "id": {
-                        "default": -1,
-                        "comment": "The id of the asset. -1 means it was not loaded from the database"
-                    }
-                }
-            }
+        "type": "router",
+        "post": {
+            "/Create": "Creates a new asset"
+        },
+        "get": {
+            "/GetReq": "GetRequ"
+        },
+        "both": {
+            "/BothReq": "Both request"
         },
         "dependencies": {
             "lodash": "lodash",
             "data": "../data",
-            "Asset": "../data/asset",
-            "AssetTag": "../data/asset_tag"
+            "Asset": "../data/asset"
         }
     },
     "Expenses": {
@@ -58,18 +44,25 @@
             "Create": {
                 "purpose": "To create new objects and load them into the Database",
                 "params": {
-                    "name": "Name of the asset to create and add to the database. Generally short, and not reading-friendly",
-                    "desc": "Reading friendly description of what the asset is",
-                    "purVal": "The original purchase price of the asset acquired",
-                    "serKey": "The optional serial key that is associated with the Asset",
-                    "tags": "The tags of the asset to be created"
+                    "obj": "The object to operate on"
                 },
                 "tests": [
-                    "rejects request with missing required parameters",
-                    "rejects duplicate name",
+                    "rejects request with empty objects (all fields undefined)",
                     "rejects invalid parameter forms",
                     "creates new object",
-                    "creates tags"
+                    "creates tags",
+                    "ignores the id field"
+                ]
+            },
+            "Sync": {
+                "purpose": "To pull a single object of a type from the database if valid, or updating a locally cached object",
+                "params": {
+                    "obj": "The object to operate on"
+                },
+                "tests": [
+                    "rejects if id is not set",
+                    "throws error if it does not exist in the database",
+                    "fills object with fields"
                 ]
             },
             "Update": {
@@ -81,6 +74,7 @@
                 "tests": [
                     "rejects when all params undefined",
                     "ignores updating no-change parameters",
+                    "throws error if id is not set, -1, or invalid",
                     "updates object",
                     "updates tags"
                 ]
@@ -88,6 +82,7 @@
             "Search": {
                 "purpose": "To search for object",
                 "params": {
+                    "objClass": "The class to search for",
                     "searchObj": "The search object takes the form { field: { value: '', *optional* exact: true/false} } where field is id/key, name, desc/description, serial/serialkey"
                 },
                 "tests": [
@@ -104,6 +99,7 @@
             "List": {
                 "purpose": "Lists X objects (max 100)",
                 "params": {
+                    "objClass": "The class type to list",
                     "amt": "Undefined for 25, or amt for amount to list",
                     "ascending": {
                         "default": false,
@@ -129,6 +125,7 @@
                 "tests": [
                     "skips proper amount",
                     "returns expected quantity",
+                    "throws error if id is not set, -1, or invalid",
                     "tags are attached"
                 ]
             },
@@ -141,6 +138,7 @@
                 "tests": [
                     "ignores already-existing tags",
                     "adds tag",
+                    "throws error if id is not set, -1, or invalid",
                     "updates object"
                 ]
             },
@@ -153,9 +151,34 @@
                 "tests": [
                     "ignores non-existent tags",
                     "removes tags",
+                    "throws error if id is not set, -1, or invalid",
                     "updates object"
+                ]
+            },
+            "GetTags": {
+                "purpose": "To get tags on a class that supports them",
+                "params": {
+                    "obj": "The object (with id set) to add a .Tags field to"
+                },
+                "tests": [
+                    "adds tags array",
+                    "throws error if the class does not support tagging",
+                    "throws error if id is not set, -1, or invalid"
+                ]
+            },
+            "Delete": {
+                "purpose": "Delete objects from the database that are NOT accounting-related",
+                "params": {
+                    "obj": "The object (with id set) to delete"
+                },
+                "tests": [
+                    "deletes object",
+                    "ignores invalid, -1, or undefined id"
                 ]
             }
         }
+    },
+    "Calendar": {
+
     }
 }
