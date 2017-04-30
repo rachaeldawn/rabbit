@@ -343,7 +343,7 @@
         }
     },
         
-    "user_account ": {
+    "user_account": {
         "Purpose": "Gives customers, employees, and the CRA an account to log in through.",
         "Fields": {
             "id":         "Identifier of a User Account",
@@ -362,7 +362,7 @@
         }
     },
 
-    "user_permission": {
+    "user_permission_set": {
         "Purpose": "Provides a true/false value for whether or not a user has a permission. Uses composite key between user/permission. ",
         "Usage":   "Loop through all the permissions, and return a permission set by referencing composite perm/user keys",
         "Fields": {
@@ -408,6 +408,68 @@
             "workorder_id":   "The id of the workorder this transaction is bound to",
             "contact_id":     "The id of the contact that made the transaction",
             "transaction_id": "The id of the transaction that is bound to the workorder"
+        }
+    },
+    "estimate": {
+        "Purpose": "Provides support for estimating costs of work before opening a workorder",
+        "Fields": {
+            "id": "The id of the estimate",
+            "customer_id": "The customer_id attached to the estimate",
+            "rep_id": "The id of the employee that opened the estimate",
+            "open_date": "The timestamp of when the estimate was opened/created",
+            "validity_period": "Default 14, but max amount of days the estimate is good for"
+        }
+    },
+    "estimate_item": {
+        "Purpose": "A single item on an estimate",
+        "Fields": {
+            "id": "The id of the entry on the estimate",
+            "estimate_id": "The id of the estimate this is attached to",
+            "service_id": "The id of the service that is being offered",
+            "quantity": "The amount of the item estimated in the quantity * price equation"
+        }
+    },
+    "estimate_contact": {
+        "Purpose": "A person we are able to contact with regards to this estimate",
+        "Fields": {
+            "id": "Id of  this specific entry",
+            "estimate_id": "The id of the estimate this is attached to",
+            "contact_id": "The id of the contact that we are working with"
+        }
+    },
+    "taskboard": {
+        "Purpose": "A personal todo-board for employees",
+        "Fields": {
+            "id": "Id of  this specific taskboard entry",
+            "name": "The nickname the employee gives to the taskboard",
+            "creator_id": "The id of the employee that created the taskboard."
+        }
+    },
+    "taskboard_participant": {
+        "Purpose": "A person that is able to see the taskboard.",
+        "Fields": {
+            "id": "The id of this binding participant binding",
+            "taskboard_id": "The id of the taskboard to be bound",
+            "user_id": "The id of the user to be bound",
+            "can_write": "A true/false on whether or not the user is able to write to the board",
+            "can_delete": "A true/false on whether or not the user is able to delete on the board",
+            "can_invite": "A true/false on whether or not the user is able to add others to the board. Note: User can not grant more permissions than they have."
+        }
+    },
+    "tasklist": {
+        "Purpose": "A single todo list",
+        "Fields": {
+            "id": "The id of the entry of the tasklist",
+            "board_id": "The id of the board this tasklist belongs to"
+        }
+    },
+    "tasklist_task": {
+        "Purpose": "A task that belongs to a specific tasklist. Supports nested tasks.",
+        "Fields": {
+            "id": "The id of the task in the database",
+            "parent_task_id": "Null if it is not nested with anything, or the Id of the task this entry is inside",
+            "is_complete": "A true/false value on whether or not the task is complete",
+            "message": "The message indicating what the todo is"
         }
     }
 }

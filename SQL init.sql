@@ -281,7 +281,7 @@ CREATE TABLE payroll_transaction (
     transaction_id integer REFERENCES transaction(id),
     memo varchar(400)
 );
-CREATE TABLE permission (
+CREATE TABLE user_permission (
     id serial PRIMARY KEY, 
     name varchar(32) NOT NULL
 );

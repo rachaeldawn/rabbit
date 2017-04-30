@@ -73,7 +73,7 @@
                 ]
             },
             "Update": {
-                "purpose": "To update an existing Asset object with new fields",
+                "purpose": "To update an existing object with new fields",
                 "params": {
                     "obj": "The object to operate on",
                     "newParams": "A table following the { field: newValue, } format. Fields are: name, desc/description, purVal/purchase_value, serial/serial_key, tags"
@@ -81,12 +81,12 @@
                 "tests": [
                     "rejects when all params undefined",
                     "ignores updating no-change parameters",
-                    "updates asset",
+                    "updates object",
                     "updates tags"
                 ]
             },
             "Search": {
-                "purpose": "To search for assets",
+                "purpose": "To search for object",
                 "params": {
                     "searchObj": "The search object takes the form { field: { value: '', *optional* exact: true/false} } where field is id/key, name, desc/description, serial/serialkey"
                 },
@@ -102,7 +102,7 @@
                 ]
             },
             "List": {
-                "purpose": "Lists X assets (max 100)",
+                "purpose": "Lists X objects (max 100)",
                 "params": {
                     "amt": "Undefined for 25, or amt for amount to list",
                     "ascending": {
@@ -112,14 +112,14 @@
                 },
                 "tests": [
                     "max list 100",
-                    "returns array of Asset objects",
+                    "returns array of objects",
                     "ascending functions as intended"
                 ]
             },
             "Page": {
-                "purpose": "Lists X assets on Y page, skipping (X * (Y - 1))",
+                "purpose": "Lists X objects on Y page, skipping (X * (Y - 1))",
                 "params": {
-                    "amt": "The amount of Assets (with tags attached) to return (max 100)",
+                    "amt": "The amount of objects (with tags attached when appropriate) to return (max 100)",
                     "page": "How many pages of assets to skip",
                     "ascending": {
                         "default": false,
