@@ -1,16 +1,22 @@
 {
+    "Router": {
+        "filename": "router",
+        "folder": "",
+        "type": "router",
+        "post": {
+            "/:Function/:Class": "The Function/Class syntax, where Function and Class are part of this file's array.",
+            "/:Function/:Class/:Subset": "The Function/Class/Subset, where Function, Class, and Subset are part of this file's array."
+        }
+    }
+    
     "Assets": {
         "filename": "asset",
         "folder": "routers",
         "type": "router",
         "post": {
-            "/Create": "Creates a new asset"
-        },
-        "get": {
-            "/GetReq": "GetRequ"
-        },
-        "all": {
-            "/BothReq": "Both request"
+            "/Create": "Creates a new asset",
+            "/Sync": "",
+            "Update": ""
         },
         "dependencies": {
             "lodash": "lodash",
@@ -20,12 +26,13 @@
     },
     "Expenses": {
         "filename": "expenses",
-        "folder": "src",
+        "folder": "routers",
         "type": "router",
         "post": {
-            "/Create"
+            "/Create": ""
         }
     },
+
     "DataAccess": {
         "filename":"data-access",
         "folder": "src",
@@ -167,5 +174,5 @@
                 ]
             }
         }
-    }
+    }"
 }
