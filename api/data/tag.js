@@ -1,14 +1,18 @@
 /*
  * @property id: The identifier of the tag 
  * @property name: A string, max length 140 characters, of a tag. Required.
- * @property color: Optional hex code of a tag color. #FFFFFF is an example.
- * @property opacity: A decimal between 0 and 1 indicating the A in RGBA.
+ * @property red: An integer between 0 and 255 symbolizing the red in RGBA
+ * @property blue: An integer between 0 and 255 symbolizing the blue in RGBA
+ * @property green: An integer between 0 and 255 symbolizing the green in RGBA
+ * @property opacity: An integer between 0 and 255 symbolizing the opacity in RGBA
  */
 class Tag {
-	constructor(id, name, color, opacity){
+	constructor(id, name, red, blue, green, opacity){
 		this.id = id
 		this.name = name
-		this.color = color
+		this.red = red
+		this.blue = blue
+		this.green = green
 		this.opacity = opacity
 	}
 }

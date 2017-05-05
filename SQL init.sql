@@ -1,17 +1,16 @@
 -- SCHEMA: RabbitSchema
 
-DROP SCHEMA "RabbitSchema" CASCADE;
 
-CREATE SCHEMA "RabbitSchema"
+CREATE SCHEMA rabbitschema
     AUTHORIZATION postgres;
-CREATE SCHEMA "RabbitSchema_Tests" 
+CREATE SCHEMA rabbitschema 
     AUTHORIZATION postgres;
 
-GRANT ALL ON SCHEMA "RabbitSchema" TO postgres;
+GRANT ALL ON SCHEMA rabbitschema TO postgres;
 
-GRANT ALL ON SCHEMA "RabbitSchema" TO "Developer";
+GRANT ALL ON SCHEMA rabbitschema TO "Developer";
 
-SET search_path TO "RabbitSchema";
+SET search_path TO rabbitschema;
 
 CREATE TYPE transaction_method AS ENUM (
     'online', 
@@ -34,8 +33,14 @@ CREATE TYPE payroll_entry_type as ENUM (
 CREATE TABLE tag (
     id serial PRIMARY KEY,
     name varchar(140) NOT NULL,
-    color varchar(7),
-    opacity numeric(4, 3) CONSTRAINT opacity CHECK (opacity >= 1) DEFAULT 1
+    red SMALLINT NOT NULL,
+    green SMALLINT NOT NULL,
+    blue SMALLINT NOT NULL, 
+    opacity SMALLINT NOT NULL,
+    CHECK (red > 0 AND red < 256),
+    CHECK (blue > 0 AND blue < 256),
+    CHECK (green > 0 AND green < 256),
+    CHECK (opacity > 0 AND opacity < 256)
 );
 
 
@@ -252,7 +257,7 @@ CREATE TABLE bill (
     id serial PRIMARY KEY,
     expense_id integer REFERENCES expense(id) NOT NULL,
     amount money NOT NULL,
-    billing_date date NOT NULL DEFAULT CURRENT_DATE,
+    billing_date date NOT NULL DEFAULT CURRENT_DATE
 );
 CREATE TABLE bill_transaction (
     id integer REFERENCES bill(id),
@@ -287,7 +292,7 @@ CREATE TABLE user_permission (
 );
 CREATE TABLE user_permission_set (
     user_id integer REFERENCES user_account(id) NOT NULL,
-    perm_id integer REFERENCES permission(id) ON DELETE CASCADE NOT NULL,
+    perm_id integer REFERENCES user_permission(id) ON DELETE CASCADE NOT NULL,
     perm boolean NOT NULL,
     PRIMARY KEY(user_id, perm_id)
 );
@@ -334,4 +339,6 @@ CREATE TABLE taskboard_participant (
     can_invite boolean DEFAULT FALSE NOT NULL
 );
 
-GRANT ALL ON SCHEMA "RabbitSchema" TO "Developer";
+GRANT ALL ON SCHEMA rabbitschema TO "Developer";
+GRANT ALL ON ALL TABLES IN SCHEMA rabbitschema TO "Developer";
+GRANT ALL ON ALL SEQUENCES IN SCHEMA rabbitschema TO "Developer";

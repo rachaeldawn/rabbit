@@ -12,8 +12,7 @@ var Pool = new pg.Pool({
     ssl: true,
     user: 'Developer',
     password: "Fluffeh9985",
-    idleTimeoutMillis: 2000,
-       
+    idleTimeoutMillis: 2000
 })
 
 class TestClass{constructor(){}}
@@ -59,7 +58,7 @@ describe('Models', function(done) {
                                 /*
                                  *  SELECT * FROM information_schema.columns WHERE table_schema = 'your_schema' AND table_name   = 'your_table'
                                  */
-                                Pool.query(`SELECT * FROM information_schema.columns WHERE table_schema = 'RabbitSchema' AND table_name = '${Class.tableName}'`)
+                                Pool.query(`SELECT * FROM information_schema.columns WHERE table_schema = 'rabbitschema' AND table_name = '${Class.tableName}'`)
                                     .then(function(result) {
                                         var columns = []
                                         for(var k in result.rows) {

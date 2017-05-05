@@ -248,7 +248,7 @@
         }
     },
         
-    "permission": {
+    "user_permission": {
         "Purpose": "A specific permission to be referenced in permission sets. To be populated on database initialize, and never changed. May adjust this to enum in the future.",
         "Fields": {
             "id":     "The Id of the permission",
@@ -311,8 +311,10 @@
         "Fields": {
             "id":         "The identifier of the tag ",
             "name":       "A string, max length 140 characters, of a tag. Required.",
-            "color":      "Optional hex code of a tag color. #FFFFFF is an example.",
-            "opacity":    "A decimal between 0 and 1 indicating the A in RGBA."
+            "red": "An integer between 0 and 255 symbolizing the red in RGBA",
+            "blue": "An integer between 0 and 255 symbolizing the blue in RGBA",
+            "green": "An integer between 0 and 255 symbolizing the green in RGBA",
+            "opacity": "An integer between 0 and 255 symbolizing the opacity in RGBA"
         }
     },
 
