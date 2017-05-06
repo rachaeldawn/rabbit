@@ -14,7 +14,7 @@ class Tag {
 		this.blue = blue
 		this.green = green
 		this.opacity = opacity
+		this.tablename = 'tag'
 	}
 }
 module.exports = Tag
-module.exports.tableName = 'tag'

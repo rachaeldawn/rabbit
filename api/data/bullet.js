@@ -10,7 +10,7 @@ class Bullet {
 		this.user_id = user_id
 		this.message = message
 		this.time_stamp = time_stamp
+		this.tablename = 'bullet'
 	}
 }
 module.exports = Bullet
-module.exports.tableName = 'bullet'

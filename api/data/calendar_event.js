@@ -16,7 +16,7 @@ class CalendarEvent {
 		this.occurs_on = occurs_on
 		this.start_time = start_time
 		this.end_time = end_time
+		this.tablename = 'calendar_event'
 	}
 }
 module.exports = CalendarEvent
-module.exports.tableName = 'calendar_event'

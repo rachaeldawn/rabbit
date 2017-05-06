@@ -12,7 +12,7 @@ class Asset {
 		this.description = description
 		this.purchase_value = purchase_value
 		this.serial_key = serial_key
+		this.tablename = 'asset'
 	}
 }
 module.exports = Asset
-module.exports.tableName = 'asset'

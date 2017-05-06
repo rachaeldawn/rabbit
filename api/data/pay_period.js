@@ -10,7 +10,7 @@ class PayPeriod {
 		this.start_date = start_date
 		this.end_date = end_date
 		this.pay_date = pay_date
+		this.tablename = 'pay_period'
 	}
 }
 module.exports = PayPeriod
-module.exports.tableName = 'pay_period'

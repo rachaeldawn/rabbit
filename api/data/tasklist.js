@@ -6,7 +6,7 @@ class Tasklist {
 	constructor(id, board_id){
 		this.id = id
 		this.board_id = board_id
+		this.tablename = 'tasklist'
 	}
 }
 module.exports = Tasklist
-module.exports.tableName = 'tasklist'

@@ -14,7 +14,7 @@ class CustomerContact {
 		this.phone = phone
 		this.phone_extension = phone_extension
 		this.about = about
+		this.tablename = 'customer_contact'
 	}
 }
 module.exports = CustomerContact
-module.exports.tableName = 'customer_contact'

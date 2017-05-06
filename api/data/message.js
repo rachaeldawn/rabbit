@@ -10,7 +10,7 @@ class Message {
 		this.conversation_id = conversation_id
 		this.sender_id = sender_id
 		this.message = message
+		this.tablename = 'message'
 	}
 }
 module.exports = Message
-module.exports.tableName = 'message'

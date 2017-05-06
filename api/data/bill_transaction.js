@@ -6,7 +6,7 @@ class BillTransaction {
 	constructor(id, transaction_id){
 		this.id = id
 		this.transaction_id = transaction_id
+		this.tablename = 'bill_transaction'
 	}
 }
 module.exports = BillTransaction
-module.exports.tableName = 'bill_transaction'

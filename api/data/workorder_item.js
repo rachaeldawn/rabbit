@@ -10,7 +10,7 @@ class WorkorderItem {
 		this.workorder_id = workorder_id
 		this.service_id = service_id
 		this.quantity = quantity
+		this.tablename = 'workorder_item'
 	}
 }
 module.exports = WorkorderItem
-module.exports.tableName = 'workorder_item'

@@ -8,7 +8,7 @@ class EstimateContact {
 		this.id = id
 		this.estimate_id = estimate_id
 		this.contact_id = contact_id
+		this.tablename = 'estimate_contact'
 	}
 }
 module.exports = EstimateContact
-module.exports.tableName = 'estimate_contact'

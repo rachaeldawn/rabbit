@@ -10,7 +10,7 @@ class MessageReceipt {
 		this.recipient_id = recipient_id
 		this.received = received
 		this.read = read
+		this.tablename = 'message_receipt'
 	}
 }
 module.exports = MessageReceipt
-module.exports.tableName = 'message_receipt'

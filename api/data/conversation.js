@@ -6,7 +6,7 @@ class Conversation {
 	constructor(id, creator_id){
 		this.id = id
 		this.creator_id = creator_id
+		this.tablename = 'conversation'
 	}
 }
 module.exports = Conversation
-module.exports.tableName = 'conversation'

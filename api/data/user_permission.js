@@ -6,7 +6,7 @@ class UserPermission {
 	constructor(id, name){
 		this.id = id
 		this.name = name
+		this.tablename = 'user_permission'
 	}
 }
 module.exports = UserPermission
-module.exports.tableName = 'user_permission'

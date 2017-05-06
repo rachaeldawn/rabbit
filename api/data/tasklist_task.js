@@ -10,7 +10,7 @@ class TasklistTask {
 		this.parent_task_id = parent_task_id
 		this.is_complete = is_complete
 		this.message = message
+		this.tablename = 'tasklist_task'
 	}
 }
 module.exports = TasklistTask
-module.exports.tableName = 'tasklist_task'

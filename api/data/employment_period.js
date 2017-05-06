@@ -10,7 +10,7 @@ class EmploymentPeriod {
 		this.employee_id = employee_id
 		this.start_date = start_date
 		this.end_date = end_date
+		this.tablename = 'employment_period'
 	}
 }
 module.exports = EmploymentPeriod
-module.exports.tableName = 'employment_period'

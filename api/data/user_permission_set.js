@@ -8,7 +8,7 @@ class UserPermissionSet {
 		this.user_id = user_id
 		this.perm_id = perm_id
 		this.perm = perm
+		this.tablename = 'user_permission_set'
 	}
 }
 module.exports = UserPermissionSet
-module.exports.tableName = 'user_permission_set'

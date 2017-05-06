@@ -8,7 +8,7 @@ class TransactionAdjustment {
 		this.id = id
 		this.original_transaction_id = original_transaction_id
 		this.memo = memo
+		this.tablename = 'transaction_adjustment'
 	}
 }
 module.exports = TransactionAdjustment
-module.exports.tableName = 'transaction_adjustment'

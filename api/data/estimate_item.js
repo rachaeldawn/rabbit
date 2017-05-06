@@ -10,7 +10,7 @@ class EstimateItem {
 		this.estimate_id = estimate_id
 		this.service_id = service_id
 		this.quantity = quantity
+		this.tablename = 'estimate_item'
 	}
 }
 module.exports = EstimateItem
-module.exports.tableName = 'estimate_item'

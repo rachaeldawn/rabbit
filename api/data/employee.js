@@ -24,7 +24,7 @@ class Employee {
 		this.sin = sin
 		this.birthday = birthday
 		this.is_active = is_active
+		this.tablename = 'employee'
 	}
 }
 module.exports = Employee
-module.exports.tableName = 'employee'

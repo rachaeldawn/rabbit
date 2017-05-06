@@ -14,7 +14,7 @@ class PurchaseOrderItem {
 		this.description = description
 		this.quantity = quantity
 		this.price = price
+		this.tablename = 'purchase_order_item'
 	}
 }
 module.exports = PurchaseOrderItem
-module.exports.tableName = 'purchase_order_item'

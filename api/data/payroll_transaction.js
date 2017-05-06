@@ -8,7 +8,7 @@ class PayrollTransaction {
 		this.id = id
 		this.transaction_id = transaction_id
 		this.memo = memo
+		this.tablename = 'payroll_transaction'
 	}
 }
 module.exports = PayrollTransaction
-module.exports.tableName = 'payroll_transaction'

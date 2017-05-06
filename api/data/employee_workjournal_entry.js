@@ -12,7 +12,7 @@ class EmployeeWorkjournalEntry {
 		this.message = message
 		this.time_stamp = time_stamp
 		this.workday_id = workday_id
+		this.tablename = 'employee_workjournal_entry'
 	}
 }
 module.exports = EmployeeWorkjournalEntry
-module.exports.tableName = 'employee_workjournal_entry'

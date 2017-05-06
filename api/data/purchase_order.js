@@ -10,7 +10,7 @@ class PurchaseOrder {
 		this.creator_id = creator_id
 		this.opened_on = opened_on
 		this.completed_on = completed_on
+		this.tablename = 'purchase_order'
 	}
 }
 module.exports = PurchaseOrder
-module.exports.tableName = 'purchase_order'

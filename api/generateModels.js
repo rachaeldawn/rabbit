@@ -92,9 +92,9 @@ function GenerateClassText(obj) {
     for(var k in obj.Properties) {
         Lines.push(`\t\tthis.${obj.Properties[k]} = ${obj.Properties[k]}`)
     }
+    Lines.push(`\t\tthis.tablename = '${obj.Table}'`)
     Lines.push('\t}\n}')
     Lines.push(`module.exports = ${obj.Class}`)
-    Lines.push(`module.exports.tableName = '${obj.Table}'`)
     return Lines.reduce(
         (prev, cur) => {
             prev += cur + '\n'

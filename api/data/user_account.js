@@ -8,7 +8,7 @@ class UserAccount {
 		this.id = id
 		this.username = username
 		this.is_active = is_active
+		this.tablename = 'user_account'
 	}
 }
 module.exports = UserAccount
-module.exports.tableName = 'user_account'

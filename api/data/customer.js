@@ -22,7 +22,7 @@ class Customer {
 		this.physical_country = physical_country
 		this.phone = phone
 		this.start_date = start_date
+		this.tablename = 'customer'
 	}
 }
 module.exports = Customer
-module.exports.tableName = 'customer'

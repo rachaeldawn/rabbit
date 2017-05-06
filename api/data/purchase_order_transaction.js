@@ -8,7 +8,7 @@ class PurchaseOrderTransaction {
 		this.id = id
 		this.purchase_order_id = purchase_order_id
 		this.transaction_id = transaction_id
+		this.tablename = 'purchase_order_transaction'
 	}
 }
 module.exports = PurchaseOrderTransaction
-module.exports.tableName = 'purchase_order_transaction'

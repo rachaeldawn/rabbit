@@ -12,7 +12,7 @@ class PayrollItem {
 		this.name = name
 		this.amount = amount
 		this.quantity = quantity
+		this.tablename = 'payroll_item'
 	}
 }
 module.exports = PayrollItem
-module.exports.tableName = 'payroll_item'

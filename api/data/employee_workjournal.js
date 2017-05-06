@@ -8,7 +8,7 @@ class EmployeeWorkjournal {
 		this.id = id
 		this.employee_id = employee_id
 		this.name = name
+		this.tablename = 'employee_workjournal'
 	}
 }
 module.exports = EmployeeWorkjournal
-module.exports.tableName = 'employee_workjournal'

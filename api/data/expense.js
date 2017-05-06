@@ -8,7 +8,7 @@ class Expense {
 		this.id = id
 		this.name = name
 		this.description = description
+		this.tablename = 'expense'
 	}
 }
 module.exports = Expense
-module.exports.tableName = 'expense'

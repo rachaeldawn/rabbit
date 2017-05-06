@@ -12,7 +12,7 @@ class Service {
 		this.description = description
 		this.price = price
 		this.default_quantity = default_quantity
+		this.tablename = 'service'
 	}
 }
 module.exports = Service
-module.exports.tableName = 'service'
