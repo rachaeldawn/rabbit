@@ -1,5 +1,6 @@
 -- SCHEMA: RabbitSchema
 
+DROP SCHEMA rabbitschema;
 
 CREATE SCHEMA rabbitschema
     AUTHORIZATION postgres;
@@ -37,10 +38,10 @@ CREATE TABLE tag (
     green SMALLINT NOT NULL,
     blue SMALLINT NOT NULL, 
     opacity SMALLINT NOT NULL,
-    CHECK (red > 0 AND red < 256),
-    CHECK (blue > 0 AND blue < 256),
-    CHECK (green > 0 AND green < 256),
-    CHECK (opacity > 0 AND opacity < 256)
+    CHECK (red > -1 AND red < 256),
+    CHECK (blue > -1 AND blue < 256),
+    CHECK (green > -1 AND green < 256),
+    CHECK (opacity > -1 AND opacity < 256)
 );
 
 
@@ -119,8 +120,8 @@ CREATE TABLE employment_period (
 CREATE TABLE employee_workday (
     id serial PRIMARY KEY,
     employee_id integer REFERENCES employee(id) NOT NULL,
-    clock_in timestamp DEFAULT NOW() NOT NULL,
-    clock_out timestamp   
+    clock_in timestamp WITH TIME ZONE DEFAULT NOW() NOT NULL,
+    clock_out timestamp WITH TIME ZONE 
 );
 -- Work journal is a written rubber duck debugging. Strongly encourage to use this, but not required.
 CREATE TABLE employee_workjournal (
@@ -133,7 +134,7 @@ CREATE TABLE employee_workjournal_entry (
     id serial PRIMARY KEY,
     journal_id integer REFERENCES employee_workjournal(id) NOT NULL,
     message varchar(5000) NOT NULL,
-    time_stamp timestamp DEFAULT NOW() NOT NULL,
+    time_stamp timestamp WITH TIME ZONE  DEFAULT NOW() NOT NULL,
     -- OPTIONAL --
     workday_id integer REFERENCES employee_workday(id),
     CONSTRAINT message CHECK (char_length(message) > 15)
