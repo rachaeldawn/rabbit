@@ -4,6 +4,7 @@
  * @property message: A max 1200 character message for the bulletin board. Minimum 5 characters
  * @property time_stamp: A timestamp of when the sticky note was created
  */
+const tablename = 'bullet'
 class Bullet {
 	constructor(id, user_id, message, time_stamp){
 		this.id = id
@@ -13,4 +14,6 @@ class Bullet {
 		this.tablename = 'bullet'
 	}
 }
+Bullet.prototype.tablename = 'bullet'
 module.exports = Bullet
+module.exports.tablename = tablename

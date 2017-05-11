@@ -4,6 +4,7 @@
  * @property amount: The cost of the bill on this instance
  * @property billing_date: The date of the bill
  */
+const tablename = 'bill'
 class Bill {
 	constructor(id, expense_id, amount, billing_date){
 		this.id = id
@@ -13,4 +14,6 @@ class Bill {
 		this.tablename = 'bill'
 	}
 }
+Bill.prototype.tablename = 'bill'
 module.exports = Bill
+module.exports.tablename = tablename

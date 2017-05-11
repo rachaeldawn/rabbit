@@ -3,6 +3,7 @@
  * @property employee_id: Id of the employee that owns the work journal
  * @property name: The name of the work journal
  */
+const tablename = 'employee_workjournal'
 class EmployeeWorkjournal {
 	constructor(id, employee_id, name){
 		this.id = id
@@ -11,4 +12,6 @@ class EmployeeWorkjournal {
 		this.tablename = 'employee_workjournal'
 	}
 }
+EmployeeWorkjournal.prototype.tablename = 'employee_workjournal'
 module.exports = EmployeeWorkjournal
+module.exports.tablename = tablename

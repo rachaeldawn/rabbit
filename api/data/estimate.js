@@ -5,6 +5,7 @@
  * @property open_date: The timestamp of when the estimate was opened/created
  * @property validity_period: Default 14, but max amount of days the estimate is good for
  */
+const tablename = 'estimate'
 class Estimate {
 	constructor(id, customer_id, rep_id, open_date, validity_period){
 		this.id = id
@@ -15,4 +16,6 @@ class Estimate {
 		this.tablename = 'estimate'
 	}
 }
+Estimate.prototype.tablename = 'estimate'
 module.exports = Estimate
+module.exports.tablename = tablename

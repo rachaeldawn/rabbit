@@ -4,6 +4,7 @@
  * @property method: One of the enum values of transaction_method are stored in here. Describes what method of payment was used to process the transaction.
  * @property paid_on: The timestamp of when the transaction was made
  */
+const tablename = 'transaction'
 class Transaction {
 	constructor(id, amount, method, paid_on){
 		this.id = id
@@ -13,4 +14,6 @@ class Transaction {
 		this.tablename = 'transaction'
 	}
 }
+Transaction.prototype.tablename = 'transaction'
 module.exports = Transaction
+module.exports.tablename = tablename

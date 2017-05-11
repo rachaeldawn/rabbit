@@ -5,6 +5,7 @@
  * @property time_stamp: Default of NOW(), timestamp of when the journal was created. This is not updateable.
  * @property workday_id: Id of a workday, in case an employee wishes to tag what they're working on for payroll purposes.
  */
+const tablename = 'employee_workjournal_entry'
 class EmployeeWorkjournalEntry {
 	constructor(id, journal_id, message, time_stamp, workday_id){
 		this.id = id
@@ -15,4 +16,6 @@ class EmployeeWorkjournalEntry {
 		this.tablename = 'employee_workjournal_entry'
 	}
 }
+EmployeeWorkjournalEntry.prototype.tablename = 'employee_workjournal_entry'
 module.exports = EmployeeWorkjournalEntry
+module.exports.tablename = tablename

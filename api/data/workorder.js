@@ -4,6 +4,7 @@
  * @property rep_id: The id of the employee that opened the workorder
  * @property open_date: Timestamp that defaults to now 
  */
+const tablename = 'workorder'
 class Workorder {
 	constructor(id, customer_id, rep_id, open_date){
 		this.id = id
@@ -13,4 +14,6 @@ class Workorder {
 		this.tablename = 'workorder'
 	}
 }
+Workorder.prototype.tablename = 'workorder'
 module.exports = Workorder
+module.exports.tablename = tablename

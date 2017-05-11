@@ -3,6 +3,7 @@
  * @property name: The nickname the employee gives to the taskboard
  * @property creator_id: The id of the employee that created the taskboard.
  */
+const tablename = 'taskboard'
 class Taskboard {
 	constructor(id, name, creator_id){
 		this.id = id
@@ -11,4 +12,6 @@ class Taskboard {
 		this.tablename = 'taskboard'
 	}
 }
+Taskboard.prototype.tablename = 'taskboard'
 module.exports = Taskboard
+module.exports.tablename = tablename

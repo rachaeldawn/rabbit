@@ -3,6 +3,7 @@
  * @property purchase_order_id: The Id of the purchase order
  * @property transaction_id: The id of the transaction made
  */
+const tablename = 'purchase_order_transaction'
 class PurchaseOrderTransaction {
 	constructor(id, purchase_order_id, transaction_id){
 		this.id = id
@@ -11,4 +12,6 @@ class PurchaseOrderTransaction {
 		this.tablename = 'purchase_order_transaction'
 	}
 }
+PurchaseOrderTransaction.prototype.tablename = 'purchase_order_transaction'
 module.exports = PurchaseOrderTransaction
+module.exports.tablename = tablename

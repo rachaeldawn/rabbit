@@ -4,6 +4,7 @@
  * @property service_id: Id of this item
  * @property quantity: The quantity of this item
  */
+const tablename = 'workorder_item'
 class WorkorderItem {
 	constructor(id, workorder_id, service_id, quantity){
 		this.id = id
@@ -13,4 +14,6 @@ class WorkorderItem {
 		this.tablename = 'workorder_item'
 	}
 }
+WorkorderItem.prototype.tablename = 'workorder_item'
 module.exports = WorkorderItem
+module.exports.tablename = tablename

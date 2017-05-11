@@ -6,6 +6,7 @@
  * @property phone_extension: The phone extension of the contact
  * @property about: A max 2000 character length about to describe who the contact is, what they're permitted to authorize/do, and any other relevant details.
  */
+const tablename = 'customer_contact'
 class CustomerContact {
 	constructor(id, first_name, last_name, phone, phone_extension, about){
 		this.id = id
@@ -17,4 +18,6 @@ class CustomerContact {
 		this.tablename = 'customer_contact'
 	}
 }
+CustomerContact.prototype.tablename = 'customer_contact'
 module.exports = CustomerContact
+module.exports.tablename = tablename

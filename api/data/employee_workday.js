@@ -4,6 +4,7 @@
  * @property clock_in: When the employee clocks in
  * @property clock_out: When the employee clocks out
  */
+const tablename = 'employee_workday'
 class EmployeeWorkday {
 	constructor(id, employee_id, clock_in, clock_out){
 		this.id = id
@@ -13,4 +14,6 @@ class EmployeeWorkday {
 		this.tablename = 'employee_workday'
 	}
 }
+EmployeeWorkday.prototype.tablename = 'employee_workday'
 module.exports = EmployeeWorkday
+module.exports.tablename = tablename

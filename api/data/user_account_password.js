@@ -4,6 +4,7 @@
  * @property salt: Salt added to the original
  * @property iterations: The amount of times the hashing algo was ran.
  */
+const tablename = 'user_account_password'
 class UserAccountPassword {
 	constructor(id, hash, salt, iterations){
 		this.id = id
@@ -13,4 +14,6 @@ class UserAccountPassword {
 		this.tablename = 'user_account_password'
 	}
 }
+UserAccountPassword.prototype.tablename = 'user_account_password'
 module.exports = UserAccountPassword
+module.exports.tablename = tablename

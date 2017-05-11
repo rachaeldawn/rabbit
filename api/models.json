@@ -175,7 +175,8 @@
         "Fields": {
             "id":             "The id of the expense",
             "name":           "A max 64 character long name of the expense/bill",
-            "description":    "A max 300 character long description of the expense/bill"
+            "description":    "A max 300 character long description of the expense/bill",
+            "is_active":      "Whether or not the expense is still current."
         }
     },
         

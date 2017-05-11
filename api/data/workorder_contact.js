@@ -3,6 +3,7 @@
  * @property workorder_id: Id of the workorder to be bound
  * @property contact_id: The id of the customer contact to be bound
  */
+const tablename = 'workorder_contact'
 class WorkorderContact {
 	constructor(id, workorder_id, contact_id){
 		this.id = id
@@ -11,4 +12,6 @@ class WorkorderContact {
 		this.tablename = 'workorder_contact'
 	}
 }
+WorkorderContact.prototype.tablename = 'workorder_contact'
 module.exports = WorkorderContact
+module.exports.tablename = tablename

@@ -5,6 +5,7 @@
  * @property amount: The unit of money being paid/deducted ($x / quantity)
  * @property quantity: The quantity of the amount to be paid/deducted (multiplier)
  */
+const tablename = 'payroll_item'
 class PayrollItem {
 	constructor(id, payroll_id, name, amount, quantity){
 		this.id = id
@@ -15,4 +16,6 @@ class PayrollItem {
 		this.tablename = 'payroll_item'
 	}
 }
+PayrollItem.prototype.tablename = 'payroll_item'
 module.exports = PayrollItem
+module.exports.tablename = tablename

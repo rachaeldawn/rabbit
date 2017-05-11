@@ -1,6 +1,7 @@
 var _ = require('lodash')
-var obj = 22.22
+var Asset = require('./data/asset')
 
-obj = parseFloat(obj)
+var obj = new Asset(-1, 'namaparta', 'descrumana', 44.44)
 
-console.log(new Date(2, 2, 2, 2, 2, 2, 2))
+
+console.log(obj.cd tablename)

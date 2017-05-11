@@ -88,13 +88,16 @@ function GenerateClassText(obj) {
             return prev
         }, ''
     )
+    Lines.push(`const tablename = '${obj.Table}'`)
     Lines.push(`class ${obj.Class} {\n\tconstructor(${constructorprops}){`)
     for(var k in obj.Properties) {
         Lines.push(`\t\tthis.${obj.Properties[k]} = ${obj.Properties[k]}`)
     }
     Lines.push(`\t\tthis.tablename = '${obj.Table}'`)
     Lines.push('\t}\n}')
+    Lines.push(`${obj.Class}.prototype.tablename = '${obj.Table}'`)
     Lines.push(`module.exports = ${obj.Class}`)
+    Lines.push(`module.exports.tablename = tablename`)
     return Lines.reduce(
         (prev, cur) => {
             prev += cur + '\n'

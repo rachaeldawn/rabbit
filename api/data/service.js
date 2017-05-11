@@ -5,6 +5,7 @@
  * @property price: The default price to be used in the price * quantity equation.
  * @property default_quantity: The default quantity of the service to be used in the price * quantity equation.
  */
+const tablename = 'service'
 class Service {
 	constructor(id, name, description, price, default_quantity){
 		this.id = id
@@ -15,4 +16,6 @@ class Service {
 		this.tablename = 'service'
 	}
 }
+Service.prototype.tablename = 'service'
 module.exports = Service
+module.exports.tablename = tablename

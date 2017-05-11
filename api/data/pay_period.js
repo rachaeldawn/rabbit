@@ -4,6 +4,7 @@
  * @property end_date: The ending date of the pay-period
  * @property pay_date: The date the pay is to be provided to employees
  */
+const tablename = 'pay_period'
 class PayPeriod {
 	constructor(id, start_date, end_date, pay_date){
 		this.id = id
@@ -13,4 +14,6 @@ class PayPeriod {
 		this.tablename = 'pay_period'
 	}
 }
+PayPeriod.prototype.tablename = 'pay_period'
 module.exports = PayPeriod
+module.exports.tablename = tablename

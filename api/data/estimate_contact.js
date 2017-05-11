@@ -3,6 +3,7 @@
  * @property estimate_id: The id of the estimate this is attached to
  * @property contact_id: The id of the contact that we are working with
  */
+const tablename = 'estimate_contact'
 class EstimateContact {
 	constructor(id, estimate_id, contact_id){
 		this.id = id
@@ -11,4 +12,6 @@ class EstimateContact {
 		this.tablename = 'estimate_contact'
 	}
 }
+EstimateContact.prototype.tablename = 'estimate_contact'
 module.exports = EstimateContact
+module.exports.tablename = tablename

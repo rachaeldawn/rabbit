@@ -7,6 +7,7 @@
  * @property start_time: Optional Start time of the event. 
  * @property end_time: Optional End time of the event. If null, and start time does exist, it means it starts at start_time and ends at 23:59 of occurs_on.
  */
+const tablename = 'calendar_event'
 class CalendarEvent {
 	constructor(id, user_id, title, message, occurs_on, start_time, end_time){
 		this.id = id
@@ -19,4 +20,6 @@ class CalendarEvent {
 		this.tablename = 'calendar_event'
 	}
 }
+CalendarEvent.prototype.tablename = 'calendar_event'
 module.exports = CalendarEvent
+module.exports.tablename = tablename

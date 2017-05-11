@@ -4,6 +4,7 @@
  * @property sender_id: The user_account id of the person who sent the message
  * @property message: The message (max 2400 characters)
  */
+const tablename = 'message'
 class Message {
 	constructor(id, conversation_id, sender_id, message){
 		this.id = id
@@ -13,4 +14,6 @@ class Message {
 		this.tablename = 'message'
 	}
 }
+Message.prototype.tablename = 'message'
 module.exports = Message
+module.exports.tablename = tablename

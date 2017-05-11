@@ -18,8 +18,6 @@ var RequireAll = function(reqs) {
     }
     return requires
 } 
-var Load = function() {
-    return RequireAll(ReadDir())
-}
+var Load = () => RequireAll(ReadDir())
 
 module.exports = Load

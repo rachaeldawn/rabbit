@@ -4,6 +4,7 @@
  * @property is_complete: A true/false value on whether or not the task is complete
  * @property message: The message indicating what the todo is
  */
+const tablename = 'tasklist_task'
 class TasklistTask {
 	constructor(id, parent_task_id, is_complete, message){
 		this.id = id
@@ -13,4 +14,6 @@ class TasklistTask {
 		this.tablename = 'tasklist_task'
 	}
 }
+TasklistTask.prototype.tablename = 'tasklist_task'
 module.exports = TasklistTask
+module.exports.tablename = tablename

@@ -3,6 +3,7 @@
  * @property username: What a user will use to log into the system
  * @property is_active: Indicator of whether or not a user account is active
  */
+const tablename = 'user_account'
 class UserAccount {
 	constructor(id, username, is_active){
 		this.id = id
@@ -11,4 +12,6 @@ class UserAccount {
 		this.tablename = 'user_account'
 	}
 }
+UserAccount.prototype.tablename = 'user_account'
 module.exports = UserAccount
+module.exports.tablename = tablename

@@ -8,10 +8,9 @@
             "/:Function/:Class/:Subset": "The Function/Class/Subset, where Function, Class, and Subset are part of this file's array."
         },
         "depdendencies": {
-            "lodash": "lodash",
-            ""
+            "lodash": "lodash"
         }
-    }
+    },
     
     "Assets": {
         "filename": "asset",
@@ -178,5 +177,5 @@
                 ]
             }
         }
-    }"
+    }
 }

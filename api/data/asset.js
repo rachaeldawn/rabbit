@@ -5,6 +5,7 @@
  * @property purchase_value: What the asset cost to purchase
  * @property serial_key: An optional string for the serial, or serial key, that was purchased.
  */
+const tablename = 'asset'
 class Asset {
 	constructor(id, name, description, purchase_value, serial_key){
 		this.id = id
@@ -15,4 +16,6 @@ class Asset {
 		this.tablename = 'asset'
 	}
 }
+Asset.prototype.tablename = 'asset'
 module.exports = Asset
+module.exports.tablename = tablename

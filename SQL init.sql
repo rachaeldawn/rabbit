@@ -1,16 +1,12 @@
 -- SCHEMA: RabbitSchema
 
-DROP SCHEMA rabbitschema;
-
-CREATE SCHEMA rabbitschema
-    AUTHORIZATION postgres;
-CREATE SCHEMA rabbitschema 
-    AUTHORIZATION postgres;
 
 GRANT ALL ON SCHEMA rabbitschema TO postgres;
 
 GRANT ALL ON SCHEMA rabbitschema TO "Developer";
 
+ALTER ROLE "Developer" SET search_path TO rabbitschema;
+ALTER ROLE postgres SET search_path TO rabbitschema;
 SET search_path TO rabbitschema;
 
 CREATE TYPE transaction_method AS ENUM (
@@ -247,7 +243,8 @@ CREATE TABLE asset_tag (
 CREATE TABLE expense (
     id serial PRIMARY KEY,
     name varchar(64) NOT NULL,
-    description varchar(300)
+    description varchar(300),
+    is_active boolean DEFAULT TRUE NOT NULL
 );
 CREATE TABLE expense_tag (
     id serial PRIMARY KEY,

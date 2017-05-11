@@ -2,6 +2,7 @@
  * @property id: Identifier of a Conversation
  * @property creator_id: The Id matching a user_account table entry
  */
+const tablename = 'conversation'
 class Conversation {
 	constructor(id, creator_id){
 		this.id = id
@@ -9,4 +10,6 @@ class Conversation {
 		this.tablename = 'conversation'
 	}
 }
+Conversation.prototype.tablename = 'conversation'
 module.exports = Conversation
+module.exports.tablename = tablename

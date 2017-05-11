@@ -4,6 +4,7 @@
  * @property opened_on: When the purchase order was opened. This is not to be editable client side.
  * @property completed_on: Null if incomplete, or the timestamp of when it was closed.
  */
+const tablename = 'purchase_order'
 class PurchaseOrder {
 	constructor(id, creator_id, opened_on, completed_on){
 		this.id = id
@@ -13,4 +14,6 @@ class PurchaseOrder {
 		this.tablename = 'purchase_order'
 	}
 }
+PurchaseOrder.prototype.tablename = 'purchase_order'
 module.exports = PurchaseOrder
+module.exports.tablename = tablename

@@ -4,6 +4,7 @@
  * @property start_date: Date the employee's employment period started
  * @property end_date: Date the employee's employment period ends (or null for still here)
  */
+const tablename = 'employment_period'
 class EmploymentPeriod {
 	constructor(id, employee_id, start_date, end_date){
 		this.id = id
@@ -13,4 +14,6 @@ class EmploymentPeriod {
 		this.tablename = 'employment_period'
 	}
 }
+EmploymentPeriod.prototype.tablename = 'employment_period'
 module.exports = EmploymentPeriod
+module.exports.tablename = tablename
