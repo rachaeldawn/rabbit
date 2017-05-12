@@ -1,181 +1,32 @@
 {
-    "Router": {
+    "Asset": {
         "filename": "router",
-        "folder": "",
-        "type": "router",
-        "post": {
-            "/:Function/:Class": "The Function/Class syntax, where Function and Class are part of this file's array.",
-            "/:Function/:Class/:Subset": "The Function/Class/Subset, where Function, Class, and Subset are part of this file's array."
-        },
-        "depdendencies": {
-            "lodash": "lodash"
-        }
-    },
-    
-    "Assets": {
-        "filename": "asset",
         "folder": "routers",
         "type": "router",
         "post": {
-            "/Create": "Creates a new asset",
-            "/Sync": "",
-            "Update": ""
+            "/Asset/New": "Create a new asset",
+            "/Asset/Update": "Update an existing asset",
+            "/Asset/Sync": "Pull an asset from the database",
+            "/Asset/Sync/:Id": "Pull an asset from the database based on id",
+            "/Asset/Archive": "Archive an asset",
+            "/Asset/Archive/:Id": "Archive an asset",
+            "/Asset/Page": "Uses a JSON object to get a page of assets",
+            "/Asset/Page/:Amount/:Page": "Get a page of assets",
+            "/Asset/List/:Amount": "Lists an amount of assets",
+            "/Asset/List/Tag/:Amount": "List of all asset tags",
+            "/Asset/Tag/New": "Tags an asset",
+            "/Asset/Tag/List": "List of tagged assets",
+            "/Asset/Tag/List/:Amount": "List amount of tagged assets",
+            "/Asset/Tag/Page/:Amount": "Page of assets that are tagged",
+            "/Asset/Tag/Delete": "Deletes a tag",
+            "/Asset/Tag/Update": "Updates an asset's tag",
+            "/Asset/Tag/Sync": "Pulls an asset's tag from the DB",
+            "/Asset/Tag/Sync/:Id": "Pulls an asset's tag based an asset's id from the database"
         },
         "dependencies": {
-            "lodash": "lodash",
-            "data": "../data",
-            "Asset": "../data/asset"
-        }
-    },
-    "Expenses": {
-        "filename": "expenses",
-        "folder": "routers",
-        "type": "router",
-        "post": {
-            "/Create": ""
-        }
-    },
-
-    "DataAccess": {
-        "filename":"data-access",
-        "folder": "src",
-        "type": "functional",
-        "functions": {
-            "Create": {
-                "purpose": "To create new objects and load them into the Database",
-                "params": {
-                    "obj": "The object to operate on"
-                },
-                "tests": [
-                    "rejects request with empty objects (all fields undefined)",
-                    "rejects invalid parameter forms",
-                    "creates new object",
-                    "creates tags",
-                    "ignores the id field"
-                ]
-            },
-            "Sync": {
-                "purpose": "To pull a single object of a type from the database if valid, or updating a locally cached object",
-                "params": {
-                    "obj": "The object to operate on"
-                },
-                "tests": [
-                    "rejects if id is not set",
-                    "throws error if it does not exist in the database",
-                    "fills object with fields"
-                ]
-            },
-            "Update": {
-                "purpose": "To update an existing object with new fields",
-                "params": {
-                    "obj": "The object to operate on",
-                    "newParams": "A table following the { field: newValue, } format. Fields are: name, desc/description, purVal/purchase_value, serial/serial_key, tags"
-                },
-                "tests": [
-                    "rejects when all params undefined",
-                    "ignores updating no-change parameters",
-                    "throws error if id is not set, -1, or invalid",
-                    "updates object",
-                    "updates tags"
-                ]
-            },
-            "Search": {
-                "purpose": "To search for object",
-                "params": {
-                    "objClass": "The class to search for",
-                    "searchObj": "The search object takes the form { field: { value: '', *optional* exact: true/false} } where field is id/key, name, desc/description, serial/serialkey"
-                },
-                "tests": [
-                    "rejects empty search object",
-                    "logs invalid fields in search object",
-                    "rejects no valid fields in search object",
-                    "searches partials appropriately",
-                    "searches exacts appropriately",
-                    "supports multiple-field search",
-                    "refines search using all fields (filtering locally)",
-                    "rejects invalid search object form"
-                ]
-            },
-            "List": {
-                "purpose": "Lists X objects (max 100)",
-                "params": {
-                    "objClass": "The class type to list",
-                    "amt": "Undefined for 25, or amt for amount to list",
-                    "ascending": {
-                        "default": false,
-                        "comment": "false for most recent, true for oldest"
-                    }
-                },
-                "tests": [
-                    "max list 100",
-                    "returns array of objects",
-                    "ascending functions as intended"
-                ]
-            },
-            "Page": {
-                "purpose": "Lists X objects on Y page, skipping (X * (Y - 1))",
-                "params": {
-                    "amt": "The amount of objects (with tags attached when appropriate) to return (max 100)",
-                    "page": "How many pages of assets to skip",
-                    "ascending": {
-                        "default": false,
-                        "comment": "false for most recent, true for oldest"
-                    }
-                },
-                "tests": [
-                    "skips proper amount",
-                    "returns expected quantity",
-                    "throws error if id is not set, -1, or invalid",
-                    "tags are attached"
-                ]
-            },
-            "Tag": {
-                "purpose": "To add tags to an asset",
-                "params": {
-                    "obj": "The object to operate on",
-                    "tags": "A single tag, or an array of tags."
-                },
-                "tests": [
-                    "ignores already-existing tags",
-                    "adds tag",
-                    "throws error if id is not set, -1, or invalid",
-                    "updates object"
-                ]
-            },
-            "Untag": {
-                "purpose": "To remove tags from an asset",
-                "params": {
-                    "obj": "The object to operate on",
-                    "tags": "A single tag, or an array of tags."
-                },
-                "tests": [
-                    "ignores non-existent tags",
-                    "removes tags",
-                    "throws error if id is not set, -1, or invalid",
-                    "updates object"
-                ]
-            },
-            "GetTags": {
-                "purpose": "To get tags on a class that supports them",
-                "params": {
-                    "obj": "The object (with id set) to add a .Tags field to"
-                },
-                "tests": [
-                    "adds tags array",
-                    "throws error if the class does not support tagging",
-                    "throws error if id is not set, -1, or invalid"
-                ]
-            },
-            "Delete": {
-                "purpose": "Delete objects from the database that are NOT accounting-related",
-                "params": {
-                    "obj": "The object (with id set) to delete"
-                },
-                "tests": [
-                    "deletes object",
-                    "ignores invalid, -1, or undefined id"
-                ]
-            }
+            "_": "lodash",
+            "auth": "../auth",
+            "data": "../data"
         }
     }
 }

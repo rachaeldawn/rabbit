@@ -23,7 +23,7 @@ function getData(obj) {
     })
 }
 
-function startGenerator(data) {
+async function startGenerator(data) {
     return new Promise(
         function(resolve, reject) {
             if(typeof data != typeof {}) {
@@ -32,6 +32,9 @@ function startGenerator(data) {
             }
             var files = []
             for(var k in data) {
+                if(!fs.existsSync(path.join(__dirname, data[k].folder)))
+                    fs.mkdirSync(path.join(__dirname, data[k].folder))
+
                 fs.writeFile(path.join(__dirname, data[k].folder, data[k].filename) + '.js', generateClassFile(data[k], k), function(err) {
                     if(err) {
                         reject(err)
