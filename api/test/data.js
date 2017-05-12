@@ -31,16 +31,7 @@ let ValidBooleans = {
     'on': true
 }
 
-before('Loading models...', function(done) {
-    console.log("Loading Models... one moment")
-    Data.Initialize()
-        .then(() => { 
-            console.log("Everything loaded.")
-            console.log("========================")
-            done() 
-        })
-        .catch(err => err && console.error(err))
-})
+before('Loading models...', async function() { await Data.Initialize() })
 
 describe('Validators', function() {
     describe('Boolean', function() {

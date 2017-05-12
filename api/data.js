@@ -17,164 +17,106 @@ let DataPool = new pg.Pool({
     password: "Fluffeh9985"
 })
 
-var Initialize = function() {
-    return new Promise(function(resolve, reject) {
-        DataPool.connect()
-            .then(client => {
-                client.query(`SELECT * FROM information_schema.columns WHERE table_schema='rabbitschema'`)
-                    .then(res => {
-                        for(var k in res.rows) {
-                            if(Models[res.rows[k].table_name] == undefined)
-                                Models[res.rows[k].table_name] = {}
-                            Models[res.rows[k].table_name][res.rows[k].column_name] = res.rows[k]
-                        }
-                        client.end(err => err && console.error(err))
-                        resolve()
-                    })
-                    .catch(reject)
-            })
-            .catch(reject)
-    })
+var Initialize = async function() {
+    try {
+        var res = await Query(`SELECT * FROM information_schema.columns WHERE table_schema='rabbitschema'`)
+    } catch(err) {
+        throw err
+    }
+    for(var k in res.rows) {
+        if(Models[res.rows[k].table_name] == undefined)
+            Models[res.rows[k].table_name] = {}
+        Models[res.rows[k].table_name][res.rows[k].column_name] = res.rows[k]
+    }
 }
 
-let Delete = function(obj) {
-    return new Promise(function(resolve, reject) {
-        ValidateObject(obj, Models[obj.tablename])
-        obj.id == -1 && UnsavedObjectError()
-        DataPool.connect()
-            .then(client => {
-                SanitizeObject(obj)
-                client.query(`DELETE FROM ${obj.tablename} WHERE id=${obj.id} RETURNING *`)
-                    .then((res) => {
-                        obj.id = -1
-                        client.end()
-                        resolve(res.rows)
-                    })
-                    .then(resolve)
-                    .catch(reject)
-            })
-            .catch(reject)
-    })
+let Delete = async function(obj) {
+    ValidateObject(obj, Models[obj.tablename])
+    obj.id == -1 && UnsavedObjectError()
+    try {
+        var res = (await Query(`DELETE FROM ${obj.tablename} WHERE id=${obj.id} RETURNING *`)).rows
+    } catch(err) {
+        throw err
+    }
+    obj.id = -1
+    return res
 }
 
-let Page = function(obj, amt, page, asc = true) {
-    return new Promise(function(resolve, reject) {
-        !obj.prototype.tablename && RequiredFieldError('tablename')
-        !amt && RequiredFieldError('amt')
-        (page == undefined || page == null) && RequiredFieldError('page')
+let Page = async function(obj, amt, page, asc = true) {
+    !obj.prototype.tablename && RequiredFieldError('tablename')
+    !amt && RequiredFieldError('amt')
+    (page == undefined || page == null) && RequiredFieldError('page')
 
-        var tname = obj.tablename || obj.prototype.tablename
+    var tname = obj.tablename || obj.prototype.tablename
 
-        !_.isNumber(amt) && WrongTypeError(typeof amt, 'number', 'amt')
-        !_.isNumber(page) && WrongTypeError(typeof page, 'number', 'page')
-        if(page < 0)  {
-            asc = !asc
-            page = Math.abs(page)
-        }
-        amt < 1 && WrongTypeError('signed integer', 'unsigned integer', 'amt')
-        amt = amt > 100 ? amt = 100 : amt
-        DataPool.connect()
-            .then(client => {
-                SanitizeObject(obj)
-                client.query(`SELECT * FROM ${tname} ORDER BY id ${asc ? 'ASC' : 'DESC'} LIMIT ${amt} ${amt * page != 0 ? 'OFFSET ' + amt * page : ''}`)
-                    .then(res => res.rows)
-                    .then((res) =>{
-                        client.end()
-                        return res
-                    })
-                    .then(resolve)
-                    .catch(reject)
-            })
-            .catch(reject)
-    })
+    !_.isNumber(amt) && WrongTypeError(typeof amt, 'number', 'amt')
+    !_.isNumber(page) && WrongTypeError(typeof page, 'number', 'page')
+    if(page < 0)  {
+        asc = !asc
+        page = Math.abs(page)
+    }
+    amt < 1 && WrongTypeError('signed integer', 'unsigned integer', 'amt')
+    amt = amt > 100 ? amt = 100 : amt
+    SanitizeObject(obj)
+    return (await Query(`SELECT * FROM ${tname} ORDER BY id ${asc ? 'ASC' : 'DESC'} LIMIT ${amt} ${amt * page != 0 ? 'OFFSET ' + amt * page : ''}`)).rows
+    
 }
 
 let List = (obj, amt, asc = true) => Page(obj, amt, 0, asc)
 
-let Save = function(obj) {
-    return new Promise(function(resolve, reject) {
-        // Perform validation and formatting
-        try {
-            ObjectToQueryable(obj)
-        } catch (err) {
-            reject(err)
-        }
-        DataPool.connect()
-            .then((client => {
-                SanitizeObject(obj)
-                var Values = GenerateDefinedValuesArray(obj)
-                client.query(`INSERT INTO ${obj.tablename} (${GenerateDefinedKeysString(obj)}) VALUES (${GenerateDefinedValuesPlaceholders(Values.length)}) RETURNING *`, Values)
-                    .then(res => res.rows[0])
-                    .then((res) => {
-                        client.end()
-                        SoftClone(obj, res)
-                        return obj
-                    })
-                    .then(resolve)
-                    .catch(reject)
-            }))
-            .catch(reject)
-        })
+let Save = async function(obj) {
+    try {
+        ObjectToQueryable(obj)
+    } catch(err) {
+        throw err
+    }
+    SanitizeObject(obj)
+    var Values = GenerateDefinedValuesArray(obj)
+    var res = (await Query(`INSERT INTO ${obj.tablename} (${GenerateDefinedKeysString(obj)}) VALUES (${GenerateDefinedValuesPlaceholders(Values.length)}) RETURNING *`, Values)).rows[0]
+    SoftClone(obj, res)
+    return obj
 }
 // AKA Spawn, Get, etc
 // Select * FROM tablename WHERE id=x
-let Sync = function(obj) {
-    return new Promise(function(resolve, reject) {
-        ValidateObject(obj, Models[obj.tablename])
-        DataPool.connect()
-        .then(client => {
-            SanitizeObject(obj)
-            client.query(`SELECT * FROM ${obj.tablename} WHERE id=${obj.id}`)
-                .then(res => res.rows[0])
-                .then((res) => {
-                    client.end()
-                    SoftClone(obj, res)
-                    return obj
-                })
-                .then(resolve)
-                .catch(reject)
-        })
-    })
+let Sync = async function(obj) {
+    ValidateObject(obj, Models[obj.tablename])
+    SanitizeObject(obj)
+    try {
+        var DBResult = (await Query(`SELECT * FROM ${obj.tablename} WHERE id=${obj.id}`)).rows[0]
+        SoftClone(obj, DBResult)
+    } catch(err) {
+        throw err
+    }
+    return obj
 }
+
+/**
+ * 
+ * @param { Data object with partially filled, or filled, values. Strings will always use %val% for sake of ease.} obj 
+ */
+let Search = function(obj) {
+
+}
+
 // UPDATE tablename SET param=value, param=value WHERE id=x RETURNING *
-let Update = function(obj) {
-    return new Promise(function(resolve, reject) {
-        try {
-            ObjectToQueryable(obj)
-        } catch(err) {
-            reject(err)
-        }
-        (!obj.id || obj.id == -1 || obj.id == undefined) && RequiredFieldError('id')
-        DataPool.connect()
-            .then(client => {
-                SanitizeObject(obj)
-                //UPDATE films SET kind = 'Dramatic' WHERE kind = 'Drama';
-                client.query(`SELECT * FROM ${obj.tablename} WHERE id=${obj.id}`)
-                    .then(res => res.rows[0])
-                    .then(res => {
-                        updateObj = {}
-                        for(var k in res) {
-                            if(obj[k] != res[k] && obj[k] != `'${res[k]}'`) 
-                                updateObj[k] = obj[k]
-                        }
-                        updateObj.id = obj.id
-                        updateObj.tablename = obj.tablename
-                        return updateObj
-                    })
-                    .then(res => {
-                        client.query(`UPDATE ${res.tablename} SET ${GenerateUpdateKVs(res)} WHERE id=${res.id} RETURNING *`)
-                            .then(res => res.rows[0])
-                            .then((res) => {
-                                client.end()
-                                return res
-                            })
-                            .then(resolve)
-                            .catch(reject)
-                    })
-                
-            })
-            .catch(reject)
-    })
+let Update = async function(obj) {
+    try {
+        ObjectToQueryable(obj)
+    } catch(err) {
+        throw err
+    }
+    (!obj.id || obj.id == -1 || obj.id == undefined) && RequiredFieldError('id')
+    var Existent = (await Query(`SELECT * FROM ${obj.tablename} WHERE id=${obj.id}`)).rows[0]
+    updateObj = {}
+    for(var k in Existent) {
+        if(obj[k] != Existent[k] && obj[k] != `'${Existent[k]}'`) 
+            updateObj[k] = obj[k]
+    }
+    updateObj.id = obj.id
+    updateObj.tablename = obj.tablename
+    var returnResult = await Query(`UPDATE ${updateObj.tablename} SET ${GenerateUpdateKVs(updateObj)} WHERE id=${updateObj.id} RETURNING *`)
+    return returnResult.rows[0]
+    
 }
 
 var GenerateDefinedKeysString = function(obj) {
@@ -283,6 +225,17 @@ function IntIsInRange(size, obj) {
 function CountsAsNumber(obj) {
     // Dates 'count' as numbers, but they are not valid. 
     return !_.isDate(obj) && _.isNumber(parseFloat(obj)) && `${obj}`.split('.').length <= 2
+}
+
+var Query = async function(str, args) {
+    try {
+        var Client = await DataPool.connect()
+        var res = await Client.query(str, args)
+        Client.release()
+    } catch(err) {
+        throw err
+    }
+    return res
 }
 
 let ValidBooleans = {
@@ -447,3 +400,4 @@ module.exports.Page                 = Page
 module.exports.List                 = List
 module.exports.Delete               = Delete
 module.exports.Update               = Update
+module.exports.Search               = Search
