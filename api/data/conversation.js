@@ -7,9 +7,8 @@ class Conversation {
 	constructor(id, creator_id){
 		this.id = id
 		this.creator_id = creator_id
-		this.tablename = 'conversation'
 	}
 }
-Conversation.prototype.tablename = 'conversation'
+Conversation.prototype.tablename = tablename
 module.exports = Conversation
 module.exports.tablename = tablename

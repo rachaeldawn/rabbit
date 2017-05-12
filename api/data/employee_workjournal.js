@@ -9,9 +9,8 @@ class EmployeeWorkjournal {
 		this.id = id
 		this.employee_id = employee_id
 		this.name = name
-		this.tablename = 'employee_workjournal'
 	}
 }
-EmployeeWorkjournal.prototype.tablename = 'employee_workjournal'
+EmployeeWorkjournal.prototype.tablename = tablename
 module.exports = EmployeeWorkjournal
 module.exports.tablename = tablename

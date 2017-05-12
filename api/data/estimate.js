@@ -13,9 +13,8 @@ class Estimate {
 		this.rep_id = rep_id
 		this.open_date = open_date
 		this.validity_period = validity_period
-		this.tablename = 'estimate'
 	}
 }
-Estimate.prototype.tablename = 'estimate'
+Estimate.prototype.tablename = tablename
 module.exports = Estimate
 module.exports.tablename = tablename

@@ -15,9 +15,8 @@ class TaskboardParticipant {
 		this.can_write = can_write
 		this.can_delete = can_delete
 		this.can_invite = can_invite
-		this.tablename = 'taskboard_participant'
 	}
 }
-TaskboardParticipant.prototype.tablename = 'taskboard_participant'
+TaskboardParticipant.prototype.tablename = tablename
 module.exports = TaskboardParticipant
 module.exports.tablename = tablename

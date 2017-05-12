@@ -11,9 +11,8 @@ class EmployeeWorkday {
 		this.employee_id = employee_id
 		this.clock_in = clock_in
 		this.clock_out = clock_out
-		this.tablename = 'employee_workday'
 	}
 }
-EmployeeWorkday.prototype.tablename = 'employee_workday'
+EmployeeWorkday.prototype.tablename = tablename
 module.exports = EmployeeWorkday
 module.exports.tablename = tablename

@@ -11,9 +11,8 @@ class Workorder {
 		this.customer_id = customer_id
 		this.rep_id = rep_id
 		this.open_date = open_date
-		this.tablename = 'workorder'
 	}
 }
-Workorder.prototype.tablename = 'workorder'
+Workorder.prototype.tablename = tablename
 module.exports = Workorder
 module.exports.tablename = tablename

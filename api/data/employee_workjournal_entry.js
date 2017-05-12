@@ -13,9 +13,8 @@ class EmployeeWorkjournalEntry {
 		this.message = message
 		this.time_stamp = time_stamp
 		this.workday_id = workday_id
-		this.tablename = 'employee_workjournal_entry'
 	}
 }
-EmployeeWorkjournalEntry.prototype.tablename = 'employee_workjournal_entry'
+EmployeeWorkjournalEntry.prototype.tablename = tablename
 module.exports = EmployeeWorkjournalEntry
 module.exports.tablename = tablename

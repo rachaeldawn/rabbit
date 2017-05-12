@@ -78,7 +78,7 @@ function GenerateClassText(obj) {
         Lines.push(` * @property ${k}: ${obj.PropertyDescriptions[k]}`)
     }
     Lines.push(' */')
-    var constructorprops = obj.Properties.reduce(
+    var props = obj.Properties.reduce(
         (prev, current) => {
             if(prev == '') {
                 prev = current
@@ -89,13 +89,12 @@ function GenerateClassText(obj) {
         }, ''
     )
     Lines.push(`const tablename = '${obj.Table}'`)
-    Lines.push(`class ${obj.Class} {\n\tconstructor(${constructorprops}){`)
+    Lines.push(`class ${obj.Class} {\n\tconstructor(${props}){`)
     for(var k in obj.Properties) {
         Lines.push(`\t\tthis.${obj.Properties[k]} = ${obj.Properties[k]}`)
     }
-    Lines.push(`\t\tthis.tablename = '${obj.Table}'`)
     Lines.push('\t}\n}')
-    Lines.push(`${obj.Class}.prototype.tablename = '${obj.Table}'`)
+    Lines.push(`${obj.Class}.prototype.tablename = tablename`)
     Lines.push(`module.exports = ${obj.Class}`)
     Lines.push(`module.exports.tablename = tablename`)
     return Lines.reduce(

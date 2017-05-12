@@ -9,9 +9,8 @@ class UserAccount {
 		this.id = id
 		this.username = username
 		this.is_active = is_active
-		this.tablename = 'user_account'
 	}
 }
-UserAccount.prototype.tablename = 'user_account'
+UserAccount.prototype.tablename = tablename
 module.exports = UserAccount
 module.exports.tablename = tablename

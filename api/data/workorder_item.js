@@ -11,9 +11,8 @@ class WorkorderItem {
 		this.workorder_id = workorder_id
 		this.service_id = service_id
 		this.quantity = quantity
-		this.tablename = 'workorder_item'
 	}
 }
-WorkorderItem.prototype.tablename = 'workorder_item'
+WorkorderItem.prototype.tablename = tablename
 module.exports = WorkorderItem
 module.exports.tablename = tablename

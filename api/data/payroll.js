@@ -9,9 +9,8 @@ class Payroll {
 		this.id = id
 		this.employee_id = employee_id
 		this.pay_period_id = pay_period_id
-		this.tablename = 'payroll'
 	}
 }
-Payroll.prototype.tablename = 'payroll'
+Payroll.prototype.tablename = tablename
 module.exports = Payroll
 module.exports.tablename = tablename

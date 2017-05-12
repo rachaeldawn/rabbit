@@ -11,9 +11,8 @@ class PayPeriod {
 		this.start_date = start_date
 		this.end_date = end_date
 		this.pay_date = pay_date
-		this.tablename = 'pay_period'
 	}
 }
-PayPeriod.prototype.tablename = 'pay_period'
+PayPeriod.prototype.tablename = tablename
 module.exports = PayPeriod
 module.exports.tablename = tablename

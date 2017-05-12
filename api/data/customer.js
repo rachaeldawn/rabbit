@@ -23,9 +23,8 @@ class Customer {
 		this.physical_country = physical_country
 		this.phone = phone
 		this.start_date = start_date
-		this.tablename = 'customer'
 	}
 }
-Customer.prototype.tablename = 'customer'
+Customer.prototype.tablename = tablename
 module.exports = Customer
 module.exports.tablename = tablename

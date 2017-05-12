@@ -9,9 +9,8 @@ class EstimateContact {
 		this.id = id
 		this.estimate_id = estimate_id
 		this.contact_id = contact_id
-		this.tablename = 'estimate_contact'
 	}
 }
-EstimateContact.prototype.tablename = 'estimate_contact'
+EstimateContact.prototype.tablename = tablename
 module.exports = EstimateContact
 module.exports.tablename = tablename

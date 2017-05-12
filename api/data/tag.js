@@ -15,9 +15,8 @@ class Tag {
 		this.blue = blue
 		this.green = green
 		this.opacity = opacity
-		this.tablename = 'tag'
 	}
 }
-Tag.prototype.tablename = 'tag'
+Tag.prototype.tablename = tablename
 module.exports = Tag
 module.exports.tablename = tablename

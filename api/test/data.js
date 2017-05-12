@@ -177,10 +177,21 @@ describe('Accessors', function() {
         beforeEach(function(done) {
             DataPool.connect()
                 .then(client => {
-                    client.query(`INSERT INTO asset (name, description, purchase_value) VALUES ('an asset name', 'an asset description', 44.44) RETURNING id`)
+                    client.query(`SELECT * FROM asset WHERE name='an asset name'`)
                         .then(res => {
-                            asset.id = res.rows[0].id
-                            done()
+                            if(res.rows.length == 1) {
+                                asset.id = res.rows[0].id
+                                done()
+                                return
+                            }
+                            client.query(`INSERT INTO asset (name, description, purchase_value) VALUES ('an asset name', 'an asset description', 44.44) RETURNING id`)
+                                .then(res => asset.id = res.rows[0].id)
+                                .then(() => {
+                                    client.end()
+                                    done()
+                                })
+                                .catch(done)
+
                         })
                         .catch(done)
                 })
@@ -198,18 +209,39 @@ describe('Accessors', function() {
                 .then(done)
                 .catch(done)
         })
+        it('Errors when id is -1', function(done) {
+            Data.Delete(new Asset(-1, 'no name', 'description here', 44.44))  
+                .catch(err => {
+                    assert.ok(err, 'Needs to break when id is -1')
+                    done()
+                })
+        })
+        it('Ignores invalid objects', function(done) {
+            Data.Delete({name: 'George', tablename: 'Notvalid'})
+                .then(() => {
+                    assert.ok(false, 'This needs to throw an error')
+                    done()
+                })
+                .catch(err => {
+                    assert.ok(err, 'Needs to break when invalid object')
+                    done()
+                })
+        })
     })
     describe('List/Page', function() {
         before(function(done) {
             DataPool.connect()
             .then(client => {
                 return new Promise(function(resolve, reject) {
-                    var qstring = `INSERT INTO tag (name, red, green, blue, opacity) VALUES ('tag_1}', 255, 255, 255, 255);`
+                    var qstring = `INSERT INTO tag (name, red, green, blue, opacity) VALUES ('tag_1', 255, 255, 255, 255);`
                     for(i = 2; i <= 300; i++) {
                         qstring += `INSERT INTO tag (name, red, green, blue, opacity) VALUES ('tag_${_.clone(i)}', 255, 255, 255, 255);`
                     }
                     client.query(qstring)
-                        .then(resolve)
+                        .then(() => {
+                            client.end()
+                            resolve()
+                        })
                         .catch(reject)
                 })
             })
@@ -226,15 +258,17 @@ describe('Accessors', function() {
             })
         })
         it('Gets proper quantity', function(done) {
-            Data.Page(Tag, 50, 1)
-                .then(res => assert.ok(res.length == 50))
+            Data.Page(Tag, 22, 1)
+                .then(res => assert.ok(res.length == 22, 'Needs to return the specified amount'))
                 .then(done)
                 .catch(done)
         })
         it('Skips proper amount', function(done) {
             Data.Page(Tag, 50, 1)
                 .then(res => {
-                    assert.ok(res[0].name == 'tag_51' && res[49].name == 'tag_100', `Did not skip proper amount. ${res[0].name} to ${res[49].name}`)
+                    var firstTag = _.toNumber(res[0].name.split('_')[1])
+                    var secondTag = _.toNumber(res[49].name.split(_)[1])
+                    assert.ok(firstTag >= 50, `Did not skip proper amount. ${res[0].name} to ${res[49].name}`)
                 })
                 .then(done)
                 .catch(done)
@@ -247,8 +281,47 @@ describe('Accessors', function() {
                 .then(done)
                 .catch(done)
         })
+        it('List returns page 0', function(done) {
+            Data.List(Tag, 50)
+                .then(res => {
+                    assert.ok(res[0].name == 'tag_1' && res[49].name == 'tag_50', `Needs to return first page. Returned: ${res[0].name} to ${res[49].name}`)
+                    done()
+                })
+                .catch(done)
+        })
+        it('Pages descending properly', function(done) {
+            Data.List(Tag, 50, false)
+                .then(res => {
+                    var firstTag = _.toNumber(res[0].name.split('_')[1])
+                    var secondTag = _.toNumber(res[49].name.split('_')[1])
+                    assert.ok(firstTag - secondTag > 0 && secondTag - firstTag < 0, `Reversed incorrectly. ${firstTag - secondTag}, ${secondTag - firstTag}`)
+                })
+                .then(() => done())
+                .catch(done)
+        })
+        it('Reverses ascend/descend if pages are negative', function(done){
+            Data.Page(Tag, 50, -1, false)
+                .then(res => {
+                    var firstTag = _.toNumber(res[0].name.split('_')[1])
+                    var secondTag = _.toNumber(res[49].name.split(_)[1])
+                    assert.ok(firstTag >= 50, `Did not reverse. ${res[0].name} to ${res[49].name}`)
+                })
+                .then(() => done())
+                .catch(done)
+        })
+        it('Errors on invalid page/amt/class', function(done) {
+            Data.Page(Tag, 'blue', 'green')
+                .then(res => {
+                    assert.ok(!res, 'This should have errored')
+                })
+                .then(() => done())
+                .catch(err => {
+                    assert.ok(err, 'This should have broken')
+                    done()
+                })
+        })
     })
-    describe('#Save()', function(){
+    describe('Save', function(){
         it('Returns a row', function(done) {
             Data.Save(new Asset(-1, 'from_code_asset_row', 'The first asset generated from code', 54.45))
                 .then(function(res) {
@@ -266,6 +339,30 @@ describe('Accessors', function() {
                 })
                 .catch(done)
         })
+        it('Refuses to save invalid objects', function(done) {
+            let obj = { id: -1, name: 'george', description: 'a description', purchase_value: 'a thing', invalidkey: false, tablename:'asset'}
+            Data.Save(obj)
+                .then(function() {
+                    assert.ok(!obj.id, 'This needs to never happen. Security hole. Reject non-compliant objects.')
+                    done()
+                })
+                .catch(err => {
+                    assert.ok(err, 'This needs to never happen. Security hole. Reject non-compliant objects.')
+                    done()
+                })
+        })
+        it('Refuses to save missing required fields', function(done) {
+            let obj = new Asset(-1, undefined, 'a desc', undefined)
+            Data.Save(obj)
+                .then(function() {
+                    assert.ok(false, 'This should not work. Missing required fields.')
+                    done()
+                })
+                .catch(err => {
+                    assert.ok(err, 'This should not work. Missing required fields.')
+                    done()
+                })
+        })
         after('Making sure uniques do not exist', function(done) {
             DataPool.connect()
                 .then(client => {
@@ -277,6 +374,91 @@ describe('Accessors', function() {
                     .catch(done)
                 })
         })
+    })
+    describe('Update', function() {
+        let testAsset
+        before('Creating original asset', function(done) {
+            testAsset = new Asset(-1, 'test_asset_update', 'a description', 44.44)
+            DataPool.connect()
+                .then(client => {
+                    client.query(`INSERT INTO asset (name, description, purchase_value) VALUES ('test_asset_update', 'a description', 44.44) RETURNING *`)
+                        .then(res => {
+                            testAsset.id = res.rows[0].id
+                            client.end()
+                            done()
+                        })
+                        .catch(err => done(err))
+                })
+                .catch(done)
+        })
+        it('Puts new data in database', function(done) {
+            testAsset.description = 'Updated description for puts new data in database'
+            Data.Update(testAsset)
+                .then(res => {
+                    DataPool.connect()
+                        .then(client => {
+                            client.query(`SELECT description FROM asset WHERE name='test_asset_update'`)
+                                .then(res => res.rows[0].description)
+                                .then(res => {
+                                    assert.ok(res == testAsset.description, `Needs to be updated server-side. ${res} vs ${testAsset.description}`)
+                                    client.end()
+                                })
+                                .then(done)
+                                .catch(done)
+                        })
+                        .catch(done)
+                })
+                .catch(done)
+        })
+        it('Errors on invalid id', function(done) {
+            var fail = new Asset(-1, 'A fake one', 'fake description', 1337.13)
+            Data.Update(fail)
+                .then(res => {
+                    console.log(res)
+                })
+                .catch(err => {
+                    assert.ok(err, 'This needs to error. The object does not exist in the DB.')
+                    done()
+                })
+        })
+        it('Rejects invalid objects', function(done) {
+            var invalid = {name: 'george'}
+            Data.Update(invalid)
+                .then(res => {
+                    assert.ok(-1, 'This should have errored')
+                    done()
+                })
+                .catch(err => {
+                    assert.ok(err, 'This should have errored.')
+                    done()
+                })
+        })
+        it('Returns saved object', function(done) {
+            testAsset.description = 'Dicks and balls man'
+            Data.Update(testAsset)
+                .then(res => {
+                    assert.ok(res.description == 'Dicks and balls man', 'Did not return an expected object: ' + res)
+                    done()
+                })
+                .catch(done)
+        })
+        after('Delete asset for sake of synchronicity', function(done) {
+            DataPool.connect()
+                .then(client => {
+                    client.query(`DELETE FROM asset WHERE name='test_asset_update'`)
+                        .then(() => {
+                            testAsset.id = -1
+                            client.end()
+                            done()
+                        })
+                        .catch(done)
+                }).catch(done)
+        })
+    })
+    describe('Search', function() {
+        it('searches partials')
+        it('denies invalid search object')
+        it('returns 1 result if id is provided')
     })
 })
 

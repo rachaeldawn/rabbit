@@ -11,9 +11,8 @@ class UserAccountPassword {
 		this.hash = hash
 		this.salt = salt
 		this.iterations = iterations
-		this.tablename = 'user_account_password'
 	}
 }
-UserAccountPassword.prototype.tablename = 'user_account_password'
+UserAccountPassword.prototype.tablename = tablename
 module.exports = UserAccountPassword
 module.exports.tablename = tablename

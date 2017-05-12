@@ -11,9 +11,8 @@ class Message {
 		this.conversation_id = conversation_id
 		this.sender_id = sender_id
 		this.message = message
-		this.tablename = 'message'
 	}
 }
-Message.prototype.tablename = 'message'
+Message.prototype.tablename = tablename
 module.exports = Message
 module.exports.tablename = tablename

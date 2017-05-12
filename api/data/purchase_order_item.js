@@ -15,9 +15,8 @@ class PurchaseOrderItem {
 		this.description = description
 		this.quantity = quantity
 		this.price = price
-		this.tablename = 'purchase_order_item'
 	}
 }
-PurchaseOrderItem.prototype.tablename = 'purchase_order_item'
+PurchaseOrderItem.prototype.tablename = tablename
 module.exports = PurchaseOrderItem
 module.exports.tablename = tablename

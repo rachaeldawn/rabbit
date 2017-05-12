@@ -13,9 +13,8 @@ class Service {
 		this.description = description
 		this.price = price
 		this.default_quantity = default_quantity
-		this.tablename = 'service'
 	}
 }
-Service.prototype.tablename = 'service'
+Service.prototype.tablename = tablename
 module.exports = Service
 module.exports.tablename = tablename

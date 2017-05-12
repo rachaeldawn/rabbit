@@ -9,9 +9,8 @@ class UserPermissionSet {
 		this.user_id = user_id
 		this.perm_id = perm_id
 		this.perm = perm
-		this.tablename = 'user_permission_set'
 	}
 }
-UserPermissionSet.prototype.tablename = 'user_permission_set'
+UserPermissionSet.prototype.tablename = tablename
 module.exports = UserPermissionSet
 module.exports.tablename = tablename

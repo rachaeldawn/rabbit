@@ -11,9 +11,8 @@ class Bill {
 		this.expense_id = expense_id
 		this.amount = amount
 		this.billing_date = billing_date
-		this.tablename = 'bill'
 	}
 }
-Bill.prototype.tablename = 'bill'
+Bill.prototype.tablename = tablename
 module.exports = Bill
 module.exports.tablename = tablename

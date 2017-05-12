@@ -7,14 +7,7 @@ var clone = require('lodash').clone
 function makeFolders() {
     return new Promise(function(resolve, reject) {
         fs.mkdir(__dirname + '/test', (err) => {
-            if(err) {
-                if(err.code != 'EEXIST') {
-                    reject(err)
-                    return
-                }
-                else 
-                    resolve()
-            }
+            err && err.code != 'EEXIST' && reject(err)
             resolve()
         })
         
@@ -24,11 +17,8 @@ function makeFolders() {
 function getData(obj) {
     return new Promise(function(resolve, reject) {
         return fs.readFile('specification.json', 'utf-8',function(err, data) {
-            if(err) {
-                reject(err)
-                return
-            }
-            else resolve(JSON.parse(data))
+            err && reject(err)
+            !err && resolve(JSON.parse(data))
         })
     })
 }

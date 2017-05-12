@@ -11,9 +11,8 @@ class Expense {
 		this.name = name
 		this.description = description
 		this.is_active = is_active
-		this.tablename = 'expense'
 	}
 }
-Expense.prototype.tablename = 'expense'
+Expense.prototype.tablename = tablename
 module.exports = Expense
 module.exports.tablename = tablename

@@ -13,9 +13,8 @@ class Asset {
 		this.description = description
 		this.purchase_value = purchase_value
 		this.serial_key = serial_key
-		this.tablename = 'asset'
 	}
 }
-Asset.prototype.tablename = 'asset'
+Asset.prototype.tablename = tablename
 module.exports = Asset
 module.exports.tablename = tablename

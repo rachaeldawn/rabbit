@@ -1,7 +1,4 @@
-var _ = require('lodash')
-var Asset = require('./data/asset')
+var str = `this is a ' string ' that is " escaped " ) for ( sql _ injection`
 
-var obj = new Asset(-1, 'namaparta', 'descrumana', 44.44)
-
-
-console.log(obj.cd tablename)
+str = str.replace(/\d/, /\\d/).replace('this', `'this'`)
+console.log(`this is a ' string ' that is " escaped " ) for ( sql _ injection`)

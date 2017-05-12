@@ -11,9 +11,8 @@ class EmploymentPeriod {
 		this.employee_id = employee_id
 		this.start_date = start_date
 		this.end_date = end_date
-		this.tablename = 'employment_period'
 	}
 }
-EmploymentPeriod.prototype.tablename = 'employment_period'
+EmploymentPeriod.prototype.tablename = tablename
 module.exports = EmploymentPeriod
 module.exports.tablename = tablename

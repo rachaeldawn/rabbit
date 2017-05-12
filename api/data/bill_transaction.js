@@ -7,9 +7,8 @@ class BillTransaction {
 	constructor(id, transaction_id){
 		this.id = id
 		this.transaction_id = transaction_id
-		this.tablename = 'bill_transaction'
 	}
 }
-BillTransaction.prototype.tablename = 'bill_transaction'
+BillTransaction.prototype.tablename = tablename
 module.exports = BillTransaction
 module.exports.tablename = tablename

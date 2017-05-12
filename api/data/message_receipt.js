@@ -11,9 +11,8 @@ class MessageReceipt {
 		this.recipient_id = recipient_id
 		this.received = received
 		this.read = read
-		this.tablename = 'message_receipt'
 	}
 }
-MessageReceipt.prototype.tablename = 'message_receipt'
+MessageReceipt.prototype.tablename = tablename
 module.exports = MessageReceipt
 module.exports.tablename = tablename

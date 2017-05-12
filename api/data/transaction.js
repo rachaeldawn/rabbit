@@ -11,9 +11,8 @@ class Transaction {
 		this.amount = amount
 		this.method = method
 		this.paid_on = paid_on
-		this.tablename = 'transaction'
 	}
 }
-Transaction.prototype.tablename = 'transaction'
+Transaction.prototype.tablename = tablename
 module.exports = Transaction
 module.exports.tablename = tablename

@@ -1,8 +1,10 @@
 const _ = require('lodash')
 const Promise = require('bluebird')
+const Validator = require('validator')
 var Models = {}
 var fs = require('fs')
 let pg = require('pg')
+
 
 let DataPool = new pg.Pool({
     database: "rabbit_tests",
@@ -41,11 +43,12 @@ let Delete = function(obj) {
         obj.id == -1 && UnsavedObjectError()
         DataPool.connect()
             .then(client => {
+                SanitizeObject(obj)
                 client.query(`DELETE FROM ${obj.tablename} WHERE id=${obj.id} RETURNING *`)
                     .then((res) => {
                         obj.id = -1
                         client.end()
-                        return res.rows
+                        resolve(res.rows)
                     })
                     .then(resolve)
                     .catch(reject)
@@ -56,7 +59,7 @@ let Delete = function(obj) {
 
 let Page = function(obj, amt, page, asc = true) {
     return new Promise(function(resolve, reject) {
-        !obj.tablename && !obj.prototype.tablename && RequiredFieldError('tablename')
+        !obj.prototype.tablename && RequiredFieldError('tablename')
         !amt && RequiredFieldError('amt')
         (page == undefined || page == null) && RequiredFieldError('page')
 
@@ -72,10 +75,12 @@ let Page = function(obj, amt, page, asc = true) {
         amt = amt > 100 ? amt = 100 : amt
         DataPool.connect()
             .then(client => {
+                SanitizeObject(obj)
                 client.query(`SELECT * FROM ${tname} ORDER BY id ${asc ? 'ASC' : 'DESC'} LIMIT ${amt} ${amt * page != 0 ? 'OFFSET ' + amt * page : ''}`)
-                    .then(res => {
+                    .then(res => res.rows)
+                    .then((res) =>{
                         client.end()
-                        return res.rows
+                        return res
                     })
                     .then(resolve)
                     .catch(reject)
@@ -96,13 +101,16 @@ let Save = function(obj) {
         }
         DataPool.connect()
             .then((client => {
+                SanitizeObject(obj)
                 var Values = GenerateDefinedValuesArray(obj)
                 client.query(`INSERT INTO ${obj.tablename} (${GenerateDefinedKeysString(obj)}) VALUES (${GenerateDefinedValuesPlaceholders(Values.length)}) RETURNING *`, Values)
-                    .then(function(res) {
-                        ApplyResult(obj, res.rows[0])
+                    .then(res => res.rows[0])
+                    .then((res) => {
                         client.end()
-                        resolve(obj)
+                        SoftClone(obj, res)
+                        return obj
                     })
+                    .then(resolve)
                     .catch(reject)
             }))
             .catch(reject)
@@ -110,12 +118,64 @@ let Save = function(obj) {
 }
 // AKA Spawn, Get, etc
 // Select * FROM tablename WHERE id=x
-let Sync
-// Add a tag
-let Tag
+let Sync = function(obj) {
+    return new Promise(function(resolve, reject) {
+        ValidateObject(obj, Models[obj.tablename])
+        DataPool.connect()
+        .then(client => {
+            SanitizeObject(obj)
+            client.query(`SELECT * FROM ${obj.tablename} WHERE id=${obj.id}`)
+                .then(res => res.rows[0])
+                .then((res) => {
+                    client.end()
+                    SoftClone(obj, res)
+                    return obj
+                })
+                .then(resolve)
+                .catch(reject)
+        })
+    })
+}
 // UPDATE tablename SET param=value, param=value WHERE id=x RETURNING *
-let Update
-
+let Update = function(obj) {
+    return new Promise(function(resolve, reject) {
+        try {
+            ObjectToQueryable(obj)
+        } catch(err) {
+            reject(err)
+        }
+        (!obj.id || obj.id == -1 || obj.id == undefined) && RequiredFieldError('id')
+        DataPool.connect()
+            .then(client => {
+                SanitizeObject(obj)
+                //UPDATE films SET kind = 'Dramatic' WHERE kind = 'Drama';
+                client.query(`SELECT * FROM ${obj.tablename} WHERE id=${obj.id}`)
+                    .then(res => res.rows[0])
+                    .then(res => {
+                        updateObj = {}
+                        for(var k in res) {
+                            if(obj[k] != res[k] && obj[k] != `'${res[k]}'`) 
+                                updateObj[k] = obj[k]
+                        }
+                        updateObj.id = obj.id
+                        updateObj.tablename = obj.tablename
+                        return updateObj
+                    })
+                    .then(res => {
+                        client.query(`UPDATE ${res.tablename} SET ${GenerateUpdateKVs(res)} WHERE id=${res.id} RETURNING *`)
+                            .then(res => res.rows[0])
+                            .then((res) => {
+                                client.end()
+                                return res
+                            })
+                            .then(resolve)
+                            .catch(reject)
+                    })
+                
+            })
+            .catch(reject)
+    })
+}
 
 var GenerateDefinedKeysString = function(obj) {
     return _.keys(obj).reduce((prev, cur) => {
@@ -130,6 +190,15 @@ var GenerateDefinedValuesArray = function(obj) {
         IsAValidObjectKey(obj, cur) && prev.push(obj[cur])
         return prev
     }, [])
+}
+
+var GenerateUpdateKVs = function(obj) {
+    return _.keys(obj).reduce((prev, cur) => {
+        if(_.isString(obj[cur])) obj[cur] = '\'' + obj[cur] + '\''
+        if(IsAValidObjectKey(obj, cur)) 
+            prev = prev == '' ? `${cur} = ${obj[cur]}` : prev + `, ${cur} = ${obj[cur]}`
+        return prev
+    }, '')
 }
 
 var IsAValidObjectKey = (obj, key) => (obj[key] && key != 'tablename' && key != 'id' && !_.isFunction(obj[key])) 
@@ -152,8 +221,9 @@ function ObjectToQueryable(obj) {
     ValidateObject(obj, Models[tname])
     for(var k in Models[obj.tablename]) {
         !obj[k] && Models[tname][k].is_nullable == 'NO' && RequiredFieldError(k)
-        if(!obj[k])
+        if(!obj[k] || k == 'id') {
             continue
+        }
         switch(Models[tname][k].udt_name) {
             case('int2'):
             case('int4'):
@@ -189,7 +259,7 @@ function ObjectToQueryable(obj) {
 }
 
 // Just a soft-clone. I don't want to lose the object reference.
-var ApplyResult = function(obj, row) {
+var SoftClone = function(obj, row) {
     for(var k in row)
         obj[k] = row[k]
 }
@@ -250,6 +320,8 @@ var ValidateInteger = function(obj, name, type) {
 
     return obj
 }
+
+
 
 var ValidateNumeric = function(obj, name, precision) {
     !obj && RequiredFieldError('obj')
@@ -329,6 +401,13 @@ var ValidateObject = function(obj, ref) {
         !_.has(ref, k) && k != 'tablename' && !_.isFunction(obj[k]) && InvalidModelError()
 }
 
+var SanitizeObject = function(obj) {
+    for(var k in obj) {
+        if(_.isString(obj[k]) && k != 'tablename'){
+            obj[k] = Validator.escape(obj[k])
+        }
+    }
+}
 
 var WrongTypeError = function(actual, expected, name = null) {
     throw new Error(`Invalid type ${actual}, expected ${expected} ${name != null ? 'for ' + name : ''}`)
@@ -367,3 +446,4 @@ module.exports.Save                 = Save
 module.exports.Page                 = Page
 module.exports.List                 = List
 module.exports.Delete               = Delete
+module.exports.Update               = Update

@@ -49,7 +49,7 @@ describe('Models', function(done) {
                                 assert.ok(typeof Class == typeof TestClass, 'needs to be a class')
                             })
                             it('has a tablename', function() {
-                                assert.ok(typeof Class.prototype.tablename == typeof "")
+                                assert.ok(Class.prototype.tablename, 'Tablename needs to be added to the protoype')
                             })
                             it('has properties', function() {
                                 assert.ok(Object.keys(new Class()).length > 0, 'properties need to be added')
@@ -65,7 +65,6 @@ describe('Models', function(done) {
                                             columns.push(result.rows[k].column_name)
                                         }
                                         var contents = Object.getOwnPropertyNames(new Class())
-                                        contents.splice(contents.indexOf('tablename'))
                                         assert.ok(columns.length == contents.length, `Class for ${Class.prototype.tablename} is out of sync. Has ${contents}, expects: ${columns}`)
                                         var filtered = contents.reduce(function(prev, current) {
                                             if(prev == undefined) {

@@ -7,9 +7,8 @@ class Tasklist {
 	constructor(id, board_id){
 		this.id = id
 		this.board_id = board_id
-		this.tablename = 'tasklist'
 	}
 }
-Tasklist.prototype.tablename = 'tasklist'
+Tasklist.prototype.tablename = tablename
 module.exports = Tasklist
 module.exports.tablename = tablename

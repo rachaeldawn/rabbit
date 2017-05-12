@@ -9,9 +9,8 @@ class PayrollTransaction {
 		this.id = id
 		this.transaction_id = transaction_id
 		this.memo = memo
-		this.tablename = 'payroll_transaction'
 	}
 }
-PayrollTransaction.prototype.tablename = 'payroll_transaction'
+PayrollTransaction.prototype.tablename = tablename
 module.exports = PayrollTransaction
 module.exports.tablename = tablename

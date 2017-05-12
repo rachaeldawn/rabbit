@@ -11,9 +11,8 @@ class EstimateItem {
 		this.estimate_id = estimate_id
 		this.service_id = service_id
 		this.quantity = quantity
-		this.tablename = 'estimate_item'
 	}
 }
-EstimateItem.prototype.tablename = 'estimate_item'
+EstimateItem.prototype.tablename = tablename
 module.exports = EstimateItem
 module.exports.tablename = tablename

@@ -9,9 +9,8 @@ class PurchaseOrderTransaction {
 		this.id = id
 		this.purchase_order_id = purchase_order_id
 		this.transaction_id = transaction_id
-		this.tablename = 'purchase_order_transaction'
 	}
 }
-PurchaseOrderTransaction.prototype.tablename = 'purchase_order_transaction'
+PurchaseOrderTransaction.prototype.tablename = tablename
 module.exports = PurchaseOrderTransaction
 module.exports.tablename = tablename
