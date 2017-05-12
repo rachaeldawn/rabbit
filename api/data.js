@@ -1,4 +1,14 @@
-const _ = require('lodash')
+// TODO: Dependency inject this later from a config file to support _tests vs _production DBs
+
+const lodash = require('lodash')
+const keys = lodash.keys
+const isString = lodash.isString
+const isNumber = lodash.isNumber
+const isDate = lodash.isDate
+const clone = lodash.clone
+const has = lodash.has
+const isFunction = lodash.isFunction
+const toLower = lodash.toLower
 const Promise = require('bluebird')
 const Validator = require('validator')
 var Models = {}
@@ -6,27 +16,28 @@ var fs = require('fs')
 let pg = require('pg')
 
 
-let DataPool = new pg.Pool({
-    database: "rabbit_tests",
-    host: "192.168.1.189",
-    port: 5432,
-    max: 50,
-    idleTimeoutMillis: 30000,
-    ssl: true,
-    user: "Developer",
-    password: "Fluffeh9985"
-})
+let DataPool
 
-var Initialize = async function() {
+var Initialize = async function(config = undefined) {
+    DataPool = new pg.Pool(config || {
+        database: "rabbit_tests",
+        host: "192.168.1.189",
+        port: 5432,
+        max: 50,
+        idleTimeoutMillis: 30000,
+        ssl: true,
+        user: "Developer",
+        password: "Fluffeh9985"
+    })
     try {
-        var res = await Query(`SELECT * FROM information_schema.columns WHERE table_schema='rabbitschema'`)
+        var rows = (await Query(`SELECT * FROM information_schema.columns WHERE table_schema='rabbitschema'`)).rows
     } catch(err) {
         throw err
     }
-    for(var k in res.rows) {
-        if(Models[res.rows[k].table_name] == undefined)
-            Models[res.rows[k].table_name] = {}
-        Models[res.rows[k].table_name][res.rows[k].column_name] = res.rows[k]
+    for(var k in rows) {
+        if(Models[rows[k].table_name] == undefined)
+            Models[rows[k].table_name] = {}
+        Models[rows[k].table_name][rows[k].column_name] = rows[k]
     }
 }
 
@@ -49,8 +60,8 @@ let Page = async function(obj, amt, page, asc = true) {
 
     var tname = obj.tablename || obj.prototype.tablename
 
-    !_.isNumber(amt) && WrongTypeError(typeof amt, 'number', 'amt')
-    !_.isNumber(page) && WrongTypeError(typeof page, 'number', 'page')
+    !isNumber(amt) && WrongTypeError(typeof amt, 'number', 'amt')
+    !isNumber(page) && WrongTypeError(typeof page, 'number', 'page')
     if(page < 0)  {
         asc = !asc
         page = Math.abs(page)
@@ -95,7 +106,8 @@ let Sync = async function(obj) {
  * @param { Data object with partially filled, or filled, values. Strings will always use %val% for sake of ease.} obj 
  */
 let Search = function(obj) {
-
+    !obj.tablename && RequiredFieldError('tablename')
+    !Models[obj.tablename] && InvalidModelError()
 }
 
 // UPDATE tablename SET param=value, param=value WHERE id=x RETURNING *
@@ -114,36 +126,32 @@ let Update = async function(obj) {
     }
     updateObj.id = obj.id
     updateObj.tablename = obj.tablename
-    var returnResult = await Query(`UPDATE ${updateObj.tablename} SET ${GenerateUpdateKVs(updateObj)} WHERE id=${updateObj.id} RETURNING *`)
-    return returnResult.rows[0]
-    
+    return (await Query(`UPDATE ${updateObj.tablename} SET ${GenerateUpdateKVs(updateObj)} WHERE id=${updateObj.id} RETURNING *`)).rows[0]    
 }
 
 var GenerateDefinedKeysString = function(obj) {
-    return _.keys(obj).reduce((prev, cur) => {
-        if(IsAValidObjectKey(obj, cur)) 
+    return keys(obj).reduce((prev, cur) => {
+        if(ValidateObjectKey(obj, cur)) 
             prev = (prev == '' ? cur : prev + ', ' + cur)
         return prev
     },'')
 }
 
 var GenerateDefinedValuesArray = function(obj) {
-    return _.keys(obj).reduce((prev, cur) => {
-        IsAValidObjectKey(obj, cur) && prev.push(obj[cur])
+    return keys(obj).reduce((prev, cur) => {
+        ValidateObjectKey(obj, cur) && prev.push(obj[cur])
         return prev
     }, [])
 }
 
 var GenerateUpdateKVs = function(obj) {
-    return _.keys(obj).reduce((prev, cur) => {
-        if(_.isString(obj[cur])) obj[cur] = '\'' + obj[cur] + '\''
-        if(IsAValidObjectKey(obj, cur)) 
+    return keys(obj).reduce((prev, cur) => {
+        if(isString(obj[cur]) && obj[cur][0] != "'") obj[cur] = '\'' + obj[cur] + '\''
+        if(ValidateObjectKey(obj, cur)) 
             prev = prev == '' ? `${cur} = ${obj[cur]}` : prev + `, ${cur} = ${obj[cur]}`
         return prev
     }, '')
 }
-
-var IsAValidObjectKey = (obj, key) => (obj[key] && key != 'tablename' && key != 'id' && !_.isFunction(obj[key])) 
 
 var GenerateDefinedValuesPlaceholders = function(num) {
     num < 1 && IntOutOfBoundsError(num, 1, 1000, 'num')
@@ -153,11 +161,20 @@ var GenerateDefinedValuesPlaceholders = function(num) {
     return str
 }
 
+var GenerateSearchValues = function(obj) {
+    return keys(obj).reduce(function(prev, cur) {
+        var param = `${cur} ${isString(obj[cur]) ? "like '%" + obj[cur] + "%' " : '= ' + obj[cur]}`
+        if(cur != 'tablename' && obj[cur])
+            prev = prev == '' ? param : prev + 'AND ' + param
+        return prev
+    }, '')
+}
+
 /**
  * @param {data/model} obj : The object to operate on
  */
 function ObjectToQueryable(obj) {
-    var tname = _.clone(obj.tablename)
+    var tname = clone(obj.tablename)
     !tname && RequiredFieldError('tablename')
     !Models[tname] && UnregisteredModelError(obj)
     ValidateObject(obj, Models[tname])
@@ -200,6 +217,10 @@ function ObjectToQueryable(obj) {
     return obj
 }
 
+/**
+ * @section: Utilities
+ */
+
 // Just a soft-clone. I don't want to lose the object reference.
 var SoftClone = function(obj, row) {
     for(var k in row)
@@ -222,9 +243,9 @@ function IntIsInRange(size, obj) {
     return (obj >= sizes[size][0] && sizes[size][1] >= obj)
 }
 
-function CountsAsNumber(obj) {
     // Dates 'count' as numbers, but they are not valid. 
-    return !_.isDate(obj) && _.isNumber(parseFloat(obj)) && `${obj}`.split('.').length <= 2
+function CountsAsNumber(obj) {
+    return !isDate(obj) && isNumber(parseFloat(obj)) && `${obj}`.split('.').length <= 2
 }
 
 var Query = async function(str, args) {
@@ -236,6 +257,14 @@ var Query = async function(str, args) {
         throw err
     }
     return res
+}
+
+var SanitizeObject = function(obj) {
+    for(var k in obj) {
+        if(isString(obj[k]) && k != 'tablename'){
+            obj[k] = Validator.escape(obj[k])
+        }
+    }
 }
 
 let ValidBooleans = {
@@ -264,7 +293,7 @@ var ValidateInteger = function(obj, name, type) {
     !CountsAsNumber && WrongTypeError(typeof obj, 'string(number)|number')
 
     // Is it a number in string form? If so, make it a number
-    obj = _.parseInt(obj)
+    obj = parseInt(obj)
 
     // Is it within its limits?
     type == '2' && !IntIsInRange(2, obj) && IntOutOfBoundsError(obj, 0, 255, name)
@@ -273,8 +302,6 @@ var ValidateInteger = function(obj, name, type) {
 
     return obj
 }
-
-
 
 var ValidateNumeric = function(obj, name, precision) {
     !obj && RequiredFieldError('obj')
@@ -295,7 +322,7 @@ var ValidateVarchar = function(obj, name, max) {
     !name && RequiredFieldError('name')
 
     // Is it a string?
-    !_.isString(obj) && WrongTypeError(typeof obj, 'string', name)
+    !isString(obj) && WrongTypeError(typeof obj, 'string', name)
     
     if(!max) return obj
     // Is the string too long?
@@ -308,9 +335,9 @@ var ValidateDate = function(obj, name) {
     !name && RequiredFieldError('name')
 
     // Is it a date in string value, or a date?
-    (!_.isString(obj) && !_.isDate(obj)) && WrongTypeError(typeof obj, 'string(date)|Date', name)
+    (!isString(obj) && !isDate(obj)) && WrongTypeError(typeof obj, 'string(date)|Date', name)
     // Is it a string? Make it a date
-    if(_.isString(obj)) { obj = new Date(obj) }
+    if(isString(obj)) { obj = new Date(obj) }
     // Did the string make a proper date?
     obj == 'Invalid date' && WrongTypeError(typeof obj, 'string(date)|Date', name)
     // Make it a UTC string
@@ -321,18 +348,17 @@ var ValidateMoney = function(obj, name) {
     !obj && RequiredFieldError('obj')
     !name && RequiredFieldError('name')
     
-    
     // Does it 'count' as a number
     !CountsAsNumber(obj) && WrongTypeError(typeof obj, 'string(number)|number', name)
 
     // Does the string have more than 1 period?
-    _.isString(obj) && `${obj}`.split('.').length > 2 && WrongTypeError('multi-decimal string', 'string(number)|numer', name)
+    isString(obj) && `${obj}`.split('.').length > 2 && WrongTypeError('multi-decimal string', 'string(number)|numer', name)
     
     // Safety parse
     obj = parseFloat(obj)
 
     // Is it a number?
-    !_.isNumber(obj) && WrongTypeError(typeof obj, 'string(number)|number', name)
+    !isNumber(obj) && WrongTypeError(typeof obj, 'string(number)|number', name)
     return obj
 }
 
@@ -343,7 +369,7 @@ var ValidateBoolean = function(obj, name) {
     // Postgres' valid values for true/false
     
     // is the object a valid value?
-    _.toLower(ValidBooleans[("" + obj)]) == undefined && WrongTypeError(typeof obj, 'string(bool)|boolean')
+    toLower(ValidBooleans[("" + obj)]) == undefined && WrongTypeError(typeof obj, 'string(bool)|boolean')
     
     // return true/false 
     return ValidBooleans[("" + obj).toLowerCase()]
@@ -351,16 +377,10 @@ var ValidateBoolean = function(obj, name) {
 
 var ValidateObject = function(obj, ref) {
     for(var k in obj) 
-        !_.has(ref, k) && k != 'tablename' && !_.isFunction(obj[k]) && InvalidModelError()
+        !has(ref, k) && k != 'tablename' && !isFunction(obj[k]) && InvalidModelError()
 }
 
-var SanitizeObject = function(obj) {
-    for(var k in obj) {
-        if(_.isString(obj[k]) && k != 'tablename'){
-            obj[k] = Validator.escape(obj[k])
-        }
-    }
-}
+var ValidateObjectKey = (obj, key) => (obj[key] && key != 'tablename' && key != 'id' && !isFunction(obj[key])) 
 
 var WrongTypeError = function(actual, expected, name = null) {
     throw new Error(`Invalid type ${actual}, expected ${expected} ${name != null ? 'for ' + name : ''}`)
@@ -384,20 +404,25 @@ var UnsavedObjectError = function() {
     throw new Error('Object was never saved.')
 }
 
-module.exports.Initialize           = Initialize
-module.exports.ObjectToQueryable    = ObjectToQueryable
-module.exports.ValidateBoolean      = ValidateBoolean
-module.exports.ValidateDate         = ValidateDate
-module.exports.ValidateInteger      = ValidateInteger
-module.exports.ValidateMoney        = ValidateMoney
-module.exports.ValidateNumeric      = ValidateNumeric
-module.exports.ValidateVarchar      = ValidateVarchar
-module.exports.ValidateObject       = ValidateObject
-module.exports.Models               = Models
-module.exports.GenerateDefinedList  = GenerateDefinedKeysString
-module.exports.Save                 = Save
-module.exports.Page                 = Page
-module.exports.List                 = List
-module.exports.Delete               = Delete
-module.exports.Update               = Update
-module.exports.Search               = Search
+module.exports.Initialize                           = Initialize
+module.exports.ObjectToQueryable                    = ObjectToQueryable
+module.exports.ValidateBoolean                      = ValidateBoolean
+module.exports.ValidateDate                         = ValidateDate
+module.exports.ValidateInteger                      = ValidateInteger
+module.exports.ValidateMoney                        = ValidateMoney
+module.exports.ValidateNumeric                      = ValidateNumeric
+module.exports.ValidateVarchar                      = ValidateVarchar
+module.exports.ValidateObject                       = ValidateObject
+module.exports.GenerateDefinedKeysString            = GenerateDefinedKeysString
+module.exports.GenerateDefinedValuesArray           = GenerateDefinedValuesArray
+module.exports.GenerateDefinedValuesPlaceholders    = GenerateDefinedValuesPlaceholders
+module.exports.GenerateSearchValues                 = GenerateSearchValues
+module.exports.GenerateUpdateKVs                    = GenerateUpdateKVs
+module.exports.Models                               = Models
+module.exports.GenerateDefinedKeysString            = GenerateDefinedKeysString
+module.exports.Save                                 = Save
+module.exports.Page                                 = Page
+module.exports.List                                 = List
+module.exports.Delete                               = Delete
+module.exports.Update                               = Update
+module.exports.Search                               = Search

@@ -31,7 +31,11 @@ let ValidBooleans = {
     'on': true
 }
 
-before('Loading models...', async function() { await Data.Initialize() })
+before('Loading models...', async function() { 
+    await Data.Initialize() 
+})
+
+var Query = async (str, args) => await (await DataPool.connect()).query(str, args)
 
 describe('Validators', function() {
     describe('Boolean', function() {
@@ -155,6 +159,91 @@ describe('Validators', function() {
     })
 })
 
+/**
+ * Data.GenerateDefinedValuesArray
+ * Data.GenerateDefinedValuesPlaceholders
+ * Data.GenerateSearchValues
+ * Data.GenerateUpdateKVs
+ */
+describe('Generators', function() {
+    var obj = {
+        name: 'IsDefined',
+        other: 'yee dawg',
+        invalid: undefined
+    }
+    describe('GeneratedDefinedKeysString', function() {
+        it('Strips invalids', function(){
+            assert.ok((/invalid/).exec(Data.GenerateDefinedKeysString(obj).substr('invalid')) == null, 'Undefineds need to be stripped')
+        })
+        it('Returns all valids', function() {
+            assert.ok((/name/).exec(Data.GenerateDefinedKeysString(obj)) != null, 'Needs to return the proper string')
+            assert.ok((/other/).exec(Data.GenerateDefinedKeysString(obj)) != null, 'Needs to return the proper string')
+        })
+    })
+    describe('GenerateDefinedValuesArray', function() {
+        it('Generates correct array', function() {
+            var rets = Data.GenerateDefinedValuesArray(obj)
+            assert.ok(rets.length == 2, `Should have only returned 2 values. ${rets}`)
+        })
+        it('Removes undefineds', function() {
+            // Since we KNOW there is an undefined value, if they are equal, the undefined value was never removed.
+            var rets = Data.GenerateDefinedValuesArray(obj)
+            var check = []
+            for(var k in obj) 
+                check.push(obj[k])
+            assert.ok(rets != check, `${check} vs ${rets}`)
+        })
+    })
+    describe('GenerateDefinedValuesPlaceholders', function() {
+        it('Generates correct placeholder amounts', function() {
+            var str = Data.GenerateDefinedValuesPlaceholders(4)
+            assert.ok(str == '$1, $2, $3, $4', `Needs to generate 4. ${str}`)
+            str = Data.GenerateDefinedValuesPlaceholders(1)
+            assert.ok(str == '$1', 'Does not define properly with only 1 element')
+        })
+        it('Rejects num 0', function() {
+            assert.throws(() => Data.GenerateDefinedValuesPlaceholders(0), 'Needs to error when 0 is passed.')
+        })
+    })
+    describe('GenerateSearchValues', function() {
+        var obj
+        beforeEach(function() {
+            obj = {
+                name: 'asset',
+                description: undefined,
+                purchase_value: 44.44,
+                serial_key: undefined,
+                tablename: 'asset'
+            }
+        })
+        it('Generates proper search string', function() {
+            var str = Data.GenerateSearchValues(obj)
+            var correct = `name like '%asset%' AND purchase_value = 44.44`
+            assert.ok(str == correct, `Did not generate proper string. \nIs:\t\t${str}\nShould be: \t${correct}`)
+        })
+        it('Ignored undefineds', function() {
+            var str = Data.GenerateSearchValues(obj)
+            assert.ok((/description/).exec(str) == null, 'Should have removed the undefined value description')
+        })
+    })
+    describe('GenerateUpdateKVs', function() {
+        it('Generates proper update string', function() {
+            var desc = 'Yeeeee dawg'
+            var serial = 'lkjsdf7hk3kjb+3o3'
+            obj.description = desc
+            obj.serial_key = serial
+            var str = Data.GenerateUpdateKVs(obj)
+            var correct = `name = 'IsDefined', other = 'yee dawg', description = 'Yeeeee dawg', serial_key = 'lkjsdf7hk3kjb+3o3'`
+            assert.ok(str == correct, `Did not create proper string.\nIs:\t\t${str}\nShould be: ${correct}\t`)
+            obj.serial_key = undefined
+        })
+        it('Ignores undefineds', function() {
+            var str = Data.GenerateUpdateKVs(obj)
+            var correct = `name = 'IsDefined', other = 'yee dawg', description = 'Yeeeee dawg'`
+            assert.ok(str == correct, `Did not create proper string.\nIs:\t\t${str}\nShould be: \t${correct}\t`)
+        })
+    })
+})
 function FailsOnMissing(funcName) {
     assert.throws(Data[funcName])
     assert.throws(() => Data[funcName](1), 'Needs to fail on first param')
