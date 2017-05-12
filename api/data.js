@@ -105,9 +105,25 @@ let Sync = async function(obj) {
  * 
  * @param { Data object with partially filled, or filled, values. Strings will always use %val% for sake of ease.} obj 
  */
-let Search = function(obj) {
+let Search = async function(obj, amt = 25, page = 0, asc = true) {
     !obj.tablename && RequiredFieldError('tablename')
-    !Models[obj.tablename] && InvalidModelError()
+    !amt && RequiredFieldError('amt')
+    (page == undefined || page == null) && RequiredFieldError('page')
+
+    var tname = obj.tablename
+
+    !isNumber(amt) && WrongTypeError(typeof amt, 'number', 'amt')
+    !isNumber(page) && WrongTypeError(typeof page, 'number', 'page')
+    if(page < 0)  {
+        asc = !asc
+        page = Math.abs(page)
+    }
+    amt < 1 && WrongTypeError('signed integer', 'unsigned integer', 'amt')
+    amt = amt > 100 ? amt = 100 : amt
+    SanitizeObject(obj)
+    //`SELECT * FROM ${tname} ORDER BY id ${asc ? 'ASC' : 'DESC'} LIMIT ${amt} ${amt * page != 0 ? 'OFFSET ' + amt * page : ''}`
+    // SELECT * FROM tag WHERE name like '%asset%' ORDER BY id ASC LIMIT 25 OFFSET 25 
+    return (await Query(`SELECT * FROM ${obj.tablename} WHERE ${GenerateSearchValues(obj)} ORDER BY id ${asc ? 'asc' : 'desc'} LIMIT ${amt} ${amt * page > 0 ? 'OFFSET ' + amt * page : ''}`)).rows
 }
 
 // UPDATE tablename SET param=value, param=value WHERE id=x RETURNING *
@@ -126,6 +142,7 @@ let Update = async function(obj) {
     }
     updateObj.id = obj.id
     updateObj.tablename = obj.tablename
+    //
     return (await Query(`UPDATE ${updateObj.tablename} SET ${GenerateUpdateKVs(updateObj)} WHERE id=${updateObj.id} RETURNING *`)).rows[0]    
 }
 

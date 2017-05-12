@@ -252,29 +252,28 @@ function FailsOnMissing(funcName) {
 
 
 describe('Accessors', function() {
+    before(async function() {
+        var qstring = `INSERT INTO tag (name, red, green, blue, opacity) VALUES ('tag_1', 255, 255, 255, 255);`
+        for(i = 2; i <= 300; i++) {
+            qstring += `INSERT INTO tag (name, red, green, blue, opacity) VALUES ('tag_${_.clone(i)}', 255, 255, 255, 255);`
+        }
+        return await Query(qstring)
+    })
+    after(async function() {
+        return await Query(`DELETE FROM tag WHERE name like 'tag_%'`)
+    })
     describe('Delete', function() {
         let asset = new Asset(-1, 'an asset name', 'an asset description', 44.44)
-        beforeEach(function(done) {
-            DataPool.connect()
-                .then(client => {
-                    client.query(`SELECT * FROM asset WHERE name='an asset name'`)
-                        .then(res => {
-                            if(res.rows.length == 1) {
-                                asset.id = res.rows[0].id
-                                done()
-                                return
-                            }
-                            client.query(`INSERT INTO asset (name, description, purchase_value) VALUES ('an asset name', 'an asset description', 44.44) RETURNING id`)
-                                .then(res => asset.id = res.rows[0].id)
-                                .then(() => {
-                                    client.end()
-                                    done()
-                                })
-                                .catch(done)
-
-                        })
-                        .catch(done)
-                })
+        beforeEach(async function() {
+            var res = (await Query(`SELECT * FROM asset WHERE name='an asset name'`)).rows
+            if(res.length == 1) {
+                asset.id = res[0].id
+                return
+            } else {
+                var inserted = (await Query(`INSERT INTO asset (name, description, purchase_value) VALUES ('an asset name', 'an asset description', 44.44) RETURNING id`)).rows[0]
+                asset.id = inserted.id
+                return
+            }
         })
         it('Deletes', function(done) {
             var PrevId = _.clone(asset.id)
@@ -309,34 +308,6 @@ describe('Accessors', function() {
         })
     })
     describe('List/Page', function() {
-        before(function(done) {
-            DataPool.connect()
-            .then(client => {
-                return new Promise(function(resolve, reject) {
-                    var qstring = `INSERT INTO tag (name, red, green, blue, opacity) VALUES ('tag_1', 255, 255, 255, 255);`
-                    for(i = 2; i <= 300; i++) {
-                        qstring += `INSERT INTO tag (name, red, green, blue, opacity) VALUES ('tag_${_.clone(i)}', 255, 255, 255, 255);`
-                    }
-                    client.query(qstring)
-                        .then(() => {
-                            client.end()
-                            resolve()
-                        })
-                        .catch(reject)
-                })
-            })
-            .then(() => done())
-            .catch(done)
-        })
-        after(function(done) {
-            DataPool.connect()
-            .then(client => {
-                client.query(`DELETE FROM tag WHERE name like 'tag_%'`)
-                    .then(() => client.end())
-                    .then(done)
-                    .catch(done)
-            })
-        })
         it('Gets proper quantity', function(done) {
             Data.Page(Tag, 22, 1)
                 .then(res => assert.ok(res.length == 22, 'Needs to return the specified amount'))
@@ -536,9 +507,28 @@ describe('Accessors', function() {
         })
     })
     describe('Search', function() {
-        it('searches partials')
-        it('denies invalid search object')
-        it('returns 1 result if id is provided')
+        it('searches partials', async function() {
+            var SearchObj = new Tag(undefined, 'tag_2')
+            var Results = await Data.Search(SearchObj, 50, 0)
+            assert.ok(Results.length == 50, 'Needs to return full amount (tags generates 300)')
+            for(var k in Results) {
+                assert.ok(Results[k].name.substr('tag_2'), `An invalid result was returned: ${Results[k]}`)
+            }
+        })
+        it('denies invalid search object', async function() {
+            var SearchObj = {name: 'george'}
+            try {
+                await Data.Search(SearchObj)
+                assert.ok(false, 'Search should have failed as tablename was undefined')
+            } catch (err) {
+                assert.ok(err, 'Search should have failed as tablename was undefined')
+            }
+        })
+        it('returns 1 result if valid id is provided', async function() {
+            var obj = (await Query(`SELECT * FROM tag WHERE name='tag_233' LIMIT 1`)).rows[0]
+            obj.tablename = 'tag'
+            assert.ok((await Data.Search(obj)).length == 1, 'Should have only returned 1 since a real id was passed.')
+        })
     })
 })
 
