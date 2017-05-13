@@ -16,7 +16,7 @@ function makeFolders() {
 
 function getData(obj) {
     return new Promise(function(resolve, reject) {
-        return fs.readFile('specification.json', 'utf-8',function(err, data) {
+        return fs.readFile('specification.json', 'utf-8', function(err, data) {
             err && reject(err)
             !err && resolve(JSON.parse(data))
         })

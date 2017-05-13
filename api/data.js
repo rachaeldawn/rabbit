@@ -15,7 +15,7 @@ const Validator = require('validator')
 var Models = {}
 var fs = require('fs')
 let pg = require('pg')
-
+const Errors = require('./errors')
 
 let DataPool
 
@@ -47,7 +47,7 @@ var Initialize = async function(config = undefined) {
 
 let Delete = async function(obj) {
     // Ignore unset objects
-    obj.id == -1 && UnsavedObjectError()
+    obj.id == -1 && Errors.UnsavedObjectError()
     // Ensure object conforms to standards
     ValidateObject(obj, Models[obj.tablename])
     // Delete the object, and return the results
@@ -64,12 +64,12 @@ let Delete = async function(obj) {
 
 let Page = async function(obj, amt, page, asc = true) {
     // Are the parameters valid?
-    !obj.prototype.tablename && !obj.tablename && RequiredFieldError('tablename')
-    !amt && RequiredFieldError('amt')
-    amt < 1 && WrongTypeError('signed integer', 'unsigned integer', 'amt')
-    !isNumber(amt) && WrongTypeError(typeof amt, 'number', 'amt')
-    (page == undefined || page == null) && RequiredFieldError('page')
-    !isNumber(page) && WrongTypeError(typeof page, 'number', 'page')
+    !obj.prototype.tablename && !obj.tablename && Errors.RequiredFieldError('tablename')
+    !amt && Errors.RequiredFieldError('amt')
+    amt < 1 && Errors.WrongTypeError('signed integer', 'unsigned integer', 'amt')
+    !isNumber(amt) && Errors.WrongTypeError(typeof amt, 'number', 'amt')
+    (page == undefined || page == null) && Errors.RequiredFieldError('page')
+    !isNumber(page) && Errors.WrongTypeError(typeof page, 'number', 'page')
 
     // You can pass either an instance or a require('name') and it'll work.
     var tname = obj.tablename || obj.prototype.tablename
@@ -107,9 +107,9 @@ let Save = async function(obj) {
 let Sync = async function(obj) {
     // Note that there's no need to validate/sanitize because Models[Key] will never contain HTMLChars.
     // Verify the 2 important fields are up to par
-    !obj.id && RequiredFieldError('id')
-    !isNumber(obj.id) && WrongTypeError(typeof obj.id, 'number', 'id')
-    !Models[obj.tablename] && UnregisteredModelError(obj)
+    !obj.id && Errors.RequiredFieldError('id')
+    !isNumber(obj.id) && Errors.WrongTypeError(typeof obj.id, 'number', 'id')
+    !Models[obj.tablename] && Errors.UnregisteredModelError(obj)
 
     // Pull the database's information on the object, and softclone it.
     try {
@@ -127,12 +127,12 @@ let Sync = async function(obj) {
  */
 let Search = async function(obj, amt = 25, page = 0, asc = true) {
     // Ensure that the parameters passed are up to standard
-    !obj.tablename && RequiredFieldError('tablename')
-    !amt && RequiredFieldError('amt')
-    !isNumber(amt) && WrongTypeError(typeof amt, 'number', 'amt')
-    !isNumber(page) && WrongTypeError(typeof page, 'number', 'page')
-    amt < 1 && WrongTypeError('signed integer', 'unsigned integer', 'amt')
-    (page == undefined || page == null) && RequiredFieldError('page')
+    !obj.tablename && Errors.RequiredFieldError('tablename')
+    !amt && Errors.RequiredFieldError('amt')
+    !isNumber(amt) && Errors.WrongTypeError(typeof amt, 'number', 'amt')
+    !isNumber(page) && Errors.WrongTypeError(typeof page, 'number', 'page')
+    amt < 1 && Errors.WrongTypeError('signed integer', 'unsigned integer', 'amt')
+    (page == undefined || page == null) && Errors.RequiredFieldError('page')
     // Paging supported
     if(page < 0)  {
         asc = !asc
@@ -147,7 +147,7 @@ let Search = async function(obj, amt = 25, page = 0, asc = true) {
 // UPDATE tablename SET param=value, param=value WHERE id=x RETURNING *
 let Update = async function(obj) {
     // Make sure the object has an id
-    (!obj.id || obj.id == -1 || obj.id == undefined) && RequiredFieldError('id')
+    (!obj.id || obj.id == -1 || obj.id == undefined) && Errors.RequiredFieldError('id')
     // Prep object for query
     try {
         ObjectToQueryable(obj)
@@ -198,7 +198,7 @@ var GenerateUpdateKVs = (obj) =>
 
 // Generate a $1, $2, $3 style placeholder
 var GenerateDefinedValuesPlaceholders = function(num) {
-    num < 1 && IntOutOfBoundsError(num, 1, 1000, 'num')
+    num < 1 && Errors.IntOutOfBoundsError(num, 1, 1000, 'num')
     var str = '$1'
     for(i = 2; i <= num; i++) 
         str += ", $" + i
@@ -219,12 +219,12 @@ var GenerateSearchValues = function(obj) {
  * @param {data/model} obj : The object to operate on
  */
 function ObjectToQueryable(obj) {
-    var tname = clone(obj.tablename) || RequiredFieldError('tablename')
-    !Models[tname] && UnregisteredModelError(obj)
+    var tname = clone(obj.tablename) || Errors.RequiredFieldError('tablename')
+    !Models[tname] && Errors.UnregisteredModelError(obj)
     ValidateObject(obj, Models[tname])
     for(var k in Models[obj.tablename]) {
         // Check if the value is allowed to be null, vs whether or not it is
-        !obj[k] && Models[tname][k].is_nullable == 'NO' && RequiredFieldError(k)
+        !obj[k] && Models[tname][k].is_nullable == 'NO' && Errors.RequiredFieldError(k)
         // Ignore the id. It is not important for this.
         if(!obj[k] || k == 'id') {
             continue
@@ -335,90 +335,90 @@ let ValidBooleans = {
 // First 2 lines on all of them is param checking.
 
 var ValidateInteger = function(obj, name, type) {
-    !obj && RequiredFieldError('obj')
-    !name && RequiredFieldError('name')
-    !type && RequiredFieldError('type')
+    !obj && Errors.RequiredFieldError('obj')
+    !name && Errors.RequiredFieldError('name')
+    !type && Errors.RequiredFieldError('type')
 
-    !CountsAsNumber && WrongTypeError(typeof obj, 'string(number)|number')
+    !CountsAsNumber && Errors.WrongTypeError(typeof obj, 'string(number)|number')
 
     // Is it a number in string form? If so, make it a number
     obj = parseInt(obj)
 
     // Is it within its limits?
-    type == '2' && !IntIsInRange(2, obj) && IntOutOfBoundsError(obj, 0, 255, name)
-    type == '4' && !IntIsInRange(4, obj) && IntOutOfBoundsError(obj, -2147483648, 2147483647, name)
-    type == '8' && !IntIsInRange(8, obj) && IntOutOfBoundsError(obj, -9223372036854775808, 9223372036854775807, name)
+    type == '2' && !IntIsInRange(2, obj) && Errors.IntOutOfBoundsError(obj, 0, 255, name)
+    type == '4' && !IntIsInRange(4, obj) && Errors.IntOutOfBoundsError(obj, -2147483648, 2147483647, name)
+    type == '8' && !IntIsInRange(8, obj) && Errors.IntOutOfBoundsError(obj, -9223372036854775808, 9223372036854775807, name)
 
     return obj
 }
 
 var ValidateNumeric = function(obj, name, precision) {
-    !obj && RequiredFieldError('obj')
-    !name && RequiredFieldError('name')
+    !obj && Errors.RequiredFieldError('obj')
+    !name && Errors.RequiredFieldError('name')
         
     // Is the string a "number"
-    !CountsAsNumber(obj) && WrongTypeError(typeof obj, 'string(number)|number', name)
+    !CountsAsNumber(obj) && Errors.WrongTypeError(typeof obj, 'string(number)|number', name)
     
     // Is it too long?
-    (('' + obj).split('.').pop() > precision) && WrongTypeError(typeof obj, `float(${precision})`, name)
+    (('' + obj).split('.').pop() > precision) && Errors.WrongTypeError(typeof obj, `float(${precision})`, name)
     
     // Safety parse
     return parseFloat(obj)
 }
 
 var ValidateVarchar = function(obj, name, max) {
-    !obj && RequiredFieldError('obj')
-    !name && RequiredFieldError('name')
+    !obj && Errors.RequiredFieldError('obj')
+    !name && Errors.RequiredFieldError('name')
 
     // Is it a string?
-    !isString(obj) && WrongTypeError(typeof obj, 'string', name)
+    !isString(obj) && Errors.WrongTypeError(typeof obj, 'string', name)
     
     if(!max) return obj
     // Is the string too long?
-    obj.length > max && StringTooLongError(name, max)
+    obj.length > max && Errors.StringTooLongError(name, max)
     return obj
 }
 
 var ValidateDate = function(obj, name) {
-    !obj && RequiredFieldError('obj')
-    !name && RequiredFieldError('name')
+    !obj && Errors.RequiredFieldError('obj')
+    !name && Errors.RequiredFieldError('name')
 
     // Is it a date in string value, or a date?
-    (!isString(obj) && !isDate(obj)) && WrongTypeError(typeof obj, 'string(date)|Date', name)
+    (!isString(obj) && !isDate(obj)) && Errors.WrongTypeError(typeof obj, 'string(date)|Date', name)
     // Is it a string? Make it a date
     if(isString(obj)) { obj = new Date(obj) }
     // Did the string make a proper date?
-    obj == 'Invalid date' && WrongTypeError(typeof obj, 'string(date)|Date', name)
+    obj == 'Invalid date' && Errors.WrongTypeError(typeof obj, 'string(date)|Date', name)
     // Make it a UTC string
     return obj.toUTCString()
 }
 
 var ValidateMoney = function(obj, name) {
-    !obj && RequiredFieldError('obj')
-    !name && RequiredFieldError('name')
+    !obj && Errors.RequiredFieldError('obj')
+    !name && Errors.RequiredFieldError('name')
     
     // Does it 'count' as a number
-    !CountsAsNumber(obj) && WrongTypeError(typeof obj, 'string(number)|number', name)
+    !CountsAsNumber(obj) && Errors.WrongTypeError(typeof obj, 'string(number)|number', name)
 
     // Does the string have more than 1 period?
-    isString(obj) && `${obj}`.split('.').length > 2 && WrongTypeError('multi-decimal string', 'string(number)|numer', name)
+    isString(obj) && `${obj}`.split('.').length > 2 && Errors.WrongTypeError('multi-decimal string', 'string(number)|numer', name)
     
     // Safety parse
     obj = parseFloat(obj)
 
     // Is it a number?
-    !isNumber(obj) && WrongTypeError(typeof obj, 'string(number)|number', name)
+    !isNumber(obj) && Errors.WrongTypeError(typeof obj, 'string(number)|number', name)
     return obj
 }
 
 var ValidateBoolean = function(obj, name) {
-    !obj && RequiredFieldError('obj')
-    !name && RequiredFieldError('name')
+    !obj && Errors.RequiredFieldError('obj')
+    !name && Errors.RequiredFieldError('name')
     
     // Postgres' valid values for true/false
     
     // is the object a valid value?
-    toLower(ValidBooleans[("" + obj)]) == undefined && WrongTypeError(typeof obj, 'string(bool)|boolean')
+    toLower(ValidBooleans[("" + obj)]) == undefined && Errors.WrongTypeError(typeof obj, 'string(bool)|boolean')
     
     // return true/false 
     return ValidBooleans[("" + obj).toLowerCase()]
@@ -426,35 +426,12 @@ var ValidateBoolean = function(obj, name) {
 
 var ValidateObject = function(obj, ref) {
     for(var k in obj) 
-        !has(ref, k) && k != 'tablename' && !isFunction(obj[k]) && InvalidModelError()
+        !has(ref, k) && k != 'tablename' && !isFunction(obj[k]) && Errors.InvalidModelError()
 }
 
 // It exists, is not tablename or id, and is not a function
 var ValidateObjectKey = (obj, key) => (obj[key] && key != 'tablename' && key != 'id' && !isFunction(obj[key])) 
 
-
-// This is the error section. These are pretty self explanatory
-var WrongTypeError = function(actual, expected, name = null) {
-    throw new Error(`Invalid type ${actual}, expected ${expected} ${name != null ? 'for ' + name : ''}`)
-}
-var IntOutOfBoundsError = function(value, min, max, name = null) {
-    throw new Error(`Value${value} ${name != null ? ' for ' + name : ''} is out of bounds. Min: ${min}, Max: ${max}`)
-}
-var RequiredFieldError = function(name) {
-    throw new Error(`Required field ${name} is undefined`)
-}
-var StringTooLongError = function(name, max) {
-    throw new Error(`String ${name} is too long. Max: ${max}`)
-}
-var UnregisteredModelError = function(obj) {
-    throw new Error(`Class '${obj.constructor.name}' is not registered.`)
-}
-var InvalidModelError = function() {
-    throw new Error(`Object does not align with schema.`)
-}
-var UnsavedObjectError = function() {
-    throw new Error('Object was never saved.')
-}
 
 module.exports.Initialize                           = Initialize
 module.exports.ObjectToQueryable                    = ObjectToQueryable

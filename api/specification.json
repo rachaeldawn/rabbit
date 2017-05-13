@@ -1,32 +1,100 @@
 {
+    "Router": {
+        "filename": "primaryRouter",
+        "folder": "",
+        "type": "router",
+        "all": {
+            "/Asset": "Asset router",
+            "/Expense": "Expenses router",
+            "/Calendar": "Calendar router",
+            "/Conversation": "Conversation router",
+            "/Customer": "Customer router",
+            "/Employee": "Employee router",
+            "/Orders": "Router handles workorders, estimates, and purchase orders",
+            "/Inventory": "Handles the 'services' we offer. May expand later.",
+            "/Payroll": "The payroll router",
+            "/Taskboard": "The taskboard router",
+            "/Transaction": "The payments router"
+        }
+    },
+    "Payments": {
+        "filename": "payment-controller",
+        "folder": "controllers",
+        "type": "functional",
+        "functions": {
+            "MakePayment": {
+                "purpose": "To process payments",
+                "params": {
+                    "token": "The stripe token",
+                    "amt": "The amount of the payment",
+                    "description": "The reason or description for/of the payment",
+                    "save": {
+                        "default": false,
+                        "comment": "Whether or not the card details should be saved through Stripe for future re-use."
+                    }
+                }
+            },
+            "Refund": {
+                "purpose": "Refund a payment to a customer",
+                "params": {
+                    "transaction": "A transaction object",
+                    "amount": {
+                        "default": -1,
+                        "comment": "Amount to refund. -1 means full amount."
+                    }
+                }
+            },
+            "MakeAdjustment": {
+                "purpose": "Adjust a previously made payment (refund, and makepayment)",
+                "params": {
+                    "transaction": "A transaction object",
+                    "amount": "Positive or negative decimal"
+                }
+            },
+            "CheckForEvents": {
+                "purpose": "Check for new events from Stripe"
+            }
+        }
+
+    },
     "Asset": {
-        "filename": "router",
+        "filename": "assetRouter",
         "folder": "routers",
         "type": "router",
         "post": {
-            "/Asset/New": "Create a new asset",
-            "/Asset/Update": "Update an existing asset",
-            "/Asset/Sync": "Pull an asset from the database",
-            "/Asset/Sync/:Id": "Pull an asset from the database based on id",
-            "/Asset/Archive": "Archive an asset",
-            "/Asset/Archive/:Id": "Archive an asset",
-            "/Asset/Page": "Uses a JSON object to get a page of assets",
-            "/Asset/Page/:Amount/:Page": "Get a page of assets",
-            "/Asset/List/:Amount": "Lists an amount of assets",
-            "/Asset/List/Tag/:Amount": "List of all asset tags",
-            "/Asset/Tag/New": "Tags an asset",
-            "/Asset/Tag/List": "List of tagged assets",
-            "/Asset/Tag/List/:Amount": "List amount of tagged assets",
-            "/Asset/Tag/Page/:Amount": "Page of assets that are tagged",
-            "/Asset/Tag/Delete": "Deletes a tag",
-            "/Asset/Tag/Update": "Updates an asset's tag",
-            "/Asset/Tag/Sync": "Pulls an asset's tag from the DB",
-            "/Asset/Tag/Sync/:Id": "Pulls an asset's tag based an asset's id from the database"
+            "/New": "Create a new asset",
+            "/Update": "Update an existing asset",
+            "/Sync": "Pull an asset from the database",
+            "/Sync/:Id": "Pull an asset from the database based on id",
+            "/Archive": "Archive an asset",
+            "/Archive/:Id": "Archive an asset",
+            "/Page": "Uses a JSON object to get a page of assets",
+            "/Page/:Amount/:Page": "Get a page of assets",
+            "/List/:Amount": "Lists an amount of assets",
+            "/List/Tag/:Amount": "List of all asset tags",
+            "/Tag/New": "Tags an asset",
+            "/Tag/List": "List of tagged assets",
+            "/Tag/List/:Amount": "List amount of tagged assets",
+            "/Tag/Page/:Amount/:Page": "Page of assets that are tagged",
+            "/Tag/Delete": "Deletes a tag",
+            "/Tag/Update": "Updates an asset's tag",
+            "/Tag/Sync": "Pulls an asset's tag from the DB",
+            "/Tag/Sync/:Id": "Pulls an asset's tag based an asset's id from the database"
         },
         "dependencies": {
             "_": "lodash",
             "auth": "../auth",
-            "data": "../data"
+            "data": "../data",
+            "Asset": "../data/asset",
+            "AssetTag:": "../data/asset_tag"
+        }
+    },
+    "Expense": {
+        "filename": "expenseController",
+        "folder": "routers",
+        "type": "router",
+        "post": {
+            
         }
     }
 }
