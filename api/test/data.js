@@ -442,24 +442,11 @@ describe('Accessors', function() {
                 })
                 .catch(done)
         })
-        it('Puts new data in database', function(done) {
+        it('Async Puts new data in database', async function() {
             testAsset.description = 'Updated description for puts new data in database'
-            Data.Update(testAsset)
-                .then(res => {
-                    DataPool.connect()
-                        .then(client => {
-                            client.query(`SELECT description FROM asset WHERE name='test_asset_update'`)
-                                .then(res => res.rows[0].description)
-                                .then(res => {
-                                    assert.ok(res == testAsset.description, `Needs to be updated server-side. ${res} vs ${testAsset.description}`)
-                                    client.end()
-                                })
-                                .then(done)
-                                .catch(done)
-                        })
-                        .catch(done)
-                })
-                .catch(done)
+            var res = (await Data.Update(testAsset)).description
+            var description = (await Query(`SELECT description FROM asset WHERE name='test_asset_update'`)).rows[0].description
+            assert.ok(res == testAsset.description, `Needs to be updated server-side. ${res} vs ${testAsset.description}`)
         })
         it('Errors on invalid id', function(done) {
             var fail = new Asset(-1, 'A fake one', 'fake description', 1337.13)
@@ -530,6 +517,7 @@ describe('Accessors', function() {
             assert.ok((await Data.Search(obj)).length == 1, 'Should have only returned 1 since a real id was passed.')
         })
     })
+    
 })
 
 describe('Converter', function() {

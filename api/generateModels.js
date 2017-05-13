@@ -1,4 +1,5 @@
 var fs = require('fs')
+var keys = require('lodash').keys
 var rimraf = require('rimraf')
 var promise = require('promise')
 var models
@@ -38,11 +39,10 @@ function GetClassNames(arr) {
 }
 
 function SerializeJsonData(data) {
-    var tableNames = []
-    for(var k in data) {
-        if(!k.endsWith('_tag'))
-        tableNames.push(k)
-    }
+    var tableNames = keys(data)
+    // for(var k in data) {
+    //     tableNames.push(k)
+    // }
     classNames = GetClassNames(tableNames)
     var Classes = []
     for(var k in classNames) {

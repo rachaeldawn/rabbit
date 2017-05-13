@@ -9,6 +9,7 @@ const clone = lodash.clone
 const has = lodash.has
 const isFunction = lodash.isFunction
 const toLower = lodash.toLower
+const forEach = lodash.forEach
 const Promise = require('bluebird')
 const Validator = require('validator')
 var Models = {}
@@ -19,6 +20,7 @@ let pg = require('pg')
 let DataPool
 
 var Initialize = async function(config = undefined) {
+    // Initialize with other config? If not, use the testing DB by default
     DataPool = new pg.Pool(config || {
         database: "rabbit_tests",
         host: "192.168.1.189",
@@ -29,11 +31,13 @@ var Initialize = async function(config = undefined) {
         user: "Developer",
         password: "Fluffeh9985"
     })
+    // Try get the database schema for local reference and validation
     try {
         var rows = (await Query(`SELECT * FROM information_schema.columns WHERE table_schema='rabbitschema'`)).rows
     } catch(err) {
         throw err
     }
+    // Populate the local reference where the key is the tablename
     for(var k in rows) {
         if(Models[rows[k].table_name] == undefined)
             Models[rows[k].table_name] = {}
@@ -42,40 +46,51 @@ var Initialize = async function(config = undefined) {
 }
 
 let Delete = async function(obj) {
-    ValidateObject(obj, Models[obj.tablename])
+    // Ignore unset objects
     obj.id == -1 && UnsavedObjectError()
+    // Ensure object conforms to standards
+    ValidateObject(obj, Models[obj.tablename])
+    // Delete the object, and return the results
     try {
         var res = (await Query(`DELETE FROM ${obj.tablename} WHERE id=${obj.id} RETURNING *`)).rows
     } catch(err) {
         throw err
     }
+    // Set the id to the 'non-existent' value
     obj.id = -1
+    // Return the deletion results (for testing)
     return res
 }
 
 let Page = async function(obj, amt, page, asc = true) {
-    !obj.prototype.tablename && RequiredFieldError('tablename')
+    // Are the parameters valid?
+    !obj.prototype.tablename && !obj.tablename && RequiredFieldError('tablename')
     !amt && RequiredFieldError('amt')
-    (page == undefined || page == null) && RequiredFieldError('page')
-
-    var tname = obj.tablename || obj.prototype.tablename
-
+    amt < 1 && WrongTypeError('signed integer', 'unsigned integer', 'amt')
     !isNumber(amt) && WrongTypeError(typeof amt, 'number', 'amt')
+    (page == undefined || page == null) && RequiredFieldError('page')
     !isNumber(page) && WrongTypeError(typeof page, 'number', 'page')
+
+    // You can pass either an instance or a require('name') and it'll work.
+    var tname = obj.tablename || obj.prototype.tablename
+    // Negative pages flip ascending/descending returns. -2 and asc = false returns page 2 in normal order, for example.
     if(page < 0)  {
         asc = !asc
         page = Math.abs(page)
     }
-    amt < 1 && WrongTypeError('signed integer', 'unsigned integer', 'amt')
+    // Cap the amount
     amt = amt > 100 ? amt = 100 : amt
-    SanitizeObject(obj)
+
+    // Return the page results
     return (await Query(`SELECT * FROM ${tname} ORDER BY id ${asc ? 'ASC' : 'DESC'} LIMIT ${amt} ${amt * page != 0 ? 'OFFSET ' + amt * page : ''}`)).rows
     
 }
 
+// This is because I think typing 'page' when you just want a list is ridiculous
 let List = (obj, amt, asc = true) => Page(obj, amt, 0, asc)
 
 let Save = async function(obj) {
+    // Format and validate
     try {
         ObjectToQueryable(obj)
     } catch(err) {
@@ -90,10 +105,15 @@ let Save = async function(obj) {
 // AKA Spawn, Get, etc
 // Select * FROM tablename WHERE id=x
 let Sync = async function(obj) {
-    ValidateObject(obj, Models[obj.tablename])
-    SanitizeObject(obj)
+    // Note that there's no need to validate/sanitize because Models[Key] will never contain HTMLChars.
+    // Verify the 2 important fields are up to par
+    !obj.id && RequiredFieldError('id')
+    !isNumber(obj.id) && WrongTypeError(typeof obj.id, 'number', 'id')
+    !Models[obj.tablename] && UnregisteredModelError(obj)
+
+    // Pull the database's information on the object, and softclone it.
     try {
-        var DBResult = (await Query(`SELECT * FROM ${obj.tablename} WHERE id=${obj.id}`)).rows[0]
+        var DBResult = (await Query(`SELECT * FROM ${tname} WHERE id=${obj.id}`)).rows[0]
         SoftClone(obj, DBResult)
     } catch(err) {
         throw err
@@ -106,46 +126,51 @@ let Sync = async function(obj) {
  * @param { Data object with partially filled, or filled, values. Strings will always use %val% for sake of ease.} obj 
  */
 let Search = async function(obj, amt = 25, page = 0, asc = true) {
+    // Ensure that the parameters passed are up to standard
     !obj.tablename && RequiredFieldError('tablename')
     !amt && RequiredFieldError('amt')
-    (page == undefined || page == null) && RequiredFieldError('page')
-
-    var tname = obj.tablename
-
     !isNumber(amt) && WrongTypeError(typeof amt, 'number', 'amt')
     !isNumber(page) && WrongTypeError(typeof page, 'number', 'page')
+    amt < 1 && WrongTypeError('signed integer', 'unsigned integer', 'amt')
+    (page == undefined || page == null) && RequiredFieldError('page')
+    // Paging supported
     if(page < 0)  {
         asc = !asc
         page = Math.abs(page)
     }
-    amt < 1 && WrongTypeError('signed integer', 'unsigned integer', 'amt')
     amt = amt > 100 ? amt = 100 : amt
+    // Sanitize from any pesky fuckers.
     SanitizeObject(obj)
-    //`SELECT * FROM ${tname} ORDER BY id ${asc ? 'ASC' : 'DESC'} LIMIT ${amt} ${amt * page != 0 ? 'OFFSET ' + amt * page : ''}`
-    // SELECT * FROM tag WHERE name like '%asset%' ORDER BY id ASC LIMIT 25 OFFSET 25 
     return (await Query(`SELECT * FROM ${obj.tablename} WHERE ${GenerateSearchValues(obj)} ORDER BY id ${asc ? 'asc' : 'desc'} LIMIT ${amt} ${amt * page > 0 ? 'OFFSET ' + amt * page : ''}`)).rows
 }
 
 // UPDATE tablename SET param=value, param=value WHERE id=x RETURNING *
 let Update = async function(obj) {
+    // Make sure the object has an id
+    (!obj.id || obj.id == -1 || obj.id == undefined) && RequiredFieldError('id')
+    // Prep object for query
     try {
         ObjectToQueryable(obj)
     } catch(err) {
         throw err
     }
-    (!obj.id || obj.id == -1 || obj.id == undefined) && RequiredFieldError('id')
-    var Existent = (await Query(`SELECT * FROM ${obj.tablename} WHERE id=${obj.id}`)).rows[0]
     updateObj = {}
+    updateObj.id = obj.id
+    updateObj.tablename = obj.tablename
+    // Get the row that matches the object
+    var Existent = (await Query(`SELECT * FROM ${obj.tablename} WHERE id=${obj.id}`)).rows[0]
+    // Push the diffs to updateObj
     for(var k in Existent) {
         if(obj[k] != Existent[k] && obj[k] != `'${Existent[k]}'`) 
             updateObj[k] = obj[k]
     }
-    updateObj.id = obj.id
-    updateObj.tablename = obj.tablename
-    //
+    // No point in updating an object that is not any different
+    if(keys(obj).length == 2)
+        return
     return (await Query(`UPDATE ${updateObj.tablename} SET ${GenerateUpdateKVs(updateObj)} WHERE id=${updateObj.id} RETURNING *`)).rows[0]    
 }
 
+// Generate a string with only keys that have values
 var GenerateDefinedKeysString = function(obj) {
     return keys(obj).reduce((prev, cur) => {
         if(ValidateObjectKey(obj, cur)) 
@@ -154,22 +179,24 @@ var GenerateDefinedKeysString = function(obj) {
     },'')
 }
 
-var GenerateDefinedValuesArray = function(obj) {
-    return keys(obj).reduce((prev, cur) => {
+
+// Generate an array with only valid values
+var GenerateDefinedValuesArray = (obj) => 
+    keys(obj).reduce((prev, cur) => {
         ValidateObjectKey(obj, cur) && prev.push(obj[cur])
         return prev
     }, [])
-}
 
-var GenerateUpdateKVs = function(obj) {
-    return keys(obj).reduce((prev, cur) => {
+// Generate a Key = newValue string for update
+var GenerateUpdateKVs = (obj) =>
+    keys(obj).reduce((prev, cur) => {
         if(isString(obj[cur]) && obj[cur][0] != "'") obj[cur] = '\'' + obj[cur] + '\''
         if(ValidateObjectKey(obj, cur)) 
             prev = prev == '' ? `${cur} = ${obj[cur]}` : prev + `, ${cur} = ${obj[cur]}`
         return prev
     }, '')
-}
 
+// Generate a $1, $2, $3 style placeholder
 var GenerateDefinedValuesPlaceholders = function(num) {
     num < 1 && IntOutOfBoundsError(num, 1, 1000, 'num')
     var str = '$1'
@@ -178,6 +205,7 @@ var GenerateDefinedValuesPlaceholders = function(num) {
     return str
 }
 
+// Generate a search string
 var GenerateSearchValues = function(obj) {
     return keys(obj).reduce(function(prev, cur) {
         var param = `${cur} ${isString(obj[cur]) ? "like '%" + obj[cur] + "%' " : '= ' + obj[cur]}`
@@ -191,12 +219,13 @@ var GenerateSearchValues = function(obj) {
  * @param {data/model} obj : The object to operate on
  */
 function ObjectToQueryable(obj) {
-    var tname = clone(obj.tablename)
-    !tname && RequiredFieldError('tablename')
+    var tname = clone(obj.tablename) || RequiredFieldError('tablename')
     !Models[tname] && UnregisteredModelError(obj)
     ValidateObject(obj, Models[tname])
     for(var k in Models[obj.tablename]) {
+        // Check if the value is allowed to be null, vs whether or not it is
         !obj[k] && Models[tname][k].is_nullable == 'NO' && RequiredFieldError(k)
+        // Ignore the id. It is not important for this.
         if(!obj[k] || k == 'id') {
             continue
         }
@@ -260,11 +289,12 @@ function IntIsInRange(size, obj) {
     return (obj >= sizes[size][0] && sizes[size][1] >= obj)
 }
 
-    // Dates 'count' as numbers, but they are not valid. 
+// Dates 'count' as numbers, but they are not valid. 
 function CountsAsNumber(obj) {
     return !isDate(obj) && isNumber(parseFloat(obj)) && `${obj}`.split('.').length <= 2
 }
 
+// Abstracted this out because #yolo
 var Query = async function(str, args) {
     try {
         var Client = await DataPool.connect()
@@ -276,6 +306,7 @@ var Query = async function(str, args) {
     return res
 }
 
+// Sanitize every string
 var SanitizeObject = function(obj) {
     for(var k in obj) {
         if(isString(obj[k]) && k != 'tablename'){
@@ -284,6 +315,7 @@ var SanitizeObject = function(obj) {
     }
 }
 
+// Valid 'boolean' values for validators
 let ValidBooleans = {
     '0': false,
     'f': false,
@@ -397,8 +429,11 @@ var ValidateObject = function(obj, ref) {
         !has(ref, k) && k != 'tablename' && !isFunction(obj[k]) && InvalidModelError()
 }
 
+// It exists, is not tablename or id, and is not a function
 var ValidateObjectKey = (obj, key) => (obj[key] && key != 'tablename' && key != 'id' && !isFunction(obj[key])) 
 
+
+// This is the error section. These are pretty self explanatory
 var WrongTypeError = function(actual, expected, name = null) {
     throw new Error(`Invalid type ${actual}, expected ${expected} ${name != null ? 'for ' + name : ''}`)
 }
