@@ -2,7 +2,7 @@ const _ = require("lodash")
 const auth = require("../auth")
 const data = require("../data")
 const Asset = require("../data/asset")
-const AssetTag: = require("../data/asset_tag")
+const AssetTag = require("../data/asset_tag")
 
 var route = require('express').Router()
 

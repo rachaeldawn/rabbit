@@ -9,10 +9,12 @@
   "author": "Jonathan Schmold",
   "license": "UNLICENSED",
   "dependencies": {
+    "@types/node": "^7.0.18",
+    "bluebird": "^3.5.0",
     "express": "^4.15.2",
     "lodash": "^4.17.4",
     "pg": "^6.1.5",
-    "promise": "^7.1.1",
+    "stripe": "^4.19.0",
     "validator": "^7.0.0"
   },
   "devDependencies": {

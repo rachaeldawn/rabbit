@@ -1,25 +1,16 @@
 // TODO: Dependency inject this later from a config file to support _tests vs _production DBs
 
-const lodash = require('lodash')
-const keys = lodash.keys
-const isString = lodash.isString
-const isNumber = lodash.isNumber
-const isDate = lodash.isDate
-const clone = lodash.clone
-const has = lodash.has
-const isFunction = lodash.isFunction
-const toLower = lodash.toLower
-const forEach = lodash.forEach
-const Promise = require('bluebird')
-const Validator = require('validator')
+import { keys, isString, isNumber, isDate, clone, has, isFunction, toLower, forEach } from "lodash"
+import * as Validator from "Validator"
+import * as fs from "fs"
+import * as pg from "pg"
+
 var Models = {}
-var fs = require('fs')
-let pg = require('pg')
 const Errors = require('./errors')
 
 let DataPool
 
-var Initialize = async function(config = undefined) {
+export var Initialize = async function(config = undefined) {
     // Initialize with other config? If not, use the testing DB by default
     DataPool = new pg.Pool(config || {
         database: "rabbit_tests",
@@ -45,7 +36,7 @@ var Initialize = async function(config = undefined) {
     }
 }
 
-let Delete = async function(obj) {
+export let Delete = async function(obj) {
     // Ignore unset objects
     obj.id == -1 && Errors.UnsavedObjectError()
     // Ensure object conforms to standards
@@ -62,7 +53,7 @@ let Delete = async function(obj) {
     return res
 }
 
-let Page = async function(obj, amt, page, asc = true) {
+export let Page = async function(obj, amt, page, asc = true) {
     // Are the parameters valid?
     !obj.prototype.tablename && !obj.tablename && Errors.RequiredFieldError('tablename')
     !amt && Errors.RequiredFieldError('amt')
@@ -87,9 +78,9 @@ let Page = async function(obj, amt, page, asc = true) {
 }
 
 // This is because I think typing 'page' when you just want a list is ridiculous
-let List = (obj, amt, asc = true) => Page(obj, amt, 0, asc)
+export let List = (obj, amt, asc = true) => Page(obj, amt, 0, asc)
 
-let Save = async function(obj) {
+export let Save = async function(obj) {
     // Format and validate
     try {
         ObjectToQueryable(obj)
@@ -104,7 +95,7 @@ let Save = async function(obj) {
 }
 // AKA Spawn, Get, etc
 // Select * FROM tablename WHERE id=x
-let Sync = async function(obj) {
+export let Sync = async function(obj) {
     // Note that there's no need to validate/sanitize because Models[Key] will never contain HTMLChars.
     // Verify the 2 important fields are up to par
     !obj.id && Errors.RequiredFieldError('id')
@@ -113,7 +104,7 @@ let Sync = async function(obj) {
 
     // Pull the database's information on the object, and softclone it.
     try {
-        var DBResult = (await Query(`SELECT * FROM ${tname} WHERE id=${obj.id}`)).rows[0]
+        var DBResult = (await Query(`SELECT * FROM ${obj.tablename} WHERE id=${obj.id}`)).rows[0]
         SoftClone(obj, DBResult)
     } catch(err) {
         throw err
@@ -125,7 +116,7 @@ let Sync = async function(obj) {
  * 
  * @param { Data object with partially filled, or filled, values. Strings will always use %val% for sake of ease.} obj 
  */
-let Search = async function(obj, amt = 25, page = 0, asc = true) {
+export let Search = async function(obj, amt = 25, page = 0, asc = true) {
     // Ensure that the parameters passed are up to standard
     !obj.tablename && Errors.RequiredFieldError('tablename')
     !amt && Errors.RequiredFieldError('amt')
@@ -145,7 +136,7 @@ let Search = async function(obj, amt = 25, page = 0, asc = true) {
 }
 
 // UPDATE tablename SET param=value, param=value WHERE id=x RETURNING *
-let Update = async function(obj) {
+export let Update = async function(obj) {
     // Make sure the object has an id
     (!obj.id || obj.id == -1 || obj.id == undefined) && Errors.RequiredFieldError('id')
     // Prep object for query
@@ -154,9 +145,10 @@ let Update = async function(obj) {
     } catch(err) {
         throw err
     }
-    updateObj = {}
-    updateObj.id = obj.id
-    updateObj.tablename = obj.tablename
+    let updateObj: any = {
+        id: obj.id,
+        tablename: obj.tablename
+    }
     // Get the row that matches the object
     var Existent = (await Query(`SELECT * FROM ${obj.tablename} WHERE id=${obj.id}`)).rows[0]
     // Push the diffs to updateObj
@@ -171,7 +163,7 @@ let Update = async function(obj) {
 }
 
 // Generate a string with only keys that have values
-var GenerateDefinedKeysString = function(obj) {
+export var GenerateDefinedKeysString = function(obj) {
     return keys(obj).reduce((prev, cur) => {
         if(ValidateObjectKey(obj, cur)) 
             prev = (prev == '' ? cur : prev + ', ' + cur)
@@ -181,14 +173,14 @@ var GenerateDefinedKeysString = function(obj) {
 
 
 // Generate an array with only valid values
-var GenerateDefinedValuesArray = (obj) => 
+export var GenerateDefinedValuesArray = (obj) => 
     keys(obj).reduce((prev, cur) => {
         ValidateObjectKey(obj, cur) && prev.push(obj[cur])
         return prev
     }, [])
 
 // Generate a Key = newValue string for update
-var GenerateUpdateKVs = (obj) =>
+export var GenerateUpdateKVs = (obj) =>
     keys(obj).reduce((prev, cur) => {
         if(isString(obj[cur]) && obj[cur][0] != "'") obj[cur] = '\'' + obj[cur] + '\''
         if(ValidateObjectKey(obj, cur)) 
@@ -197,16 +189,16 @@ var GenerateUpdateKVs = (obj) =>
     }, '')
 
 // Generate a $1, $2, $3 style placeholder
-var GenerateDefinedValuesPlaceholders = function(num) {
+export var GenerateDefinedValuesPlaceholders = function(num) {
     num < 1 && Errors.IntOutOfBoundsError(num, 1, 1000, 'num')
     var str = '$1'
-    for(i = 2; i <= num; i++) 
+    for(var i: number = 2; i <= num; i++) 
         str += ", $" + i
     return str
 }
 
 // Generate a search string
-var GenerateSearchValues = function(obj) {
+export var GenerateSearchValues = function(obj) {
     return keys(obj).reduce(function(prev, cur) {
         var param = `${cur} ${isString(obj[cur]) ? "like '%" + obj[cur] + "%' " : '= ' + obj[cur]}`
         if(cur != 'tablename' && obj[cur])
@@ -218,7 +210,7 @@ var GenerateSearchValues = function(obj) {
 /**
  * @param {data/model} obj : The object to operate on
  */
-function ObjectToQueryable(obj) {
+export function ObjectToQueryable(obj) {
     var tname = clone(obj.tablename) || Errors.RequiredFieldError('tablename')
     !Models[tname] && Errors.UnregisteredModelError(obj)
     ValidateObject(obj, Models[tname])
@@ -268,7 +260,7 @@ function ObjectToQueryable(obj) {
  */
 
 // Just a soft-clone. I don't want to lose the object reference.
-var SoftClone = function(obj, row) {
+export var SoftClone = function(obj, row) {
     for(var k in row)
         obj[k] = row[k]
 }
@@ -290,12 +282,12 @@ function IntIsInRange(size, obj) {
 }
 
 // Dates 'count' as numbers, but they are not valid. 
-function CountsAsNumber(obj) {
+export function CountsAsNumber(obj) {
     return !isDate(obj) && isNumber(parseFloat(obj)) && `${obj}`.split('.').length <= 2
 }
 
 // Abstracted this out because #yolo
-var Query = async function(str, args) {
+export var Query = async function(str: string, args: any = undefined) {
     try {
         var Client = await DataPool.connect()
         var res = await Client.query(str, args)
@@ -307,7 +299,7 @@ var Query = async function(str, args) {
 }
 
 // Sanitize every string
-var SanitizeObject = function(obj) {
+export var SanitizeObject = function(obj) {
     for(var k in obj) {
         if(isString(obj[k]) && k != 'tablename'){
             obj[k] = Validator.escape(obj[k])
@@ -334,7 +326,7 @@ let ValidBooleans = {
 // All Validate functions require that the params are not null. 
 // First 2 lines on all of them is param checking.
 
-var ValidateInteger = function(obj, name, type) {
+export var ValidateInteger = function(obj: number|string, name: string, type: any): number {
     !obj && Errors.RequiredFieldError('obj')
     !name && Errors.RequiredFieldError('name')
     !type && Errors.RequiredFieldError('type')
@@ -342,7 +334,7 @@ var ValidateInteger = function(obj, name, type) {
     !CountsAsNumber && Errors.WrongTypeError(typeof obj, 'string(number)|number')
 
     // Is it a number in string form? If so, make it a number
-    obj = parseInt(obj)
+    obj = parseInt("" + obj)
 
     // Is it within its limits?
     type == '2' && !IntIsInRange(2, obj) && Errors.IntOutOfBoundsError(obj, 0, 255, name)
@@ -352,7 +344,7 @@ var ValidateInteger = function(obj, name, type) {
     return obj
 }
 
-var ValidateNumeric = function(obj, name, precision) {
+export var ValidateNumeric = function(obj: any, name: string, precision: number): number {
     !obj && Errors.RequiredFieldError('obj')
     !name && Errors.RequiredFieldError('name')
         
@@ -360,13 +352,13 @@ var ValidateNumeric = function(obj, name, precision) {
     !CountsAsNumber(obj) && Errors.WrongTypeError(typeof obj, 'string(number)|number', name)
     
     // Is it too long?
-    (('' + obj).split('.').pop() > precision) && Errors.WrongTypeError(typeof obj, `float(${precision})`, name)
+    (obj.split('.').pop() > precision) && Errors.WrongTypeError(typeof obj, `float(${precision})`, name)
     
     // Safety parse
-    return parseFloat(obj)
+    return parseFloat("" + obj)
 }
 
-var ValidateVarchar = function(obj, name, max) {
+export var ValidateVarchar = function(obj: string, name: string, max: number = undefined) {
     !obj && Errors.RequiredFieldError('obj')
     !name && Errors.RequiredFieldError('name')
 
@@ -379,7 +371,7 @@ var ValidateVarchar = function(obj, name, max) {
     return obj
 }
 
-var ValidateDate = function(obj, name) {
+export var ValidateDate = function(obj, name) {
     !obj && Errors.RequiredFieldError('obj')
     !name && Errors.RequiredFieldError('name')
 
@@ -393,7 +385,7 @@ var ValidateDate = function(obj, name) {
     return obj.toUTCString()
 }
 
-var ValidateMoney = function(obj, name) {
+export var ValidateMoney = function(obj, name) {
     !obj && Errors.RequiredFieldError('obj')
     !name && Errors.RequiredFieldError('name')
     
@@ -411,7 +403,7 @@ var ValidateMoney = function(obj, name) {
     return obj
 }
 
-var ValidateBoolean = function(obj, name) {
+export var ValidateBoolean = function(obj, name) {
     !obj && Errors.RequiredFieldError('obj')
     !name && Errors.RequiredFieldError('name')
     
@@ -424,34 +416,10 @@ var ValidateBoolean = function(obj, name) {
     return ValidBooleans[("" + obj).toLowerCase()]
 }
 
-var ValidateObject = function(obj, ref) {
+export var ValidateObject = function(obj, ref) {
     for(var k in obj) 
         !has(ref, k) && k != 'tablename' && !isFunction(obj[k]) && Errors.InvalidModelError()
 }
 
 // It exists, is not tablename or id, and is not a function
-var ValidateObjectKey = (obj, key) => (obj[key] && key != 'tablename' && key != 'id' && !isFunction(obj[key])) 
-
-
-module.exports.Initialize                           = Initialize
-module.exports.ObjectToQueryable                    = ObjectToQueryable
-module.exports.ValidateBoolean                      = ValidateBoolean
-module.exports.ValidateDate                         = ValidateDate
-module.exports.ValidateInteger                      = ValidateInteger
-module.exports.ValidateMoney                        = ValidateMoney
-module.exports.ValidateNumeric                      = ValidateNumeric
-module.exports.ValidateVarchar                      = ValidateVarchar
-module.exports.ValidateObject                       = ValidateObject
-module.exports.GenerateDefinedKeysString            = GenerateDefinedKeysString
-module.exports.GenerateDefinedValuesArray           = GenerateDefinedValuesArray
-module.exports.GenerateDefinedValuesPlaceholders    = GenerateDefinedValuesPlaceholders
-module.exports.GenerateSearchValues                 = GenerateSearchValues
-module.exports.GenerateUpdateKVs                    = GenerateUpdateKVs
-module.exports.Models                               = Models
-module.exports.GenerateDefinedKeysString            = GenerateDefinedKeysString
-module.exports.Save                                 = Save
-module.exports.Page                                 = Page
-module.exports.List                                 = List
-module.exports.Delete                               = Delete
-module.exports.Update                               = Update
-module.exports.Search                               = Search
+export var ValidateObjectKey = (obj, key) => (obj[key] && key != 'tablename' && key != 'id' && !isFunction(obj[key])) 

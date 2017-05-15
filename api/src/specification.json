@@ -1,5 +1,5 @@
 {
-    "Router": {
+    "PrimaryRouter": {
         "filename": "primaryRouter",
         "folder": "",
         "type": "router",
@@ -17,22 +17,37 @@
             "/Transaction": "The payments router"
         }
     },
-    "Payments": {
+    "PaymentController": {
         "filename": "payment-controller",
         "folder": "controllers",
         "type": "functional",
         "functions": {
             "MakePayment": {
-                "purpose": "To process payments",
+                "purpose": "Process payments by taking the id of a token, verifying it is a valid token, then processing a payment of amount amt.",
                 "params": {
-                    "token": "The stripe token",
+                    "tokenId": "The stripe token",
                     "amt": "The amount of the payment",
                     "description": "The reason or description for/of the payment",
                     "save": {
                         "default": false,
                         "comment": "Whether or not the card details should be saved through Stripe for future re-use."
                     }
-                }
+                },
+                "tests": [
+                    "Errors on invalid id",
+                    "Adds transaction to database"
+                ]
+            },
+            "ValidateToken": {
+                "purpose": "Easier validation of tokens to make testing easier.",
+                "params": {
+                    "tokenId": " The stripe token id"
+                },
+                "tests": [
+                    "Rejects bad form before sending to server",
+                    "Rejects good form, invalid tokens",
+                    "Approves valid tokens"
+                ]
             },
             "Refund": {
                 "purpose": "Refund a payment to a customer",
@@ -51,12 +66,29 @@
                     "amount": "Positive or negative decimal"
                 }
             },
+            "VerifyToken": {
+                "purpose": "Checks if a token is still usable, is created, and is valid",
+                "params": {
+                    "tokenId": "The token to be checked"
+                }
+            },
             "CheckForEvents": {
                 "purpose": "Check for new events from Stripe"
             }
         }
-
     },
+    "UserController": {
+        "filename": "user-controller",
+        "folder": "controllers",
+        "type": "functional",
+        "functions": {
+            "Register": {},
+            "Login": {},
+            "Deactivate": {},
+            "Activate": {}
+        }
+    },
+    ""
     "Asset": {
         "filename": "assetRouter",
         "folder": "routers",

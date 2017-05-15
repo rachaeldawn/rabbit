@@ -1,0 +1,22 @@
+{
+    "compileOnSave": true,
+    "compilerOptions": {
+        "allowJs": true,
+        "allowUnusedLabels": false,
+        "baseUrl": ".",
+        "listFiles": true,
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "pretty": true,
+        "outDir": "build/",
+        "sourceRoot": "src",
+        "sourceMap": true,
+        "noImplicitAny": false,
+        "lib": [
+            "es7"
+        ],
+        "paths": {
+            "controllers": [ "controllers/" ]
+        }
+    }
+}
