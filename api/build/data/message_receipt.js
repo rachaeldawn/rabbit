@@ -1,3 +1,4 @@
+var Data = require("../data");
 /*
  * @property message_id: References the message this receipt belongs to. First part to composite key.
  * @property recipient_id: The recipient receiving the message. Second part to composite key.
@@ -11,10 +12,21 @@ var MessageReceipt = (function () {
         this.recipient_id = recipient_id;
         this.received = received;
         this.read = read;
+        this.Update = Data.Update.bind(this.Update, this);
+        this.Sync = Data.Sync.bind(this.Sync, this);
+        this.Save = Data.Save.bind(this.Save, this);
+        this.Delete = Data.Delete.bind(this.Delete, this);
     }
     return MessageReceipt;
 }());
 MessageReceipt.prototype.tablename = tablename;
+MessageReceipt.Delete = Data.Delete.bind(MessageReceipt.Delete);
+MessageReceipt.Page = Data.Page.bind(MessageReceipt.Page);
+MessageReceipt.List = Data.List.bind(MessageReceipt.List);
+MessageReceipt.Save = Data.Save.bind(MessageReceipt.Save);
+MessageReceipt.Sync = Data.Sync.bind(MessageReceipt.Sync);
+MessageReceipt.Search = Data.Search.bind(MessageReceipt.Search);
+MessageReceipt.Update = Data.Update.bind(MessageReceipt.Update);
 module.exports = MessageReceipt;
 module.exports.tablename = tablename;
 //# sourceMappingURL=message_receipt.js.map

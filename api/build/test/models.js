@@ -2,7 +2,7 @@ var assert = require('assert');
 var clone = require('lodash').cloneDeep;
 var pg = require('pg');
 var fs = require('fs');
-var Promise = require('promise');
+var Promise = require('bluebird');
 var Pool = new pg.Pool({
     database: 'rabbit_tests',
     host: '192.168.1.189',

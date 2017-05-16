@@ -7,7 +7,9 @@
             "description":    "A max 340 character description of the asset",
             "purchase_value": "What the asset cost to purchase",
             "serial_key":     "An optional string for the serial, or serial key, that was purchased."
-        }
+        },
+        "DeleteMethod": "archive",
+        "SupportTag": true
     },
         
     "asset_tag": {

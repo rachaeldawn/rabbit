@@ -5,7 +5,7 @@
         "allowUnusedLabels": false,
         "baseUrl": ".",
         "listFiles": true,
-        "module": "commonjs",
+        "module": "umd",
         "moduleResolution": "node",
         "pretty": true,
         "outDir": "build/",

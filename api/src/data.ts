@@ -1,12 +1,14 @@
 // TODO: Dependency inject this later from a config file to support _tests vs _production DBs
 
-import { keys, isString, isNumber, isDate, clone, has, isFunction, toLower, forEach } from "lodash"
+import { clone, keys, isString, isNumber, isDate, isFunction, has, toLower, forEach } from "lodash"
+import * as Promse from "bluebird"
 import * as Validator from "Validator"
 import * as fs from "fs"
 import * as pg from "pg"
+import * as Errors from "./errors"
 
-var Models = {}
-const Errors = require('./errors')
+
+export var Models = {}
 
 let DataPool
 
@@ -36,7 +38,7 @@ export var Initialize = async function(config = undefined) {
     }
 }
 
-export let Delete = async function(obj) {
+export let Delete: (obj) => object = async function(obj) {
     // Ignore unset objects
     obj.id == -1 && Errors.UnsavedObjectError()
     // Ensure object conforms to standards
@@ -103,7 +105,8 @@ export let Sync = async function(obj) {
     !Models[obj.tablename] && Errors.UnregisteredModelError(obj)
 
     // Pull the database's information on the object, and softclone it.
-    try {
+    try {   
+        // obj.tablename does not need sanitization because if it was set by a nefarious source, the previous statement would have errored.
         var DBResult = (await Query(`SELECT * FROM ${obj.tablename} WHERE id=${obj.id}`)).rows[0]
         SoftClone(obj, DBResult)
     } catch(err) {
@@ -130,6 +133,7 @@ export let Search = async function(obj, amt = 25, page = 0, asc = true) {
         page = Math.abs(page)
     }
     amt = amt > 100 ? amt = 100 : amt
+    FormatToQueryable(obj)
     // Sanitize from any pesky fuckers.
     SanitizeObject(obj)
     return (await Query(`SELECT * FROM ${obj.tablename} WHERE ${GenerateSearchValues(obj)} ORDER BY id ${asc ? 'asc' : 'desc'} LIMIT ${amt} ${amt * page > 0 ? 'OFFSET ' + amt * page : ''}`)).rows
@@ -145,10 +149,9 @@ export let Update = async function(obj) {
     } catch(err) {
         throw err
     }
-    let updateObj: any = {
-        id: obj.id,
-        tablename: obj.tablename
-    }
+    let updateObj: any = {}
+    updateObj.id = obj.id
+    updateObj.tablename = obj.tablename
     // Get the row that matches the object
     var Existent = (await Query(`SELECT * FROM ${obj.tablename} WHERE id=${obj.id}`)).rows[0]
     // Push the diffs to updateObj
@@ -192,7 +195,7 @@ export var GenerateUpdateKVs = (obj) =>
 export var GenerateDefinedValuesPlaceholders = function(num) {
     num < 1 && Errors.IntOutOfBoundsError(num, 1, 1000, 'num')
     var str = '$1'
-    for(var i: number = 2; i <= num; i++) 
+    for(let i = 2; i <= num; i++) 
         str += ", $" + i
     return str
 }
@@ -201,8 +204,8 @@ export var GenerateDefinedValuesPlaceholders = function(num) {
 export var GenerateSearchValues = function(obj) {
     return keys(obj).reduce(function(prev, cur) {
         var param = `${cur} ${isString(obj[cur]) ? "like '%" + obj[cur] + "%' " : '= ' + obj[cur]}`
-        if(cur != 'tablename' && obj[cur])
-            prev = prev == '' ? param : prev + 'AND ' + param
+        if(cur != 'tablename' && obj[cur] && !isFunction(obj[cur]))
+            prev = prev == '' ? param : prev + ' AND ' + param
         return prev
     }, '')
 }
@@ -214,9 +217,19 @@ export function ObjectToQueryable(obj) {
     var tname = clone(obj.tablename) || Errors.RequiredFieldError('tablename')
     !Models[tname] && Errors.UnregisteredModelError(obj)
     ValidateObject(obj, Models[tname])
+    for(var k in obj) {
+        !obj[k] && Models[tname][k].is_nullable == 'NO' && k != 'id' && Errors.RequiredFieldError(k)
+    }
+    FormatToQueryable(obj)
+    // Test key count, and check 
+    return obj
+}
+
+let StripFunction = (obj, k) => { obj[k] = undefined }
+
+export function FormatToQueryable(obj) {
+    var tname = obj.tablename
     for(var k in Models[obj.tablename]) {
-        // Check if the value is allowed to be null, vs whether or not it is
-        !obj[k] && Models[tname][k].is_nullable == 'NO' && Errors.RequiredFieldError(k)
         // Ignore the id. It is not important for this.
         if(!obj[k] || k == 'id') {
             continue
@@ -251,8 +264,6 @@ export function ObjectToQueryable(obj) {
                 break;
         }
     }
-    // Test key count, and check 
-    return obj
 }
 
 /**
@@ -260,7 +271,7 @@ export function ObjectToQueryable(obj) {
  */
 
 // Just a soft-clone. I don't want to lose the object reference.
-export var SoftClone = function(obj, row) {
+var SoftClone = function(obj, row) {
     for(var k in row)
         obj[k] = row[k]
 }
@@ -282,7 +293,7 @@ function IntIsInRange(size, obj) {
 }
 
 // Dates 'count' as numbers, but they are not valid. 
-export function CountsAsNumber(obj) {
+function CountsAsNumber(obj) {
     return !isDate(obj) && isNumber(parseFloat(obj)) && `${obj}`.split('.').length <= 2
 }
 
@@ -299,7 +310,7 @@ export var Query = async function(str: string, args: any = undefined) {
 }
 
 // Sanitize every string
-export var SanitizeObject = function(obj) {
+var SanitizeObject = function(obj: any) {
     for(var k in obj) {
         if(isString(obj[k]) && k != 'tablename'){
             obj[k] = Validator.escape(obj[k])
@@ -326,7 +337,7 @@ let ValidBooleans = {
 // All Validate functions require that the params are not null. 
 // First 2 lines on all of them is param checking.
 
-export var ValidateInteger = function(obj: number|string, name: string, type: any): number {
+export var ValidateInteger = function(obj, name, type) {
     !obj && Errors.RequiredFieldError('obj')
     !name && Errors.RequiredFieldError('name')
     !type && Errors.RequiredFieldError('type')
@@ -334,7 +345,7 @@ export var ValidateInteger = function(obj: number|string, name: string, type: an
     !CountsAsNumber && Errors.WrongTypeError(typeof obj, 'string(number)|number')
 
     // Is it a number in string form? If so, make it a number
-    obj = parseInt("" + obj)
+    obj = parseInt(obj)
 
     // Is it within its limits?
     type == '2' && !IntIsInRange(2, obj) && Errors.IntOutOfBoundsError(obj, 0, 255, name)
@@ -344,7 +355,7 @@ export var ValidateInteger = function(obj: number|string, name: string, type: an
     return obj
 }
 
-export var ValidateNumeric = function(obj: any, name: string, precision: number): number {
+export var ValidateNumeric = function(obj, name, precision) {
     !obj && Errors.RequiredFieldError('obj')
     !name && Errors.RequiredFieldError('name')
         
@@ -352,13 +363,13 @@ export var ValidateNumeric = function(obj: any, name: string, precision: number)
     !CountsAsNumber(obj) && Errors.WrongTypeError(typeof obj, 'string(number)|number', name)
     
     // Is it too long?
-    (obj.split('.').pop() > precision) && Errors.WrongTypeError(typeof obj, `float(${precision})`, name)
+    (('' + obj).split('.').pop() > precision) && Errors.WrongTypeError(typeof obj, `float(${precision})`, name)
     
     // Safety parse
-    return parseFloat("" + obj)
+    return parseFloat(obj)
 }
 
-export var ValidateVarchar = function(obj: string, name: string, max: number = undefined) {
+export var ValidateVarchar = function(obj, name, max = undefined) {
     !obj && Errors.RequiredFieldError('obj')
     !name && Errors.RequiredFieldError('name')
 

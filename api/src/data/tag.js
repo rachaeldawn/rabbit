@@ -1,3 +1,4 @@
+var Data = require("../data")
 /*
  * @property id: The identifier of the tag 
  * @property name: A string, max length 140 characters, of a tag. Required.
@@ -15,8 +16,20 @@ class Tag {
 		this.blue = blue
 		this.green = green
 		this.opacity = opacity
+		this.Update = Data.Update.bind(this.Update, this)
+		this.Sync = Data.Sync.bind(this.Sync, this)
+		this.Save = Data.Save.bind(this.Save, this)
+		this.Delete = Data.Delete.bind(this.Delete, this)
 	}
 }
+
 Tag.prototype.tablename = tablename
+Tag.Delete = Data.Delete.bind(Tag.Delete)
+Tag.Page = Data.Page.bind(Tag.Page)
+Tag.List = Data.List.bind(Tag.List)
+Tag.Save = Data.Save.bind(Tag.Save)
+Tag.Sync = Data.Sync.bind(Tag.Sync)
+Tag.Search = Data.Search.bind(Tag.Search)
+Tag.Update = Data.Update.bind(Tag.Update)
 module.exports = Tag
 module.exports.tablename = tablename

@@ -1,3 +1,4 @@
+var Data = require("../data")
 /*
  * @property id: The id of a specific calendar event
  * @property user_id: References a specific user. This is null if it is a global event for employees.
@@ -17,8 +18,20 @@ class CalendarEvent {
 		this.occurs_on = occurs_on
 		this.start_time = start_time
 		this.end_time = end_time
+		this.Update = Data.Update.bind(this.Update, this)
+		this.Sync = Data.Sync.bind(this.Sync, this)
+		this.Save = Data.Save.bind(this.Save, this)
+		this.Delete = Data.Delete.bind(this.Delete, this)
 	}
 }
+
 CalendarEvent.prototype.tablename = tablename
+CalendarEvent.Delete = Data.Delete.bind(CalendarEvent.Delete)
+CalendarEvent.Page = Data.Page.bind(CalendarEvent.Page)
+CalendarEvent.List = Data.List.bind(CalendarEvent.List)
+CalendarEvent.Save = Data.Save.bind(CalendarEvent.Save)
+CalendarEvent.Sync = Data.Sync.bind(CalendarEvent.Sync)
+CalendarEvent.Search = Data.Search.bind(CalendarEvent.Search)
+CalendarEvent.Update = Data.Update.bind(CalendarEvent.Update)
 module.exports = CalendarEvent
 module.exports.tablename = tablename

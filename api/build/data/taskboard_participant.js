@@ -1,3 +1,4 @@
+var Data = require("../data");
 /*
  * @property id: The id of this binding participant binding
  * @property taskboard_id: The id of the taskboard to be bound
@@ -15,10 +16,21 @@ var TaskboardParticipant = (function () {
         this.can_write = can_write;
         this.can_delete = can_delete;
         this.can_invite = can_invite;
+        this.Update = Data.Update.bind(this.Update, this);
+        this.Sync = Data.Sync.bind(this.Sync, this);
+        this.Save = Data.Save.bind(this.Save, this);
+        this.Delete = Data.Delete.bind(this.Delete, this);
     }
     return TaskboardParticipant;
 }());
 TaskboardParticipant.prototype.tablename = tablename;
+TaskboardParticipant.Delete = Data.Delete.bind(TaskboardParticipant.Delete);
+TaskboardParticipant.Page = Data.Page.bind(TaskboardParticipant.Page);
+TaskboardParticipant.List = Data.List.bind(TaskboardParticipant.List);
+TaskboardParticipant.Save = Data.Save.bind(TaskboardParticipant.Save);
+TaskboardParticipant.Sync = Data.Sync.bind(TaskboardParticipant.Sync);
+TaskboardParticipant.Search = Data.Search.bind(TaskboardParticipant.Search);
+TaskboardParticipant.Update = Data.Update.bind(TaskboardParticipant.Update);
 module.exports = TaskboardParticipant;
 module.exports.tablename = tablename;
 //# sourceMappingURL=taskboard_participant.js.map

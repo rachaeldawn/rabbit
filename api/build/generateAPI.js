@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 var fs = require('fs');
 var path = require('path');
 var rimraf = require('rimraf');
-var promise = require('promise');
+var promise = require('bluebird');
 var clone = require('lodash').clone;
 function makeFolders() {
     return new Promise(function (resolve, reject) {
@@ -139,10 +139,10 @@ function generateClassFile(obj, key) {
     };
     var Lines = [];
     for (var k in obj.dependencies) {
-        Lines.push("const " + k + " = require(\"" + obj.dependencies[k] + "\")");
+        Lines.push("import * as " + k + " from \"" + obj.dependencies[k] + "\"");
     }
     if (obj.type == 'router') {
-        Lines.push("\nvar route = require('express').Router()");
+        Lines.push("\nvar route = require('express').Router()\nexport default route = route");
     }
     Lines.push('\n');
     if (obj.type == 'class') {
@@ -196,14 +196,12 @@ function generateClassFile(obj, key) {
         Lines.push('\n');
         tabLevel = 0;
         for (var funcName in obj.functions) {
-            if (obj.functions[funcName].visibility == 'private') {
-                Lines.push(tabs() + "function " + funcName + "(" + paramsList(obj.functions[funcName]) + ") {\n" + tabs() + "\tthrow 'Not implemented'\n}");
-            }
+            obj.functions[funcName].visibility == 'private' && Lines.push(tabs() + "function " + funcName + "(" + paramsList(obj.functions[funcName]) + ") {\n" + tabs() + "\tthrow 'Not implemented'\n}");
         }
         Lines.push('\n');
         Lines.push("module.exports = " + key);
     }
-    else if (obj.type == 'functional') {
+    else if (obj.type == 'functional' && obj.functions) {
         Lines.push('/*');
         Lines.push(" * " + tabs() + "Exported Functions: ");
         tabLevel += 1;
@@ -215,8 +213,7 @@ function generateClassFile(obj, key) {
         Lines.push(" * " + tabs() + "Private Functions: ");
         tabLevel += 1;
         for (var funcName in obj.functions) {
-            if (obj.functions[funcName].visibility == 'private')
-                Lines.push(" * " + tabs() + funcName + ": " + obj.functions[funcName].purpose);
+            obj.functions[funcName].visibility == 'private' && Lines.push(" * " + tabs() + funcName + ": " + obj.functions[funcName].purpose);
         }
         Lines.push(' */');
         tabLevel = 0;
@@ -231,13 +228,9 @@ function generateClassFile(obj, key) {
             }
             tabLevel -= 1;
             Lines.push(' */');
-            Lines.push(tabs() + "function " + funcName + "(" + paramsList(obj.functions[funcName]) + ") {\n" + tabs() + "\tthrow 'Not implemented'\n" + tabs() + "}");
+            Lines.push("" + tabs() + (obj.functions[funcName].visibility != 'private' ? 'export ' : '') + "function " + funcName + "(" + paramsList(obj.functions[funcName]) + ") {\n" + tabs() + "\tthrow 'Not implemented'\n" + tabs() + "}");
         }
         Lines.push('\n');
-        for (var funcName in obj.functions) {
-            if (obj.functions[funcName].visibility != 'private')
-                Lines.push("module.exports." + funcName + " = " + funcName);
-        }
     }
     else if (obj.type == 'router') {
         var RenderRoute = function (method, route, comment) {
@@ -247,19 +240,21 @@ function generateClassFile(obj, key) {
             Lines.push(" */");
             Lines.push("route." + method + "('" + route + "', function(response, request) {\n\tthrow \"Route yet to be defined\"\n})");
         };
-        for (var k in obj.post) {
-            RenderRoute('post', k, obj.post[k]);
-            Lines.push("\n");
-        }
-        for (var k in obj.get) {
-            RenderRoute('get', k, obj.get[k]);
-            Lines.push("\n");
-        }
-        for (var k in obj.all) {
-            RenderRoute('all', k, obj.all[k]);
-            Lines.push("\n");
-        }
-        Lines.push("module.exports = route");
+        if (obj.post)
+            for (var k in obj.post) {
+                RenderRoute('post', k, obj.post[k]);
+                Lines.push("\n");
+            }
+        if (obj.get)
+            for (var k in obj.get) {
+                RenderRoute('get', k, obj.get[k]);
+                Lines.push("\n");
+            }
+        if (obj.all)
+            for (var k in obj.all) {
+                RenderRoute('all', k, obj.all[k]);
+                Lines.push("\n");
+            }
     }
     return LinesToString(Lines);
 }

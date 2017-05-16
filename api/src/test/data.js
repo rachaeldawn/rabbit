@@ -218,7 +218,7 @@ describe('Generators', function() {
         })
         it('Generates proper search string', function() {
             var str = Data.GenerateSearchValues(obj)
-            var correct = `name like '%asset%' AND purchase_value = 44.44`
+            var correct = `name like '%asset%'  AND purchase_value = 44.44`
             assert.ok(str == correct, `Did not generate proper string. \nIs:\t\t${str}\nShould be: \t${correct}`)
         })
         it('Ignored undefineds', function() {
@@ -496,7 +496,8 @@ describe('Accessors', function() {
     describe('Search', function() {
         it('searches partials', async function() {
             var SearchObj = new Tag(undefined, 'tag_2')
-            var Results = await Data.Search(SearchObj, 50, 0)
+            var Results = await Tag.Search(SearchObj, 50, 0)
+            //var Results = await Data.Search(SearchObj, 50, 0)
             assert.ok(Results.length == 50, 'Needs to return full amount (tags generates 300)')
             for(var k in Results) {
                 assert.ok(Results[k].name.substr('tag_2'), `An invalid result was returned: ${Results[k]}`)

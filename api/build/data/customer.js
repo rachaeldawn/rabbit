@@ -1,3 +1,4 @@
+var Data = require("../data");
 /*
  * @property id: Identifier for a Customer
  * @property company_name: Name of the customer company
@@ -23,10 +24,21 @@ var Customer = (function () {
         this.physical_country = physical_country;
         this.phone = phone;
         this.start_date = start_date;
+        this.Update = Data.Update.bind(this.Update, this);
+        this.Sync = Data.Sync.bind(this.Sync, this);
+        this.Save = Data.Save.bind(this.Save, this);
+        this.Delete = Data.Delete.bind(this.Delete, this);
     }
     return Customer;
 }());
 Customer.prototype.tablename = tablename;
+Customer.Delete = Data.Delete.bind(Customer.Delete);
+Customer.Page = Data.Page.bind(Customer.Page);
+Customer.List = Data.List.bind(Customer.List);
+Customer.Save = Data.Save.bind(Customer.Save);
+Customer.Sync = Data.Sync.bind(Customer.Sync);
+Customer.Search = Data.Search.bind(Customer.Search);
+Customer.Update = Data.Update.bind(Customer.Update);
 module.exports = Customer;
 module.exports.tablename = tablename;
 //# sourceMappingURL=customer.js.map

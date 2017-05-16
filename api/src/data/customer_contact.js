@@ -1,3 +1,4 @@
+var Data = require("../data")
 /*
  * @property id: References the user account associated with this contact. 1-1 Relationship. 
  * @property first_name: First name of the contact
@@ -15,8 +16,20 @@ class CustomerContact {
 		this.phone = phone
 		this.phone_extension = phone_extension
 		this.about = about
+		this.Update = Data.Update.bind(this.Update, this)
+		this.Sync = Data.Sync.bind(this.Sync, this)
+		this.Save = Data.Save.bind(this.Save, this)
+		this.Delete = Data.Delete.bind(this.Delete, this)
 	}
 }
+
 CustomerContact.prototype.tablename = tablename
+CustomerContact.Delete = Data.Delete.bind(CustomerContact.Delete)
+CustomerContact.Page = Data.Page.bind(CustomerContact.Page)
+CustomerContact.List = Data.List.bind(CustomerContact.List)
+CustomerContact.Save = Data.Save.bind(CustomerContact.Save)
+CustomerContact.Sync = Data.Sync.bind(CustomerContact.Sync)
+CustomerContact.Search = Data.Search.bind(CustomerContact.Search)
+CustomerContact.Update = Data.Update.bind(CustomerContact.Update)
 module.exports = CustomerContact
 module.exports.tablename = tablename

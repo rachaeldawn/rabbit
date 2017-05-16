@@ -1,3 +1,4 @@
+var Data = require("../data")
 /*
  * @property id: The id of the task in the database
  * @property parent_task_id: Null if it is not nested with anything, or the Id of the task this entry is inside
@@ -11,8 +12,20 @@ class TasklistTask {
 		this.parent_task_id = parent_task_id
 		this.is_complete = is_complete
 		this.message = message
+		this.Update = Data.Update.bind(this.Update, this)
+		this.Sync = Data.Sync.bind(this.Sync, this)
+		this.Save = Data.Save.bind(this.Save, this)
+		this.Delete = Data.Delete.bind(this.Delete, this)
 	}
 }
+
 TasklistTask.prototype.tablename = tablename
+TasklistTask.Delete = Data.Delete.bind(TasklistTask.Delete)
+TasklistTask.Page = Data.Page.bind(TasklistTask.Page)
+TasklistTask.List = Data.List.bind(TasklistTask.List)
+TasklistTask.Save = Data.Save.bind(TasklistTask.Save)
+TasklistTask.Sync = Data.Sync.bind(TasklistTask.Sync)
+TasklistTask.Search = Data.Search.bind(TasklistTask.Search)
+TasklistTask.Update = Data.Update.bind(TasklistTask.Update)
 module.exports = TasklistTask
 module.exports.tablename = tablename

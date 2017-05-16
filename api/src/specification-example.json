@@ -35,7 +35,6 @@
             "/Create": ""
         }
     },
-    
     "DataAccess": {
         "filename":"data-access",
         "folder": "src",

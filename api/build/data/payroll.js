@@ -1,3 +1,4 @@
+var Data = require("../data");
 /*
  * @property id: The id of the payroll instance
  * @property employee_id: The id of the employee for this pay
@@ -9,10 +10,21 @@ var Payroll = (function () {
         this.id = id;
         this.employee_id = employee_id;
         this.pay_period_id = pay_period_id;
+        this.Update = Data.Update.bind(this.Update, this);
+        this.Sync = Data.Sync.bind(this.Sync, this);
+        this.Save = Data.Save.bind(this.Save, this);
+        this.Delete = Data.Delete.bind(this.Delete, this);
     }
     return Payroll;
 }());
 Payroll.prototype.tablename = tablename;
+Payroll.Delete = Data.Delete.bind(Payroll.Delete);
+Payroll.Page = Data.Page.bind(Payroll.Page);
+Payroll.List = Data.List.bind(Payroll.List);
+Payroll.Save = Data.Save.bind(Payroll.Save);
+Payroll.Sync = Data.Sync.bind(Payroll.Sync);
+Payroll.Search = Data.Search.bind(Payroll.Search);
+Payroll.Update = Data.Update.bind(Payroll.Update);
 module.exports = Payroll;
 module.exports.tablename = tablename;
 //# sourceMappingURL=payroll.js.map

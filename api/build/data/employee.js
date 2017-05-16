@@ -1,3 +1,4 @@
+var Data = require("../data");
 /*
  * @property id: Id of a user_account relating to this employee. 1-1 relationship.
  * @property first_name: First name of employee (max 180 characters)
@@ -25,10 +26,21 @@ var Employee = (function () {
         this.sin = sin;
         this.birthday = birthday;
         this.is_active = is_active;
+        this.Update = Data.Update.bind(this.Update, this);
+        this.Sync = Data.Sync.bind(this.Sync, this);
+        this.Save = Data.Save.bind(this.Save, this);
+        this.Delete = Data.Delete.bind(this.Delete, this);
     }
     return Employee;
 }());
 Employee.prototype.tablename = tablename;
+Employee.Delete = Data.Delete.bind(Employee.Delete);
+Employee.Page = Data.Page.bind(Employee.Page);
+Employee.List = Data.List.bind(Employee.List);
+Employee.Save = Data.Save.bind(Employee.Save);
+Employee.Sync = Data.Sync.bind(Employee.Sync);
+Employee.Search = Data.Search.bind(Employee.Search);
+Employee.Update = Data.Update.bind(Employee.Update);
 module.exports = Employee;
 module.exports.tablename = tablename;
 //# sourceMappingURL=employee.js.map

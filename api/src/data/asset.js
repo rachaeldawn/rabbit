@@ -1,3 +1,4 @@
+var Data = require("../data")
 /*
  * @property id: The Id of the asset to be tracked
  * @property name: A 64 character name of the asset being tracked. Must be unique.
@@ -13,8 +14,20 @@ class Asset {
 		this.description = description
 		this.purchase_value = purchase_value
 		this.serial_key = serial_key
+		this.Update = Data.Update.bind(this.Update, this)
+		this.Sync = Data.Sync.bind(this.Sync, this)
+		this.Save = Data.Save.bind(this.Save, this)
+		this.Delete = Data.Delete.bind(this.Delete, this)
 	}
 }
+
 Asset.prototype.tablename = tablename
+Asset.Delete = Data.Delete.bind(Asset.Delete)
+Asset.Page = Data.Page.bind(Asset.Page)
+Asset.List = Data.List.bind(Asset.List)
+Asset.Save = Data.Save.bind(Asset.Save)
+Asset.Sync = Data.Sync.bind(Asset.Sync)
+Asset.Search = Data.Search.bind(Asset.Search)
+Asset.Update = Data.Update.bind(Asset.Update)
 module.exports = Asset
 module.exports.tablename = tablename
