@@ -4,8 +4,8 @@ var Data = require("../data")
  * @property employee_id: The id of the employee for this pay
  * @property pay_period_id: The pay period of this pay
  */
-const tablename = 'payroll'
-class Payroll {
+export const tablename = 'payroll'
+export default class Payroll {
 	constructor(id, employee_id, pay_period_id){
 		this.id = id
 		this.employee_id = employee_id
@@ -17,13 +17,11 @@ class Payroll {
 	}
 }
 
+Payroll.Delete     = Data.Delete.bind(Payroll.Delete)
 Payroll.prototype.tablename = tablename
-Payroll.Delete = Data.Delete.bind(Payroll.Delete)
-Payroll.Page = Data.Page.bind(Payroll.Page)
-Payroll.List = Data.List.bind(Payroll.List)
-Payroll.Save = Data.Save.bind(Payroll.Save)
-Payroll.Sync = Data.Sync.bind(Payroll.Sync)
-Payroll.Search = Data.Search.bind(Payroll.Search)
-Payroll.Update = Data.Update.bind(Payroll.Update)
-module.exports = Payroll
-module.exports.tablename = tablename
+Payroll.Page       = Data.Page.bind(Payroll.Page)
+Payroll.List       = Data.List.bind(Payroll.List)
+Payroll.Save       = Data.Save.bind(Payroll.Save)
+Payroll.Sync       = Data.Sync.bind(Payroll.Sync)
+Payroll.Search     = Data.Search.bind(Payroll.Search)
+Payroll.Update     = Data.Update.bind(Payroll.Update)

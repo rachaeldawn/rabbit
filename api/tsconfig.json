@@ -10,7 +10,7 @@
         "pretty": true,
         "outDir": "build/",
         "sourceRoot": "src",
-        "sourceMap": true,
+        "sourceMap": false,
         "noImplicitAny": false,
         "lib": [
             "es7"

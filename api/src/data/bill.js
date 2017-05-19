@@ -5,8 +5,8 @@ var Data = require("../data")
  * @property amount: The cost of the bill on this instance
  * @property billing_date: The date of the bill
  */
-const tablename = 'bill'
-class Bill {
+export const tablename = 'bill'
+export default class Bill {
 	constructor(id, expense_id, amount, billing_date){
 		this.id = id
 		this.expense_id = expense_id
@@ -19,13 +19,11 @@ class Bill {
 	}
 }
 
+Bill.Delete     = Data.Delete.bind(Bill.Delete)
 Bill.prototype.tablename = tablename
-Bill.Delete = Data.Delete.bind(Bill.Delete)
-Bill.Page = Data.Page.bind(Bill.Page)
-Bill.List = Data.List.bind(Bill.List)
-Bill.Save = Data.Save.bind(Bill.Save)
-Bill.Sync = Data.Sync.bind(Bill.Sync)
-Bill.Search = Data.Search.bind(Bill.Search)
-Bill.Update = Data.Update.bind(Bill.Update)
-module.exports = Bill
-module.exports.tablename = tablename
+Bill.Page       = Data.Page.bind(Bill.Page)
+Bill.List       = Data.List.bind(Bill.List)
+Bill.Save       = Data.Save.bind(Bill.Save)
+Bill.Sync       = Data.Sync.bind(Bill.Sync)
+Bill.Search     = Data.Search.bind(Bill.Search)
+Bill.Update     = Data.Update.bind(Bill.Update)

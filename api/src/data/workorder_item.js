@@ -5,8 +5,8 @@ var Data = require("../data")
  * @property service_id: Id of this item
  * @property quantity: The quantity of this item
  */
-const tablename = 'workorder_item'
-class WorkorderItem {
+export const tablename = 'workorder_item'
+export default class WorkorderItem {
 	constructor(id, workorder_id, service_id, quantity){
 		this.id = id
 		this.workorder_id = workorder_id
@@ -19,13 +19,11 @@ class WorkorderItem {
 	}
 }
 
+WorkorderItem.Delete     = Data.Delete.bind(WorkorderItem.Delete)
 WorkorderItem.prototype.tablename = tablename
-WorkorderItem.Delete = Data.Delete.bind(WorkorderItem.Delete)
-WorkorderItem.Page = Data.Page.bind(WorkorderItem.Page)
-WorkorderItem.List = Data.List.bind(WorkorderItem.List)
-WorkorderItem.Save = Data.Save.bind(WorkorderItem.Save)
-WorkorderItem.Sync = Data.Sync.bind(WorkorderItem.Sync)
-WorkorderItem.Search = Data.Search.bind(WorkorderItem.Search)
-WorkorderItem.Update = Data.Update.bind(WorkorderItem.Update)
-module.exports = WorkorderItem
-module.exports.tablename = tablename
+WorkorderItem.Page       = Data.Page.bind(WorkorderItem.Page)
+WorkorderItem.List       = Data.List.bind(WorkorderItem.List)
+WorkorderItem.Save       = Data.Save.bind(WorkorderItem.Save)
+WorkorderItem.Sync       = Data.Sync.bind(WorkorderItem.Sync)
+WorkorderItem.Search     = Data.Search.bind(WorkorderItem.Search)
+WorkorderItem.Update     = Data.Update.bind(WorkorderItem.Update)

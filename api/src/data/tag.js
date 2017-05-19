@@ -7,8 +7,8 @@ var Data = require("../data")
  * @property green: An integer between 0 and 255 symbolizing the green in RGBA
  * @property opacity: An integer between 0 and 255 symbolizing the opacity in RGBA
  */
-const tablename = 'tag'
-class Tag {
+export const tablename = 'tag'
+export default class Tag {
 	constructor(id, name, red, blue, green, opacity){
 		this.id = id
 		this.name = name
@@ -23,13 +23,11 @@ class Tag {
 	}
 }
 
+Tag.Delete     = Data.Delete.bind(Tag.Delete)
 Tag.prototype.tablename = tablename
-Tag.Delete = Data.Delete.bind(Tag.Delete)
-Tag.Page = Data.Page.bind(Tag.Page)
-Tag.List = Data.List.bind(Tag.List)
-Tag.Save = Data.Save.bind(Tag.Save)
-Tag.Sync = Data.Sync.bind(Tag.Sync)
-Tag.Search = Data.Search.bind(Tag.Search)
-Tag.Update = Data.Update.bind(Tag.Update)
-module.exports = Tag
-module.exports.tablename = tablename
+Tag.Page       = Data.Page.bind(Tag.Page)
+Tag.List       = Data.List.bind(Tag.List)
+Tag.Save       = Data.Save.bind(Tag.Save)
+Tag.Sync       = Data.Sync.bind(Tag.Sync)
+Tag.Search     = Data.Search.bind(Tag.Search)
+Tag.Update     = Data.Update.bind(Tag.Update)

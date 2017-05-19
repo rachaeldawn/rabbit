@@ -4,8 +4,8 @@ var Data = require("../data")
  * @property user_id: Id matching a single user_account table value
  * @property conversation_id: Id matching a single conversation table value
  */
-const tablename = 'conversation_participant'
-class ConversationParticipant {
+export const tablename = 'conversation_participant'
+export default class ConversationParticipant {
 	constructor(id, user_id, conversation_id){
 		this.id = id
 		this.user_id = user_id
@@ -17,13 +17,11 @@ class ConversationParticipant {
 	}
 }
 
+ConversationParticipant.Delete     = Data.Delete.bind(ConversationParticipant.Delete)
 ConversationParticipant.prototype.tablename = tablename
-ConversationParticipant.Delete = Data.Delete.bind(ConversationParticipant.Delete)
-ConversationParticipant.Page = Data.Page.bind(ConversationParticipant.Page)
-ConversationParticipant.List = Data.List.bind(ConversationParticipant.List)
-ConversationParticipant.Save = Data.Save.bind(ConversationParticipant.Save)
-ConversationParticipant.Sync = Data.Sync.bind(ConversationParticipant.Sync)
-ConversationParticipant.Search = Data.Search.bind(ConversationParticipant.Search)
-ConversationParticipant.Update = Data.Update.bind(ConversationParticipant.Update)
-module.exports = ConversationParticipant
-module.exports.tablename = tablename
+ConversationParticipant.Page       = Data.Page.bind(ConversationParticipant.Page)
+ConversationParticipant.List       = Data.List.bind(ConversationParticipant.List)
+ConversationParticipant.Save       = Data.Save.bind(ConversationParticipant.Save)
+ConversationParticipant.Sync       = Data.Sync.bind(ConversationParticipant.Sync)
+ConversationParticipant.Search     = Data.Search.bind(ConversationParticipant.Search)
+ConversationParticipant.Update     = Data.Update.bind(ConversationParticipant.Update)

@@ -5,8 +5,8 @@ var Data = require("../data")
  * @property end_date: The ending date of the pay-period
  * @property pay_date: The date the pay is to be provided to employees
  */
-const tablename = 'pay_period'
-class PayPeriod {
+export const tablename = 'pay_period'
+export default class PayPeriod {
 	constructor(id, start_date, end_date, pay_date){
 		this.id = id
 		this.start_date = start_date
@@ -19,13 +19,11 @@ class PayPeriod {
 	}
 }
 
+PayPeriod.Delete     = Data.Delete.bind(PayPeriod.Delete)
 PayPeriod.prototype.tablename = tablename
-PayPeriod.Delete = Data.Delete.bind(PayPeriod.Delete)
-PayPeriod.Page = Data.Page.bind(PayPeriod.Page)
-PayPeriod.List = Data.List.bind(PayPeriod.List)
-PayPeriod.Save = Data.Save.bind(PayPeriod.Save)
-PayPeriod.Sync = Data.Sync.bind(PayPeriod.Sync)
-PayPeriod.Search = Data.Search.bind(PayPeriod.Search)
-PayPeriod.Update = Data.Update.bind(PayPeriod.Update)
-module.exports = PayPeriod
-module.exports.tablename = tablename
+PayPeriod.Page       = Data.Page.bind(PayPeriod.Page)
+PayPeriod.List       = Data.List.bind(PayPeriod.List)
+PayPeriod.Save       = Data.Save.bind(PayPeriod.Save)
+PayPeriod.Sync       = Data.Sync.bind(PayPeriod.Sync)
+PayPeriod.Search     = Data.Search.bind(PayPeriod.Search)
+PayPeriod.Update     = Data.Update.bind(PayPeriod.Update)

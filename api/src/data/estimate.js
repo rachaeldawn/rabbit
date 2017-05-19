@@ -6,8 +6,8 @@ var Data = require("../data")
  * @property open_date: The timestamp of when the estimate was opened/created
  * @property validity_period: Default 14, but max amount of days the estimate is good for
  */
-const tablename = 'estimate'
-class Estimate {
+export const tablename = 'estimate'
+export default class Estimate {
 	constructor(id, customer_id, rep_id, open_date, validity_period){
 		this.id = id
 		this.customer_id = customer_id
@@ -21,13 +21,11 @@ class Estimate {
 	}
 }
 
+Estimate.Delete     = Data.Delete.bind(Estimate.Delete)
 Estimate.prototype.tablename = tablename
-Estimate.Delete = Data.Delete.bind(Estimate.Delete)
-Estimate.Page = Data.Page.bind(Estimate.Page)
-Estimate.List = Data.List.bind(Estimate.List)
-Estimate.Save = Data.Save.bind(Estimate.Save)
-Estimate.Sync = Data.Sync.bind(Estimate.Sync)
-Estimate.Search = Data.Search.bind(Estimate.Search)
-Estimate.Update = Data.Update.bind(Estimate.Update)
-module.exports = Estimate
-module.exports.tablename = tablename
+Estimate.Page       = Data.Page.bind(Estimate.Page)
+Estimate.List       = Data.List.bind(Estimate.List)
+Estimate.Save       = Data.Save.bind(Estimate.Save)
+Estimate.Sync       = Data.Sync.bind(Estimate.Sync)
+Estimate.Search     = Data.Search.bind(Estimate.Search)
+Estimate.Update     = Data.Update.bind(Estimate.Update)

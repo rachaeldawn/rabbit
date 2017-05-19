@@ -7,8 +7,8 @@ var Data = require("../data")
  * @property phone_extension: The phone extension of the contact
  * @property about: A max 2000 character length about to describe who the contact is, what they're permitted to authorize/do, and any other relevant details.
  */
-const tablename = 'customer_contact'
-class CustomerContact {
+export const tablename = 'customer_contact'
+export default class CustomerContact {
 	constructor(id, first_name, last_name, phone, phone_extension, about){
 		this.id = id
 		this.first_name = first_name
@@ -23,13 +23,11 @@ class CustomerContact {
 	}
 }
 
+CustomerContact.Delete     = Data.Delete.bind(CustomerContact.Delete)
 CustomerContact.prototype.tablename = tablename
-CustomerContact.Delete = Data.Delete.bind(CustomerContact.Delete)
-CustomerContact.Page = Data.Page.bind(CustomerContact.Page)
-CustomerContact.List = Data.List.bind(CustomerContact.List)
-CustomerContact.Save = Data.Save.bind(CustomerContact.Save)
-CustomerContact.Sync = Data.Sync.bind(CustomerContact.Sync)
-CustomerContact.Search = Data.Search.bind(CustomerContact.Search)
-CustomerContact.Update = Data.Update.bind(CustomerContact.Update)
-module.exports = CustomerContact
-module.exports.tablename = tablename
+CustomerContact.Page       = Data.Page.bind(CustomerContact.Page)
+CustomerContact.List       = Data.List.bind(CustomerContact.List)
+CustomerContact.Save       = Data.Save.bind(CustomerContact.Save)
+CustomerContact.Sync       = Data.Sync.bind(CustomerContact.Sync)
+CustomerContact.Search     = Data.Search.bind(CustomerContact.Search)
+CustomerContact.Update     = Data.Update.bind(CustomerContact.Update)

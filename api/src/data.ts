@@ -7,7 +7,6 @@ import * as fs from "fs"
 import * as pg from "pg"
 import * as Errors from "./errors"
 
-
 export var Models = {}
 
 let DataPool

@@ -11,8 +11,8 @@ var Data = require("../data")
  * @property phone: Full phone number of customer company
  * @property start_date: The date and time that the customer's account is created
  */
-const tablename = 'customer'
-class Customer {
+export const tablename = 'customer'
+export default class Customer {
 	constructor(id, company_name, mailing_address, mailing_postal_code, mailing_country, physical_address, physical_postal_code, physical_country, phone, start_date){
 		this.id = id
 		this.company_name = company_name
@@ -31,13 +31,11 @@ class Customer {
 	}
 }
 
+Customer.Delete     = Data.Delete.bind(Customer.Delete)
 Customer.prototype.tablename = tablename
-Customer.Delete = Data.Delete.bind(Customer.Delete)
-Customer.Page = Data.Page.bind(Customer.Page)
-Customer.List = Data.List.bind(Customer.List)
-Customer.Save = Data.Save.bind(Customer.Save)
-Customer.Sync = Data.Sync.bind(Customer.Sync)
-Customer.Search = Data.Search.bind(Customer.Search)
-Customer.Update = Data.Update.bind(Customer.Update)
-module.exports = Customer
-module.exports.tablename = tablename
+Customer.Page       = Data.Page.bind(Customer.Page)
+Customer.List       = Data.List.bind(Customer.List)
+Customer.Save       = Data.Save.bind(Customer.Save)
+Customer.Sync       = Data.Sync.bind(Customer.Sync)
+Customer.Search     = Data.Search.bind(Customer.Search)
+Customer.Update     = Data.Update.bind(Customer.Update)

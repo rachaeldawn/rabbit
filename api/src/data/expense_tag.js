@@ -4,8 +4,8 @@ var Data = require("../data")
  * @property expense_id: The id of the expense to be tagged
  * @property tag_id: The tag id to be bound
  */
-const tablename = 'expense_tag'
-class ExpenseTag {
+export const tablename = 'expense_tag'
+export default class ExpenseTag {
 	constructor(id, expense_id, tag_id){
 		this.id = id
 		this.expense_id = expense_id
@@ -17,13 +17,11 @@ class ExpenseTag {
 	}
 }
 
+ExpenseTag.Delete     = Data.Delete.bind(ExpenseTag.Delete)
 ExpenseTag.prototype.tablename = tablename
-ExpenseTag.Delete = Data.Delete.bind(ExpenseTag.Delete)
-ExpenseTag.Page = Data.Page.bind(ExpenseTag.Page)
-ExpenseTag.List = Data.List.bind(ExpenseTag.List)
-ExpenseTag.Save = Data.Save.bind(ExpenseTag.Save)
-ExpenseTag.Sync = Data.Sync.bind(ExpenseTag.Sync)
-ExpenseTag.Search = Data.Search.bind(ExpenseTag.Search)
-ExpenseTag.Update = Data.Update.bind(ExpenseTag.Update)
-module.exports = ExpenseTag
-module.exports.tablename = tablename
+ExpenseTag.Page       = Data.Page.bind(ExpenseTag.Page)
+ExpenseTag.List       = Data.List.bind(ExpenseTag.List)
+ExpenseTag.Save       = Data.Save.bind(ExpenseTag.Save)
+ExpenseTag.Sync       = Data.Sync.bind(ExpenseTag.Sync)
+ExpenseTag.Search     = Data.Search.bind(ExpenseTag.Search)
+ExpenseTag.Update     = Data.Update.bind(ExpenseTag.Update)

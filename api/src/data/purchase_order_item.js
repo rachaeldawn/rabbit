@@ -7,8 +7,8 @@ var Data = require("../data")
  * @property quantity: The amount of the item to be purchased in the quantity * price equation
  * @property price: The price of the item to be purchased in the quantity * price equation
  */
-const tablename = 'purchase_order_item'
-class PurchaseOrderItem {
+export const tablename = 'purchase_order_item'
+export default class PurchaseOrderItem {
 	constructor(id, purchase_order_id, name, description, quantity, price){
 		this.id = id
 		this.purchase_order_id = purchase_order_id
@@ -23,13 +23,11 @@ class PurchaseOrderItem {
 	}
 }
 
+PurchaseOrderItem.Delete     = Data.Delete.bind(PurchaseOrderItem.Delete)
 PurchaseOrderItem.prototype.tablename = tablename
-PurchaseOrderItem.Delete = Data.Delete.bind(PurchaseOrderItem.Delete)
-PurchaseOrderItem.Page = Data.Page.bind(PurchaseOrderItem.Page)
-PurchaseOrderItem.List = Data.List.bind(PurchaseOrderItem.List)
-PurchaseOrderItem.Save = Data.Save.bind(PurchaseOrderItem.Save)
-PurchaseOrderItem.Sync = Data.Sync.bind(PurchaseOrderItem.Sync)
-PurchaseOrderItem.Search = Data.Search.bind(PurchaseOrderItem.Search)
-PurchaseOrderItem.Update = Data.Update.bind(PurchaseOrderItem.Update)
-module.exports = PurchaseOrderItem
-module.exports.tablename = tablename
+PurchaseOrderItem.Page       = Data.Page.bind(PurchaseOrderItem.Page)
+PurchaseOrderItem.List       = Data.List.bind(PurchaseOrderItem.List)
+PurchaseOrderItem.Save       = Data.Save.bind(PurchaseOrderItem.Save)
+PurchaseOrderItem.Sync       = Data.Sync.bind(PurchaseOrderItem.Sync)
+PurchaseOrderItem.Search     = Data.Search.bind(PurchaseOrderItem.Search)
+PurchaseOrderItem.Update     = Data.Update.bind(PurchaseOrderItem.Update)

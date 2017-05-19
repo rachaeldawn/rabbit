@@ -1,9 +1,15 @@
-var assert = require('assert')
-var Asset = require('../data/asset')
-var Tag = require('../data/tag')
-var _ = require('lodash')
-var Data = require('../data')
-let pg = require('pg')
+import Asset, {tablename as AssetTableName} from "../data/asset"
+import Tag from "../data/tag"
+import * as assert from "assert"
+import * as _ from "lodash"
+import * as Data from "../data"
+import * as pg from "pg"
+
+// var assert = require('assert')
+// var _ = require('lodash')
+// var Data = require('../data')
+// let pg = require('pg')
+//
 
 let DataPool = new pg.Pool({
     database: "rabbit_tests",
@@ -14,7 +20,7 @@ let DataPool = new pg.Pool({
     ssl: true,
     user: "Developer",
     password: "Fluffeh9985"
-})
+}) 
 
 let ValidBooleans = {
     '0': false,
@@ -254,7 +260,7 @@ function FailsOnMissing(funcName) {
 describe('Accessors', function() {
     before(async function() {
         var qstring = `INSERT INTO tag (name, red, green, blue, opacity) VALUES ('tag_1', 255, 255, 255, 255);`
-        for(i = 2; i <= 300; i++) {
+        for(var i = 2; i <= 300; i++) {
             qstring += `INSERT INTO tag (name, red, green, blue, opacity) VALUES ('tag_${_.clone(i)}', 255, 255, 255, 255);`
         }
         return await Query(qstring)
@@ -263,7 +269,7 @@ describe('Accessors', function() {
         return await Query(`DELETE FROM tag WHERE name like 'tag_%'`)
     })
     describe('Delete', function() {
-        let asset = new Asset(-1, 'an asset name', 'an asset description', 44.44)
+        let asset = new Asset(-1, 'an asset name', 44.44)
         beforeEach(async function() {
             var res = (await Query(`SELECT * FROM asset WHERE name='an asset name'`)).rows
             if(res.length == 1) {

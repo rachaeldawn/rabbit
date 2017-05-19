@@ -5,8 +5,8 @@ var Data = require("../data")
  * @property is_complete: A true/false value on whether or not the task is complete
  * @property message: The message indicating what the todo is
  */
-const tablename = 'tasklist_task'
-class TasklistTask {
+export const tablename = 'tasklist_task'
+export default class TasklistTask {
 	constructor(id, parent_task_id, is_complete, message){
 		this.id = id
 		this.parent_task_id = parent_task_id
@@ -19,13 +19,11 @@ class TasklistTask {
 	}
 }
 
+TasklistTask.Delete     = Data.Delete.bind(TasklistTask.Delete)
 TasklistTask.prototype.tablename = tablename
-TasklistTask.Delete = Data.Delete.bind(TasklistTask.Delete)
-TasklistTask.Page = Data.Page.bind(TasklistTask.Page)
-TasklistTask.List = Data.List.bind(TasklistTask.List)
-TasklistTask.Save = Data.Save.bind(TasklistTask.Save)
-TasklistTask.Sync = Data.Sync.bind(TasklistTask.Sync)
-TasklistTask.Search = Data.Search.bind(TasklistTask.Search)
-TasklistTask.Update = Data.Update.bind(TasklistTask.Update)
-module.exports = TasklistTask
-module.exports.tablename = tablename
+TasklistTask.Page       = Data.Page.bind(TasklistTask.Page)
+TasklistTask.List       = Data.List.bind(TasklistTask.List)
+TasklistTask.Save       = Data.Save.bind(TasklistTask.Save)
+TasklistTask.Sync       = Data.Sync.bind(TasklistTask.Sync)
+TasklistTask.Search     = Data.Search.bind(TasklistTask.Search)
+TasklistTask.Update     = Data.Update.bind(TasklistTask.Update)

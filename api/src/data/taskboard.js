@@ -4,8 +4,8 @@ var Data = require("../data")
  * @property name: The nickname the employee gives to the taskboard
  * @property creator_id: The id of the employee that created the taskboard.
  */
-const tablename = 'taskboard'
-class Taskboard {
+export const tablename = 'taskboard'
+export default class Taskboard {
 	constructor(id, name, creator_id){
 		this.id = id
 		this.name = name
@@ -17,13 +17,11 @@ class Taskboard {
 	}
 }
 
+Taskboard.Delete     = Data.Delete.bind(Taskboard.Delete)
 Taskboard.prototype.tablename = tablename
-Taskboard.Delete = Data.Delete.bind(Taskboard.Delete)
-Taskboard.Page = Data.Page.bind(Taskboard.Page)
-Taskboard.List = Data.List.bind(Taskboard.List)
-Taskboard.Save = Data.Save.bind(Taskboard.Save)
-Taskboard.Sync = Data.Sync.bind(Taskboard.Sync)
-Taskboard.Search = Data.Search.bind(Taskboard.Search)
-Taskboard.Update = Data.Update.bind(Taskboard.Update)
-module.exports = Taskboard
-module.exports.tablename = tablename
+Taskboard.Page       = Data.Page.bind(Taskboard.Page)
+Taskboard.List       = Data.List.bind(Taskboard.List)
+Taskboard.Save       = Data.Save.bind(Taskboard.Save)
+Taskboard.Sync       = Data.Sync.bind(Taskboard.Sync)
+Taskboard.Search     = Data.Search.bind(Taskboard.Search)
+Taskboard.Update     = Data.Update.bind(Taskboard.Update)

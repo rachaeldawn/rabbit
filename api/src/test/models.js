@@ -1,8 +1,11 @@
 var assert = require('assert')
-var clone = require('lodash').cloneDeep
+var lodash = require('lodash')
+var clone = lodash.clone
 var pg = require('pg')
 var fs = require('fs')
 var Promise = require('bluebird')
+var keys = lodash.keys
+var isFunction = lodash.isFunction
 
 var Pool = new pg.Pool({
     database: 'rabbit_tests',
@@ -36,20 +39,31 @@ var GetModels = function() {
     })
 }
 
+let GetConstructor = (model) => model.default
+
+let GetProperties = (obj) => 
+    keys(obj).reduce(function(prev, cur) {
+        !isFunction(obj[cur]) && prev.push(cur)
+        return prev
+    }, [])
+
+
 describe('Models', function(done) {
     it('loads models', function(done) {
         GetModels()
             .then(function(Models) {
                 return new Promise(function(resolve, reject) {
                     for(var k in Models) {
-                        describe(Models[k].prototype.tablename, function() {
+                        describe(Models[k].tablename, function() {
                             var index = clone(k)
-                            var Class = Models[index]
+                            var Class = GetConstructor(Models[k])
+                            var tablename = clone(Models[k].tablename)
+                            console.log(Class)
                             it('is a class', function() {
                                 assert.ok(typeof Class == typeof TestClass, 'needs to be a class')
                             })
                             it('has a tablename', function() {
-                                assert.ok(Class.prototype.tablename, 'Tablename needs to be added to the protoype')
+                                assert.ok(tablename, 'Tablename needs to be added to the protoype')
                             })
                             it('has properties', function() {
                                 assert.ok(Object.keys(new Class()).length > 0, 'properties need to be added')
@@ -58,14 +72,14 @@ describe('Models', function(done) {
                                 /*
                                  *  SELECT * FROM information_schema.columns WHERE table_schema = 'your_schema' AND table_name   = 'your_table'
                                  */
-                                Pool.query(`SELECT * FROM information_schema.columns WHERE table_schema='rabbitschema' AND table_name='${Class.prototype.tablename}'`)
+                                Pool.query(`SELECT * FROM information_schema.columns WHERE table_schema='rabbitschema' AND table_name='${tablename}'`)
                                     .then(function(result) {
                                         var columns = []
                                         for(var k in result.rows) {
                                             columns.push(result.rows[k].column_name)
                                         }
-                                        var contents = Object.getOwnPropertyNames(new Class())
-                                        assert.ok(columns.length == contents.length, `Class for ${Class.prototype.tablename} is out of sync. Has ${contents}, expects: ${columns}`)
+                                        var contents = GetProperties(new Class())
+                                        assert.ok(columns.length == contents.length, `Class for ${tablename} is out of sync. Has ${contents}, expects: ${columns}`)
                                         var filtered = contents.reduce(function(prev, current) {
                                             if(prev == undefined) {
                                                 prev = []
@@ -78,7 +92,7 @@ describe('Models', function(done) {
                                             prev.push(current)
                                             return prev
                                         }, [])
-                                        assert.ok(filtered.length == 0, `Class for ${Class.prototype.tablename} is out of sync. Invalids: ${filtered}`)
+                                        assert.ok(filtered.length == 0, `Class for ${tablename} is out of sync. Invalids: ${filtered}`)
                                         done()
                                     })
                                     .catch(err => done(err))
@@ -110,7 +124,7 @@ describe('Models', function(done) {
                             if(cur.endsWith('_tag'))
                                 return prev
                             for(var k in Models) {
-                                if(Models[k].prototype.tablename == cur) {
+                                if(Models[k].tablename == cur) {
                                     return prev
                                 }
                             }

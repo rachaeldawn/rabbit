@@ -1,0 +1,719 @@
+{
+    "PrimaryRouter": {
+        "filename": "router",
+        "folder": "",
+        "type": "router",
+        "post": {
+            "/:Type/:Function": "Routing made easy. All params are received by JSON.",
+            "/:Type/List/:Amount": "List amount",
+            "/:Type/Page/:Amount/:Page": "Pages number Page, amount Amount",
+            "/:Type/Tag/:Function": "Perform function on Tag. Tag must be supported.",
+            "/:Type/Page/Tagged/:Amount/:Page": "Pages tagged Type, Quantity Amount, page number Page",
+            "/:Type/Tag/Page/:Amount/:Page": "Perform function on Tagged Type. Tag must be supported.",
+            "/:Type/Tag/List/:Amount": "Perform function on Tag. Tag must be supported.",
+            "/:Type/:Function/Tag": "Perform function on Tagged Type. Tag must be supported."
+        }
+    },
+    "PaymentController": {
+        "filename": "payment-controller",
+        "folder": "controllers",
+        "type": "functional",
+        "functions": {
+            "ReceivePayment": {
+                "purpose": "Process payments by taking the id of a token, verifying it is a valid token, then processing a payment of amount amt.",
+                "params": {
+                    "tokenId" : {
+                       "type": "string",
+                       "comment": "The stripe token"
+                    },
+                    "amt" : {
+                       "type": "number",
+                       "comment": "The amount of the payment"
+                    },
+                    "description" : {
+                       "type": "string",
+                       "comment": "The reason or description for/of the payment"
+                    },
+                    "save": {
+                        "type": "boolean",
+                        "default": false,
+                        "comment": "Whether or not the card details should be saved through Stripe for future re-use."
+                    }
+                },
+                "tests": [
+                    "Errors on invalid id",
+                    "Adds transaction to database",
+                    "Charges correct amount",
+                    "Creates charge with Stripe"
+                ]
+            },
+            "ValidateToken": {
+                "purpose": "Easier validation of tokens to make testing easier.",
+                "params": {
+                    "tokenId" : {
+                       "type": "number",
+                       "comment": "The stripe token id"
+                    }
+                },
+                "tests": [
+                    "Rejects bad form before sending to server (local)",
+                    "Rejects good form, invalid tokens (async)",
+                    "Approves valid tokens"
+                ]
+            },
+            "Refund": {
+                "purpose": "Refund a payment to a customer",
+                "params": {
+                    "transaction" : {
+                       "type": "any",
+                       "comment": "A charge object"
+                    },
+                    "amount" : {
+                       "type": "number",
+                       "comment": "Amount to refund. -1 means full amount",
+                       "default": "-1"
+                    }
+                },
+                "tests": [
+                    "Refunds correct amount",
+                    "Ignores bad form for transaction id (local)",
+                    "Breaks on non-existent transaction id"
+                ]
+            },
+            "Adjust": {
+                "purpose": "Adjust a previously made payment (refund, and makepayment, or just a refund if is less)",
+                "params": {
+                    "transaction" : {
+                       "type": "any",
+                       "comment": "Positive or negative decimal"
+                    },
+                    "amount" : {
+                       "type": "number",
+                       "comment": "Positive or negative decimal"
+                    }
+                },
+                "tests": [
+                    "refunds correct partial amount",
+                    "re-charges correct amount",
+                    "refunds full amount on new charge higher"
+                ]                
+            },
+            "CheckForEvents": {
+                "purpose": "Check for new events from Stripe",
+                "params": {
+
+                },
+                "tests": [
+                    "Returns events when there are unread events",
+                    "Returns nothing when there are no events to be read"
+                ]
+            },
+            "GetBalance": {
+                "purpose": "Returns the balance that stripe owes us thus far",
+                "params" :{
+                    
+                },
+                "tests": [
+                    "Retrieves proper balance"
+                ]
+            }
+        },
+        "dependencies": {
+            "* as _": "lodash",
+            "* as StripeNode": "stripe"
+        }
+    },
+    "UserController": {
+        "filename": "user-controller",
+        "folder": "controllers",
+        "type": "functional",
+        "functions": {
+            "RegisterUserAccount": {
+              "purpose": "Register a new user for the system",
+              "params": {
+                  "username" : {
+                     "type": "string",
+                     "comment": "The username that they will be signing up with"
+                  },
+                  "password" : {
+                     "type": "string",
+                     "comment": "The password they will be using"
+                  }
+              },
+              "tests": [
+                  "Creates a new user",
+                  "Hashes the password",
+                  "Takes at least 400ms to generate",
+                  "Sends iterations and password to hasher",
+                  "Sets the user account as inactive"
+              ]
+            },
+            "FinishUserRegistration": {
+                "purpose": "Verifies a token for registration, and sets a user to active",
+                "params": {
+                    "user" : {
+                        "type": "number|string",
+                        "comment": "The user id or user name that is to be registered"
+                    },
+                    "token" : {
+                        "type": "string",
+                        "comment": "The token string for the user registration"
+                    }
+                },
+                "tests": [
+                    "Activates user account"
+                ]
+            },
+            "ValidateActivationToken": {
+              "purpose": "Validation of the activation token",
+              "params": {
+                  "userid" : {
+                     "type": "number",
+                     "comment": "The user id that is to be verified with a token"
+                  },
+                  "token" : {
+                     "type": "string",
+                     "comment": "The token to be verified"
+                  }
+              },
+              "tests": [
+                  "Validates correctly",
+                  "Rejects invalid parameters",
+                  "Rejects incorrect token"
+              ]
+            },
+            "ActivateUser": {
+                "purpose": "Activates a user that has been deactivated",
+                "params": {
+                    "userId" : {
+                        "type": "number",
+                        "comment": "The user Id that is to be activated"
+                    }
+                },
+                "tests": [
+                    "Properly activates a user",
+                    "Refuses a non-existent user id",
+                    "Ignores users that are already active"
+                ]
+            },
+            "DeactivateUser": {
+                "purpose": "Deactivates a user that is currently active",
+                "params": {
+                    "userId" : {
+                        "type": "number",
+                        "comment": "The user Id to be deactivated"
+                    }
+                },
+                "tests": [
+                    "Deactivates user",
+                    "Ignores users that are already inactive",
+                    "Refuses a non-existent user id"
+                ]
+            },
+            "GetUserStatus": {
+                "purpose": "Retrieves whether or not a user is active",
+                "params": {
+                    
+                },
+                "tests": [
+                    "gets proper status",
+                    "ignores non-existent users"
+                ]
+            },
+            "CreateUser": {
+                "purpose": "Creates a new user. Utility function for user registration. Returns id",
+                "params": {
+                    "userName" : {
+                        "type": "string",
+                        "comment": "The username to be used for logins. No spaces permitted."
+                    },
+                    "password" : {
+                        "type": "string",
+                        "comment": "Password in plaintext form, pre-hash."
+                    }
+                },
+                "tests": [
+                    "Refuses bad-form username",
+                    "Refuses passwords smaller than 8 characters", 
+                    "Uses hash algorithm"
+                ]
+            },
+            "ResetPassword": {
+                "purpose": "Uses a token to reset the user's password",
+                "params": {
+                    "newPassword" : {
+                        "type": "string",
+                        "comment": "The new password"
+                    },
+                    "resetToken" : {
+                        "type": "string",
+                        "comment": "The token to be used for resetting the user's password"
+                    }
+                },
+                "tests": [
+                    "Password is reset"
+                ]
+            },
+            "GeneratePassword": {
+                "purpose": "Dependency injection capable hasher",
+                "params": {
+                    "password" : {
+                        "type": "string",
+                        "comment": "The password to be used by the algo"
+                    },
+                    "algo" : {
+                        "type": "(password: string|Buffer, salt: string|Buffer, iterations: number, keylen: number, digest: string, callback: (err: Error, derivedKey: Buffer) => any) => any)",
+                        "comment": "The hashing algorithm to be used"
+                    }
+                },
+                "tests": [
+                    "Generates a hex password hash"
+                ]
+            },
+            "CacheUsers": {
+                "purpose": "Caches all of the users locally so lookups in the database are not so arduous. To be done ONCE on application startup.",
+                "params": {
+                    
+                },
+                "tests": [
+                    "Gets all users",
+                    "Gets all password hashes"
+                ]
+            },
+            "AddUserToCache": {
+                "purpose": "Adds a new user to the cache",
+                "params": {
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or the User object to store"
+                    }
+                },
+                "tests": [
+                    "Refuses a non-existent user id",
+                    "Caches user"
+                ]
+            },
+            "RemoveUserFromCache": {
+                "purpose": "Removes a deactivated user from the cache",
+                "params": {
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or user to remove from the cache"
+                    }
+                },
+                "tests": [
+                    "Removes user from cache",
+                    "Refuses if user does not exist in cache already"
+                ]
+            },
+            "GetCachedUser": {
+                "purpose": "Gets a cached user",
+                "params": {
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The user or id of the user to get"
+                    }
+                },
+                "tests": [
+                    "Retrieves users that do exist",
+                    "Refuses if user does not exist"
+                ]
+            },
+            "UpdateCachedUser": {
+                "purpose": "Updates a user that was already cached.",
+                "params": {
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or user to be updated from the database"
+                    }
+                },
+                "tests": [
+                    "Updates from database",
+                    "Refuses if user does not exist in cache",
+                    "Errors if user does not exist in database"
+                ]
+            }
+        },
+        "dependencies": {
+             "* as crypto": "crypto",
+             "{default as User}": "../data/user_account"
+        }
+    },
+    "PermissionController": {
+        "filename": "permission-controller",
+        "folder": "controllers",
+        "type": "functional",
+        "functions": {
+            "GivePermission": {
+                "purpose": "Give a user a permission, checking first if the user giving the permission is allowed.",
+                "params": {
+                    "userId" : {
+                        "type": "number|User",
+                        "comment": "The userId or User object to have the permission set on"
+                    },
+                    "permissionId" : {
+                        "type": "number|Permission",
+                        "comment": "The id, or object, of the permission to be set on the user"
+                    },
+                    "giverId" : {
+                        "type": "number|User",
+                        "comment": "The userId or User object providing the permission"
+                    }
+                },
+                "tests": [
+                    "Refuses if giver does not have permission to provide permission",
+                    "Refuses if giver does not exist",
+                    "Refuses if user does not exist",
+                    "Refuses if permission does not exist",
+                    "Sets permission properly"
+                ]
+            },
+            "RevokePermission": {
+                "purpose": "Revokes a permisison off of a user, checking first if the revoker is allowed to revoke permission",
+                "params": {
+                    "revokeee" : {
+                        "type": "number|User",
+                        "comment": "The id or user object to have the permission revoked from"
+                    },
+                    "permission" : {
+                        "type": "number|Permission",
+                        "comment": "The id or object of the permission to be provided"
+                    },
+                    "revoker" : {
+                        "type": "number|User",
+                        "comment": "The id or the object of the user revoking the permission"
+                    }
+                },
+                "tests": [
+                    "Refuses if giver does not have permission to revoke permission",
+                    "Refuses if revoker does not exist",
+                    "Refuses if revokeee does not exist",
+                    "Refuses if permission does not exist",
+                    "Properly revokes permission",
+                    "Updates permission cache"
+                ]
+            },
+            "HasPermission": {
+                "purpose": "Checks if the user has a permission",
+                "params": {
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "User id or the user object to be checked"
+                    },
+                    "permission" : {
+                        "type": "number|Permission",
+                        "comment": "The permission to be checked"
+                    }
+                },
+                "tests": [
+                    "Refuses if user does not exist",
+                    "Refuses if permission does not exist",
+                    "Returns proper true/false",
+                    "Updates permission cache"
+                ]
+            },
+            "CachePermissionSet": {
+                "purpose": "To cache a user's permission set. Used to increase permission checking performance.",
+                "params": {
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The user or id of the user to have their permissions cached"
+                    }
+                },
+                "tests": [
+                    "Refuses if user does not exist",
+                    "Caches all permissions"
+                ]
+            },
+            "DeleteFromCache": {
+                "purpose": "Deletes a user's permissions from cache after a period of time",
+                "params": {
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or User object to remove the permissions from"
+                    }
+                },
+                "tests": [
+                    "Refuses if user does not exist",
+                    "Deletes permissions"
+                ]
+            }
+        },
+        "dependencies": {
+            "{default as User}": "../data/user_account",
+            "{default as Permission}": "../data/user_permission",
+            "{default as PermissionSet}": "../data/user_permission_set"
+        }
+    },
+    "CommunicationController": {
+        "filename": "communication-controller",
+        "folder": "controllers",
+        "type": "functional",
+        "functions": {
+            "SendMessage": {
+                "purpose": "To send a message to another user. Note: Receipts in conversation should be created too.",
+                "params": {
+                    "sender" : {
+                        "type": "number|User",
+                        "comment": "The person that is sending the message"
+                    },
+                    "conversation" : {
+                        "type": "number|Conversation",
+                        "comment": "the id or conversation object to send the message to"
+                    },
+                    "msg" : {
+                        "type": "string",
+                        "comment": "The message the user has sent"
+                    }
+                },
+                "tests": [
+                    "Refuses if user does not exist",
+                    "Refuses if conversation does not exist",
+                    "Refuses if message is too long",
+                    "Refuses if user is not part of the conversation",
+                    "Refuses if the message is empty",
+                    "Makes necessary notifications",
+                    "Sends the message"
+                ]
+            },
+            "CreateReceiptsForMessage": {
+                "purpose": "Creates the receipts in a conversation for the messages",
+                "params": {
+                    "message" : {
+                        "type": "id|Message",
+                        "comment": "The id or the message object to create receipts for"
+                    },
+                    "conversation" : {
+                        "type": "number|Conversation",
+                        "comment": "The id or the Conversation object to create receipts for"
+                    }
+                },
+                "tests": [
+                    "Refuses if receipts already exist",
+                    "Refuses if id is not set", 
+                    "Refuses if conversation does not exist",
+                    "Creates receipts for all users in conversation"
+                ]
+            },
+            "GetConversation": {
+                "purpose": "Retrieves a single conversation",
+                "params": {
+                    "user" : {
+                        "type": "id|User",
+                        "comment": "The user requesting the conversation"
+                    },
+                    "conversation" : {
+                        "type": "number|Conversation",
+                        "comment": "The object to retrieve the conversation (just use sync)"
+                    }
+                },
+                "tests": [
+                    "Refuses if conversation does not exist",
+                    "Refuses if user is not part of the conversation",
+                    "Retrieves conversation",
+                    "Retrieves a page of messages (50) bolted onto the conversation",
+                    "Final 4 messages have receipts"                    
+                ]
+            },
+            "ListConversations": {
+                "purpose": "Gets a list of conversations related to the user",
+                "params": {
+                    "userId" : {
+                        "type": "number|User",
+                        "comment": "The user to get a list of conversations for"
+                    },
+                    "amt" : {
+                        "type": "number",
+                        "comment": "The quantity of conversations to get (max 20)",
+                        "default": 20
+                    }
+                },
+                "tests": [
+                    "Gets list of conversations",
+                    "Gets only conversations for the user",
+                    "Retrieves a page of messages (50) bolted onto each conversation",
+                    "Refuses if user does not exist",
+                    "Returns quantity of conversations or less",
+                    "Final 4 messages have receipts"                    
+                ]
+            },
+            "PageConversations": {
+                "purpose": "Gets a page of conversations related to the user",
+                "params": {
+                    "userId" : {
+                        "type": "number|User",
+                        "comment": "The user to get a page of conversations for"
+                    },
+                    "amt" : {
+                        "type": "number",
+                        "comment": "The amount of conversations to get"
+                    },
+                    "page" : {
+                        "type": "number",
+                        "comment": "The page number",
+                        "default": 1
+                    }
+                },
+                "tests": [
+                    "Gets list of conversations",
+                    "Gets only conversations for the user",
+                    "Retrieves a page of messages (50) bolted onto each conversation",
+                    "Refuses if user does not exist",
+                    "Returns quantity of conversations or less",
+                    "Final 4 messages have receipts"
+                ]
+            },
+            "ListMessages": {
+                "purpose": "Gets just the messages for a single conversation",
+                "params": {
+                    "conversation" : {
+                        "type": "number|Conversation",
+                        "comment": "The id or Conversation"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or User to get the messages in a conversation for"
+                    }
+                },
+                "tests": [
+                    "Gets list of messages",
+                    "Gets only the messages for the user",
+                    "Gets only the messages in the conversation",
+                    "Sets messages as received for user",
+                    "Final 4 messages have receipts",
+                    "Refuses if the user is not part of the conversation the message is in"
+                ]
+            },
+            "PageMessages": {
+                "purpose": "Gets a page of messages for a single conversation",
+                "params": {
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or user to get a page of messages for"
+                    },
+                    "amt" : {
+                        "type": "number",
+                        "comment": "The number of messages to get in the conversation"
+                    },
+                    "page" : {
+                        "type": "number",
+                        "comment": "The page number",
+                        "default": 1
+                    }
+                },
+                "tests": [
+                    "Gets a page of messages",
+                    "Correct amount of messages (less than or equal)",
+                    "Correct offset of messages (final page, or correct page)",
+                    "Refuses if the user is not part of the conversation the message is in",
+                    "Final 4 messages have receipts",
+                    "Sets messages as received for user"     
+                ]
+            },
+            "GetReceipts": {
+                "purpose": "Gets receipts for a message",
+                "params": {
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The user to get the receipts for"
+                    },
+                    "message" : {
+                        "type": "number|Message",
+                        "comment": "The message to get the receipt(s) for"
+                    }
+                },
+                "tests": [
+                    "Gets receipts for only the message",
+                    "Gets receipt for only the user",
+                    "Refuses if the user is not part of the conversation the message is in",
+                    "Returns receipts for message"
+                ]
+            },
+            "AddParticipant": {
+                "purpose": "Adds a participant to a conversation",
+                "params": {
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The user being added"
+                    },
+                    "conversation" : {
+                        "type": "number|Conversation",
+                        "comment": "The conversation to be added to"
+                    },
+                    "adder" : {
+                        "type": "number|User",
+                        "comment": "The person adding the other to the conversation"
+                    }
+                },
+                "tests": [
+                    "Ignores users that do not exist",
+                    "Ignores if adder is not part of the conversation",
+                    "Ignores if the user is already part of the conversation",
+                    "Adds user to the conversation"
+                ]
+            },
+            "SetMessageReceived": {
+                "purpose": "Sets a single message as read",
+                "params": {
+                    "message" : {
+                        "type": "number|Message",
+                        "comment": "The message to be set as read"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The user that read it"
+                    }
+                },
+                "tests": [
+                    "Refuses if user does not exist",
+                    "Refuses if message does not exist",
+                    "Refuses if the user is not part of the conversation the message is in",
+                    "Sets the message as read"
+                ]
+            },
+            "GetParticipants": {
+                "purpose": "Retrieves the participants in the conversation. Returns ConversationParticipant[]",
+                "params": {
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or user to get the conversation for."
+                    },
+                    "conversation" : {
+                        "type": "number|Conversation",
+                        "comment": "The conversation to get the participants for"
+                    }
+                },
+                "tests": [
+                    "Reject if the conversation or user does not exist",
+                    "Reject if user is not in the conversation",
+                    "Returns every other participant than user",
+                    "Returns array of ConversationParticipants"
+                ]
+            },
+            "SetAllMessagesRead": {
+                "purpose": "Sets all of the messages in the conversation as being read",
+                "params": {
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or user object to have 'read' the messages"
+                    },
+                    "conversation" : {
+                        "type": "number|Conversation",
+                        "comment": "the id or conversation to have the messages set to read"
+                    }
+                },
+                "tests": [
+                    "Refuses if conversation does not exist",
+                    "Refuses if user does not exist"
+                ]
+            }
+        },
+        "dependencies": {
+            "{UserAccount as User}": "../data/user_account",
+            "Conversation": "../data/conversation",
+            "ConversationParticipant": "../data/conversation_participant",
+            "Message": "../data/message",
+            "MessageReceipt": "../data/message_receipt"
+        }
+    }
+}

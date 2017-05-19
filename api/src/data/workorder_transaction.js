@@ -5,8 +5,8 @@ var Data = require("../data")
  * @property contact_id: The id of the contact that made the transaction
  * @property transaction_id: The id of the transaction that is bound to the workorder
  */
-const tablename = 'workorder_transaction'
-class WorkorderTransaction {
+export const tablename = 'workorder_transaction'
+export default class WorkorderTransaction {
 	constructor(id, workorder_id, contact_id, transaction_id){
 		this.id = id
 		this.workorder_id = workorder_id
@@ -19,13 +19,11 @@ class WorkorderTransaction {
 	}
 }
 
+WorkorderTransaction.Delete     = Data.Delete.bind(WorkorderTransaction.Delete)
 WorkorderTransaction.prototype.tablename = tablename
-WorkorderTransaction.Delete = Data.Delete.bind(WorkorderTransaction.Delete)
-WorkorderTransaction.Page = Data.Page.bind(WorkorderTransaction.Page)
-WorkorderTransaction.List = Data.List.bind(WorkorderTransaction.List)
-WorkorderTransaction.Save = Data.Save.bind(WorkorderTransaction.Save)
-WorkorderTransaction.Sync = Data.Sync.bind(WorkorderTransaction.Sync)
-WorkorderTransaction.Search = Data.Search.bind(WorkorderTransaction.Search)
-WorkorderTransaction.Update = Data.Update.bind(WorkorderTransaction.Update)
-module.exports = WorkorderTransaction
-module.exports.tablename = tablename
+WorkorderTransaction.Page       = Data.Page.bind(WorkorderTransaction.Page)
+WorkorderTransaction.List       = Data.List.bind(WorkorderTransaction.List)
+WorkorderTransaction.Save       = Data.Save.bind(WorkorderTransaction.Save)
+WorkorderTransaction.Sync       = Data.Sync.bind(WorkorderTransaction.Sync)
+WorkorderTransaction.Search     = Data.Search.bind(WorkorderTransaction.Search)
+WorkorderTransaction.Update     = Data.Update.bind(WorkorderTransaction.Update)

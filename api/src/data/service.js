@@ -6,8 +6,8 @@ var Data = require("../data")
  * @property price: The default price to be used in the price * quantity equation.
  * @property default_quantity: The default quantity of the service to be used in the price * quantity equation.
  */
-const tablename = 'service'
-class Service {
+export const tablename = 'service'
+export default class Service {
 	constructor(id, name, description, price, default_quantity){
 		this.id = id
 		this.name = name
@@ -21,13 +21,11 @@ class Service {
 	}
 }
 
+Service.Delete     = Data.Delete.bind(Service.Delete)
 Service.prototype.tablename = tablename
-Service.Delete = Data.Delete.bind(Service.Delete)
-Service.Page = Data.Page.bind(Service.Page)
-Service.List = Data.List.bind(Service.List)
-Service.Save = Data.Save.bind(Service.Save)
-Service.Sync = Data.Sync.bind(Service.Sync)
-Service.Search = Data.Search.bind(Service.Search)
-Service.Update = Data.Update.bind(Service.Update)
-module.exports = Service
-module.exports.tablename = tablename
+Service.Page       = Data.Page.bind(Service.Page)
+Service.List       = Data.List.bind(Service.List)
+Service.Save       = Data.Save.bind(Service.Save)
+Service.Sync       = Data.Sync.bind(Service.Sync)
+Service.Search     = Data.Search.bind(Service.Search)
+Service.Update     = Data.Update.bind(Service.Update)

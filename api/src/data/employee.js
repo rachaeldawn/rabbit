@@ -12,8 +12,8 @@ var Data = require("../data")
  * @property birthday: Birthday of employee
  * @property is_active: Whether or not the employee is with us.
  */
-const tablename = 'employee'
-class Employee {
+export const tablename = 'employee'
+export default class Employee {
 	constructor(id, first_name, middle_name, last_name, phone, about, home_address, postal_code, sin, birthday, is_active){
 		this.id = id
 		this.first_name = first_name
@@ -33,13 +33,11 @@ class Employee {
 	}
 }
 
+Employee.Delete     = Data.Delete.bind(Employee.Delete)
 Employee.prototype.tablename = tablename
-Employee.Delete = Data.Delete.bind(Employee.Delete)
-Employee.Page = Data.Page.bind(Employee.Page)
-Employee.List = Data.List.bind(Employee.List)
-Employee.Save = Data.Save.bind(Employee.Save)
-Employee.Sync = Data.Sync.bind(Employee.Sync)
-Employee.Search = Data.Search.bind(Employee.Search)
-Employee.Update = Data.Update.bind(Employee.Update)
-module.exports = Employee
-module.exports.tablename = tablename
+Employee.Page       = Data.Page.bind(Employee.Page)
+Employee.List       = Data.List.bind(Employee.List)
+Employee.Save       = Data.Save.bind(Employee.Save)
+Employee.Sync       = Data.Sync.bind(Employee.Sync)
+Employee.Search     = Data.Search.bind(Employee.Search)
+Employee.Update     = Data.Update.bind(Employee.Update)

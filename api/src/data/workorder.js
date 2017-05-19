@@ -5,8 +5,8 @@ var Data = require("../data")
  * @property rep_id: The id of the employee that opened the workorder
  * @property open_date: Timestamp that defaults to now 
  */
-const tablename = 'workorder'
-class Workorder {
+export const tablename = 'workorder'
+export default class Workorder {
 	constructor(id, customer_id, rep_id, open_date){
 		this.id = id
 		this.customer_id = customer_id
@@ -19,13 +19,11 @@ class Workorder {
 	}
 }
 
+Workorder.Delete     = Data.Delete.bind(Workorder.Delete)
 Workorder.prototype.tablename = tablename
-Workorder.Delete = Data.Delete.bind(Workorder.Delete)
-Workorder.Page = Data.Page.bind(Workorder.Page)
-Workorder.List = Data.List.bind(Workorder.List)
-Workorder.Save = Data.Save.bind(Workorder.Save)
-Workorder.Sync = Data.Sync.bind(Workorder.Sync)
-Workorder.Search = Data.Search.bind(Workorder.Search)
-Workorder.Update = Data.Update.bind(Workorder.Update)
-module.exports = Workorder
-module.exports.tablename = tablename
+Workorder.Page       = Data.Page.bind(Workorder.Page)
+Workorder.List       = Data.List.bind(Workorder.List)
+Workorder.Save       = Data.Save.bind(Workorder.Save)
+Workorder.Sync       = Data.Sync.bind(Workorder.Sync)
+Workorder.Search     = Data.Search.bind(Workorder.Search)
+Workorder.Update     = Data.Update.bind(Workorder.Update)

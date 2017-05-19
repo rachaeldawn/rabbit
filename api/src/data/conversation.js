@@ -3,8 +3,8 @@ var Data = require("../data")
  * @property id: Identifier of a Conversation
  * @property creator_id: The Id matching a user_account table entry
  */
-const tablename = 'conversation'
-class Conversation {
+export const tablename = 'conversation'
+export default class Conversation {
 	constructor(id, creator_id){
 		this.id = id
 		this.creator_id = creator_id
@@ -15,13 +15,11 @@ class Conversation {
 	}
 }
 
+Conversation.Delete     = Data.Delete.bind(Conversation.Delete)
 Conversation.prototype.tablename = tablename
-Conversation.Delete = Data.Delete.bind(Conversation.Delete)
-Conversation.Page = Data.Page.bind(Conversation.Page)
-Conversation.List = Data.List.bind(Conversation.List)
-Conversation.Save = Data.Save.bind(Conversation.Save)
-Conversation.Sync = Data.Sync.bind(Conversation.Sync)
-Conversation.Search = Data.Search.bind(Conversation.Search)
-Conversation.Update = Data.Update.bind(Conversation.Update)
-module.exports = Conversation
-module.exports.tablename = tablename
+Conversation.Page       = Data.Page.bind(Conversation.Page)
+Conversation.List       = Data.List.bind(Conversation.List)
+Conversation.Save       = Data.Save.bind(Conversation.Save)
+Conversation.Sync       = Data.Sync.bind(Conversation.Sync)
+Conversation.Search     = Data.Search.bind(Conversation.Search)
+Conversation.Update     = Data.Update.bind(Conversation.Update)

@@ -5,8 +5,8 @@ var Data = require("../data")
  * @property service_id: The id of the service that is being offered
  * @property quantity: The amount of the item estimated in the quantity * price equation
  */
-const tablename = 'estimate_item'
-class EstimateItem {
+export const tablename = 'estimate_item'
+export default class EstimateItem {
 	constructor(id, estimate_id, service_id, quantity){
 		this.id = id
 		this.estimate_id = estimate_id
@@ -19,13 +19,11 @@ class EstimateItem {
 	}
 }
 
+EstimateItem.Delete     = Data.Delete.bind(EstimateItem.Delete)
 EstimateItem.prototype.tablename = tablename
-EstimateItem.Delete = Data.Delete.bind(EstimateItem.Delete)
-EstimateItem.Page = Data.Page.bind(EstimateItem.Page)
-EstimateItem.List = Data.List.bind(EstimateItem.List)
-EstimateItem.Save = Data.Save.bind(EstimateItem.Save)
-EstimateItem.Sync = Data.Sync.bind(EstimateItem.Sync)
-EstimateItem.Search = Data.Search.bind(EstimateItem.Search)
-EstimateItem.Update = Data.Update.bind(EstimateItem.Update)
-module.exports = EstimateItem
-module.exports.tablename = tablename
+EstimateItem.Page       = Data.Page.bind(EstimateItem.Page)
+EstimateItem.List       = Data.List.bind(EstimateItem.List)
+EstimateItem.Save       = Data.Save.bind(EstimateItem.Save)
+EstimateItem.Sync       = Data.Sync.bind(EstimateItem.Sync)
+EstimateItem.Search     = Data.Search.bind(EstimateItem.Search)
+EstimateItem.Update     = Data.Update.bind(EstimateItem.Update)

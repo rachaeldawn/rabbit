@@ -5,8 +5,8 @@ var Data = require("../data")
  * @property clock_in: When the employee clocks in
  * @property clock_out: When the employee clocks out
  */
-const tablename = 'employee_workday'
-class EmployeeWorkday {
+export const tablename = 'employee_workday'
+export default class EmployeeWorkday {
 	constructor(id, employee_id, clock_in, clock_out){
 		this.id = id
 		this.employee_id = employee_id
@@ -19,13 +19,11 @@ class EmployeeWorkday {
 	}
 }
 
+EmployeeWorkday.Delete     = Data.Delete.bind(EmployeeWorkday.Delete)
 EmployeeWorkday.prototype.tablename = tablename
-EmployeeWorkday.Delete = Data.Delete.bind(EmployeeWorkday.Delete)
-EmployeeWorkday.Page = Data.Page.bind(EmployeeWorkday.Page)
-EmployeeWorkday.List = Data.List.bind(EmployeeWorkday.List)
-EmployeeWorkday.Save = Data.Save.bind(EmployeeWorkday.Save)
-EmployeeWorkday.Sync = Data.Sync.bind(EmployeeWorkday.Sync)
-EmployeeWorkday.Search = Data.Search.bind(EmployeeWorkday.Search)
-EmployeeWorkday.Update = Data.Update.bind(EmployeeWorkday.Update)
-module.exports = EmployeeWorkday
-module.exports.tablename = tablename
+EmployeeWorkday.Page       = Data.Page.bind(EmployeeWorkday.Page)
+EmployeeWorkday.List       = Data.List.bind(EmployeeWorkday.List)
+EmployeeWorkday.Save       = Data.Save.bind(EmployeeWorkday.Save)
+EmployeeWorkday.Sync       = Data.Sync.bind(EmployeeWorkday.Sync)
+EmployeeWorkday.Search     = Data.Search.bind(EmployeeWorkday.Search)
+EmployeeWorkday.Update     = Data.Update.bind(EmployeeWorkday.Update)

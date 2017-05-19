@@ -6,8 +6,8 @@ var Data = require("../data")
  * @property amount: The unit of money being paid/deducted ($x / quantity)
  * @property quantity: The quantity of the amount to be paid/deducted (multiplier)
  */
-const tablename = 'payroll_item'
-class PayrollItem {
+export const tablename = 'payroll_item'
+export default class PayrollItem {
 	constructor(id, payroll_id, name, amount, quantity){
 		this.id = id
 		this.payroll_id = payroll_id
@@ -21,13 +21,11 @@ class PayrollItem {
 	}
 }
 
+PayrollItem.Delete     = Data.Delete.bind(PayrollItem.Delete)
 PayrollItem.prototype.tablename = tablename
-PayrollItem.Delete = Data.Delete.bind(PayrollItem.Delete)
-PayrollItem.Page = Data.Page.bind(PayrollItem.Page)
-PayrollItem.List = Data.List.bind(PayrollItem.List)
-PayrollItem.Save = Data.Save.bind(PayrollItem.Save)
-PayrollItem.Sync = Data.Sync.bind(PayrollItem.Sync)
-PayrollItem.Search = Data.Search.bind(PayrollItem.Search)
-PayrollItem.Update = Data.Update.bind(PayrollItem.Update)
-module.exports = PayrollItem
-module.exports.tablename = tablename
+PayrollItem.Page       = Data.Page.bind(PayrollItem.Page)
+PayrollItem.List       = Data.List.bind(PayrollItem.List)
+PayrollItem.Save       = Data.Save.bind(PayrollItem.Save)
+PayrollItem.Sync       = Data.Sync.bind(PayrollItem.Sync)
+PayrollItem.Search     = Data.Search.bind(PayrollItem.Search)
+PayrollItem.Update     = Data.Update.bind(PayrollItem.Update)

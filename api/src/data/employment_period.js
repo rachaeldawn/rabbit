@@ -5,8 +5,8 @@ var Data = require("../data")
  * @property start_date: Date the employee's employment period started
  * @property end_date: Date the employee's employment period ends (or null for still here)
  */
-const tablename = 'employment_period'
-class EmploymentPeriod {
+export const tablename = 'employment_period'
+export default class EmploymentPeriod {
 	constructor(id, employee_id, start_date, end_date){
 		this.id = id
 		this.employee_id = employee_id
@@ -19,13 +19,11 @@ class EmploymentPeriod {
 	}
 }
 
+EmploymentPeriod.Delete     = Data.Delete.bind(EmploymentPeriod.Delete)
 EmploymentPeriod.prototype.tablename = tablename
-EmploymentPeriod.Delete = Data.Delete.bind(EmploymentPeriod.Delete)
-EmploymentPeriod.Page = Data.Page.bind(EmploymentPeriod.Page)
-EmploymentPeriod.List = Data.List.bind(EmploymentPeriod.List)
-EmploymentPeriod.Save = Data.Save.bind(EmploymentPeriod.Save)
-EmploymentPeriod.Sync = Data.Sync.bind(EmploymentPeriod.Sync)
-EmploymentPeriod.Search = Data.Search.bind(EmploymentPeriod.Search)
-EmploymentPeriod.Update = Data.Update.bind(EmploymentPeriod.Update)
-module.exports = EmploymentPeriod
-module.exports.tablename = tablename
+EmploymentPeriod.Page       = Data.Page.bind(EmploymentPeriod.Page)
+EmploymentPeriod.List       = Data.List.bind(EmploymentPeriod.List)
+EmploymentPeriod.Save       = Data.Save.bind(EmploymentPeriod.Save)
+EmploymentPeriod.Sync       = Data.Sync.bind(EmploymentPeriod.Sync)
+EmploymentPeriod.Search     = Data.Search.bind(EmploymentPeriod.Search)
+EmploymentPeriod.Update     = Data.Update.bind(EmploymentPeriod.Update)

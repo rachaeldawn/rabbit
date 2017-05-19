@@ -5,8 +5,8 @@ var Data = require("../data")
  * @property message: A max 1200 character message for the bulletin board. Minimum 5 characters
  * @property time_stamp: A timestamp of when the sticky note was created
  */
-const tablename = 'bullet'
-class Bullet {
+export const tablename = 'bullet'
+export default class Bullet {
 	constructor(id, user_id, message, time_stamp){
 		this.id = id
 		this.user_id = user_id
@@ -19,13 +19,11 @@ class Bullet {
 	}
 }
 
+Bullet.Delete     = Data.Delete.bind(Bullet.Delete)
 Bullet.prototype.tablename = tablename
-Bullet.Delete = Data.Delete.bind(Bullet.Delete)
-Bullet.Page = Data.Page.bind(Bullet.Page)
-Bullet.List = Data.List.bind(Bullet.List)
-Bullet.Save = Data.Save.bind(Bullet.Save)
-Bullet.Sync = Data.Sync.bind(Bullet.Sync)
-Bullet.Search = Data.Search.bind(Bullet.Search)
-Bullet.Update = Data.Update.bind(Bullet.Update)
-module.exports = Bullet
-module.exports.tablename = tablename
+Bullet.Page       = Data.Page.bind(Bullet.Page)
+Bullet.List       = Data.List.bind(Bullet.List)
+Bullet.Save       = Data.Save.bind(Bullet.Save)
+Bullet.Sync       = Data.Sync.bind(Bullet.Sync)
+Bullet.Search     = Data.Search.bind(Bullet.Search)
+Bullet.Update     = Data.Update.bind(Bullet.Update)

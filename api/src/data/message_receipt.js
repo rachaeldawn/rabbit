@@ -5,8 +5,8 @@ var Data = require("../data")
  * @property received: Timestamp of when the message was received by the user. Null if not received by them.
  * @property read: Timestamp of when the message was read by the user. Null if not read.
  */
-const tablename = 'message_receipt'
-class MessageReceipt {
+export const tablename = 'message_receipt'
+export default class MessageReceipt {
 	constructor(message_id, recipient_id, received, read){
 		this.message_id = message_id
 		this.recipient_id = recipient_id
@@ -19,13 +19,11 @@ class MessageReceipt {
 	}
 }
 
+MessageReceipt.Delete     = Data.Delete.bind(MessageReceipt.Delete)
 MessageReceipt.prototype.tablename = tablename
-MessageReceipt.Delete = Data.Delete.bind(MessageReceipt.Delete)
-MessageReceipt.Page = Data.Page.bind(MessageReceipt.Page)
-MessageReceipt.List = Data.List.bind(MessageReceipt.List)
-MessageReceipt.Save = Data.Save.bind(MessageReceipt.Save)
-MessageReceipt.Sync = Data.Sync.bind(MessageReceipt.Sync)
-MessageReceipt.Search = Data.Search.bind(MessageReceipt.Search)
-MessageReceipt.Update = Data.Update.bind(MessageReceipt.Update)
-module.exports = MessageReceipt
-module.exports.tablename = tablename
+MessageReceipt.Page       = Data.Page.bind(MessageReceipt.Page)
+MessageReceipt.List       = Data.List.bind(MessageReceipt.List)
+MessageReceipt.Save       = Data.Save.bind(MessageReceipt.Save)
+MessageReceipt.Sync       = Data.Sync.bind(MessageReceipt.Sync)
+MessageReceipt.Search     = Data.Search.bind(MessageReceipt.Search)
+MessageReceipt.Update     = Data.Update.bind(MessageReceipt.Update)

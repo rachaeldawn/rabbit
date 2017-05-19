@@ -1,0 +1,87 @@
+import * as crypto from "crypto"
+import {default as User} from "../data/user_account"
+
+
+/*
+ * Exported Functions: 
+ * 	RegisterUserAccount: Register a new user for the system
+ * 	FinishUserRegistration: Verifies a token for registration, and sets a user to active
+ * 	ValidateActivationToken: Validation of the activation token
+ * 	ActivateUser: Activates a user that has been deactivated
+ * 	DeactivateUser: Deactivates a user that is currently active
+ * 	GetUserStatus: Retrieves whether or not a user is active
+ * 	CreateUser: Creates a new user. Utility function for user registration. Returns id
+ * 	ResetPassword: Uses a token to reset the user's password
+ * 	GeneratePassword: Dependency injection capable hasher
+ * Private Functions: 
+ */
+/*
+ * Purpose: Register a new user for the system
+ * @param username: The username that they will be signing up with (default: undefined)
+ * @param password: The password they will be using (default: undefined)
+ */
+export function RegisterUserAccount(username: string, password: string) {
+	throw 'Not implemented'
+}
+/*
+ * Purpose: Verifies a token for registration, and sets a user to active
+ * @param user: The user id or user name that is to be registered (default: undefined)
+ * @param token: The token string for the user registration (default: undefined)
+ */
+export function FinishUserRegistration(user: number|string, token: string) {
+	throw 'Not implemented'
+}
+/*
+ * Purpose: Validation of the activation token
+ * @param userid: The user id that is to be verified with a token (default: undefined)
+ * @param token: The token to be verified (default: undefined)
+ */
+export function ValidateActivationToken(userid: number, token: string) {
+	throw 'Not implemented'
+}
+/*
+ * Purpose: Activates a user that has been deactivated
+ * @param userId: The user Id that is to be activated (default: undefined)
+ */
+export function ActivateUser(userId: number) {
+	throw 'Not implemented'
+}
+/*
+ * Purpose: Deactivates a user that is currently active
+ * @param userId: The user Id to be deactivated (default: undefined)
+ */
+export function DeactivateUser(userId: number) {
+	throw 'Not implemented'
+}
+/*
+ * Purpose: Retrieves whether or not a user is active
+ */
+export function GetUserStatus() {
+	throw 'Not implemented'
+}
+/*
+ * Purpose: Creates a new user. Utility function for user registration. Returns id
+ * @param userName: The username to be used for logins. No spaces permitted. (default: undefined)
+ * @param password: Password in plaintext form, pre-hash. (default: undefined)
+ */
+export function CreateUser(userName: string, password: string) {
+	throw 'Not implemented'
+}
+/*
+ * Purpose: Uses a token to reset the user's password
+ * @param newPassword: The new password (default: undefined)
+ * @param resetToken: The token to be used for resetting the user's password (default: undefined)
+ */
+export function ResetPassword(newPassword: string, resetToken: string) {
+	throw 'Not implemented'
+}
+/*
+ * Purpose: Dependency injection capable hasher
+ * @param password: The password to be used by the algo (default: undefined)
+ * @param algo: The hashing algorithm to be used (default: undefined)
+ */
+export function GeneratePassword(password: string, algo: (password: string|Buffer, salt: string|Buffer, iterations: number, keylen: number, digest: string, callback: (err: Error, derivedKey: Buffer) => any) => any)) {
+	throw 'Not implemented'
+}
+
+

@@ -5,8 +5,8 @@ var Data = require("../data")
  * @property salt: Salt added to the original
  * @property iterations: The amount of times the hashing algo was ran.
  */
-const tablename = 'user_account_password'
-class UserAccountPassword {
+export const tablename = 'user_account_password'
+export default class UserAccountPassword {
 	constructor(id, hash, salt, iterations){
 		this.id = id
 		this.hash = hash
@@ -19,13 +19,11 @@ class UserAccountPassword {
 	}
 }
 
+UserAccountPassword.Delete     = Data.Delete.bind(UserAccountPassword.Delete)
 UserAccountPassword.prototype.tablename = tablename
-UserAccountPassword.Delete = Data.Delete.bind(UserAccountPassword.Delete)
-UserAccountPassword.Page = Data.Page.bind(UserAccountPassword.Page)
-UserAccountPassword.List = Data.List.bind(UserAccountPassword.List)
-UserAccountPassword.Save = Data.Save.bind(UserAccountPassword.Save)
-UserAccountPassword.Sync = Data.Sync.bind(UserAccountPassword.Sync)
-UserAccountPassword.Search = Data.Search.bind(UserAccountPassword.Search)
-UserAccountPassword.Update = Data.Update.bind(UserAccountPassword.Update)
-module.exports = UserAccountPassword
-module.exports.tablename = tablename
+UserAccountPassword.Page       = Data.Page.bind(UserAccountPassword.Page)
+UserAccountPassword.List       = Data.List.bind(UserAccountPassword.List)
+UserAccountPassword.Save       = Data.Save.bind(UserAccountPassword.Save)
+UserAccountPassword.Sync       = Data.Sync.bind(UserAccountPassword.Sync)
+UserAccountPassword.Search     = Data.Search.bind(UserAccountPassword.Search)
+UserAccountPassword.Update     = Data.Update.bind(UserAccountPassword.Update)

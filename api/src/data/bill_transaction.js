@@ -3,8 +3,8 @@ var Data = require("../data")
  * @property id: The id of the bill being referenced.
  * @property transaction_id: The id of the transaction to be bound.
  */
-const tablename = 'bill_transaction'
-class BillTransaction {
+export const tablename = 'bill_transaction'
+export default class BillTransaction {
 	constructor(id, transaction_id){
 		this.id = id
 		this.transaction_id = transaction_id
@@ -15,13 +15,11 @@ class BillTransaction {
 	}
 }
 
+BillTransaction.Delete     = Data.Delete.bind(BillTransaction.Delete)
 BillTransaction.prototype.tablename = tablename
-BillTransaction.Delete = Data.Delete.bind(BillTransaction.Delete)
-BillTransaction.Page = Data.Page.bind(BillTransaction.Page)
-BillTransaction.List = Data.List.bind(BillTransaction.List)
-BillTransaction.Save = Data.Save.bind(BillTransaction.Save)
-BillTransaction.Sync = Data.Sync.bind(BillTransaction.Sync)
-BillTransaction.Search = Data.Search.bind(BillTransaction.Search)
-BillTransaction.Update = Data.Update.bind(BillTransaction.Update)
-module.exports = BillTransaction
-module.exports.tablename = tablename
+BillTransaction.Page       = Data.Page.bind(BillTransaction.Page)
+BillTransaction.List       = Data.List.bind(BillTransaction.List)
+BillTransaction.Save       = Data.Save.bind(BillTransaction.Save)
+BillTransaction.Sync       = Data.Sync.bind(BillTransaction.Sync)
+BillTransaction.Search     = Data.Search.bind(BillTransaction.Search)
+BillTransaction.Update     = Data.Update.bind(BillTransaction.Update)

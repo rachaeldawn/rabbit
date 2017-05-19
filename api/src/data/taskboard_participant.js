@@ -7,8 +7,8 @@ var Data = require("../data")
  * @property can_delete: A true/false on whether or not the user is able to delete on the board
  * @property can_invite: A true/false on whether or not the user is able to add others to the board. Note: User can not grant more permissions than they have.
  */
-const tablename = 'taskboard_participant'
-class TaskboardParticipant {
+export const tablename = 'taskboard_participant'
+export default class TaskboardParticipant {
 	constructor(id, taskboard_id, user_id, can_write, can_delete, can_invite){
 		this.id = id
 		this.taskboard_id = taskboard_id
@@ -23,13 +23,11 @@ class TaskboardParticipant {
 	}
 }
 
+TaskboardParticipant.Delete     = Data.Delete.bind(TaskboardParticipant.Delete)
 TaskboardParticipant.prototype.tablename = tablename
-TaskboardParticipant.Delete = Data.Delete.bind(TaskboardParticipant.Delete)
-TaskboardParticipant.Page = Data.Page.bind(TaskboardParticipant.Page)
-TaskboardParticipant.List = Data.List.bind(TaskboardParticipant.List)
-TaskboardParticipant.Save = Data.Save.bind(TaskboardParticipant.Save)
-TaskboardParticipant.Sync = Data.Sync.bind(TaskboardParticipant.Sync)
-TaskboardParticipant.Search = Data.Search.bind(TaskboardParticipant.Search)
-TaskboardParticipant.Update = Data.Update.bind(TaskboardParticipant.Update)
-module.exports = TaskboardParticipant
-module.exports.tablename = tablename
+TaskboardParticipant.Page       = Data.Page.bind(TaskboardParticipant.Page)
+TaskboardParticipant.List       = Data.List.bind(TaskboardParticipant.List)
+TaskboardParticipant.Save       = Data.Save.bind(TaskboardParticipant.Save)
+TaskboardParticipant.Sync       = Data.Sync.bind(TaskboardParticipant.Sync)
+TaskboardParticipant.Search     = Data.Search.bind(TaskboardParticipant.Search)
+TaskboardParticipant.Update     = Data.Update.bind(TaskboardParticipant.Update)

@@ -5,8 +5,8 @@ var Data = require("../data")
  * @property opened_on: When the purchase order was opened. This is not to be editable client side.
  * @property completed_on: Null if incomplete, or the timestamp of when it was closed.
  */
-const tablename = 'purchase_order'
-class PurchaseOrder {
+export const tablename = 'purchase_order'
+export default class PurchaseOrder {
 	constructor(id, creator_id, opened_on, completed_on){
 		this.id = id
 		this.creator_id = creator_id
@@ -19,13 +19,11 @@ class PurchaseOrder {
 	}
 }
 
+PurchaseOrder.Delete     = Data.Delete.bind(PurchaseOrder.Delete)
 PurchaseOrder.prototype.tablename = tablename
-PurchaseOrder.Delete = Data.Delete.bind(PurchaseOrder.Delete)
-PurchaseOrder.Page = Data.Page.bind(PurchaseOrder.Page)
-PurchaseOrder.List = Data.List.bind(PurchaseOrder.List)
-PurchaseOrder.Save = Data.Save.bind(PurchaseOrder.Save)
-PurchaseOrder.Sync = Data.Sync.bind(PurchaseOrder.Sync)
-PurchaseOrder.Search = Data.Search.bind(PurchaseOrder.Search)
-PurchaseOrder.Update = Data.Update.bind(PurchaseOrder.Update)
-module.exports = PurchaseOrder
-module.exports.tablename = tablename
+PurchaseOrder.Page       = Data.Page.bind(PurchaseOrder.Page)
+PurchaseOrder.List       = Data.List.bind(PurchaseOrder.List)
+PurchaseOrder.Save       = Data.Save.bind(PurchaseOrder.Save)
+PurchaseOrder.Sync       = Data.Sync.bind(PurchaseOrder.Sync)
+PurchaseOrder.Search     = Data.Search.bind(PurchaseOrder.Search)
+PurchaseOrder.Update     = Data.Update.bind(PurchaseOrder.Update)

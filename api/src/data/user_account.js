@@ -4,8 +4,8 @@ var Data = require("../data")
  * @property username: What a user will use to log into the system
  * @property is_active: Indicator of whether or not a user account is active
  */
-const tablename = 'user_account'
-class UserAccount {
+export const tablename = 'user_account'
+export default class UserAccount {
 	constructor(id, username, is_active){
 		this.id = id
 		this.username = username
@@ -17,13 +17,11 @@ class UserAccount {
 	}
 }
 
+UserAccount.Delete     = Data.Delete.bind(UserAccount.Delete)
 UserAccount.prototype.tablename = tablename
-UserAccount.Delete = Data.Delete.bind(UserAccount.Delete)
-UserAccount.Page = Data.Page.bind(UserAccount.Page)
-UserAccount.List = Data.List.bind(UserAccount.List)
-UserAccount.Save = Data.Save.bind(UserAccount.Save)
-UserAccount.Sync = Data.Sync.bind(UserAccount.Sync)
-UserAccount.Search = Data.Search.bind(UserAccount.Search)
-UserAccount.Update = Data.Update.bind(UserAccount.Update)
-module.exports = UserAccount
-module.exports.tablename = tablename
+UserAccount.Page       = Data.Page.bind(UserAccount.Page)
+UserAccount.List       = Data.List.bind(UserAccount.List)
+UserAccount.Save       = Data.Save.bind(UserAccount.Save)
+UserAccount.Sync       = Data.Sync.bind(UserAccount.Sync)
+UserAccount.Search     = Data.Search.bind(UserAccount.Search)
+UserAccount.Update     = Data.Update.bind(UserAccount.Update)

@@ -4,8 +4,8 @@ var Data = require("../data")
  * @property perm_id: The id of the permission. Part 2 of composite key 
  * @property perm: The true/false value for the user
  */
-const tablename = 'user_permission_set'
-class UserPermissionSet {
+export const tablename = 'user_permission_set'
+export default class UserPermissionSet {
 	constructor(user_id, perm_id, perm){
 		this.user_id = user_id
 		this.perm_id = perm_id
@@ -17,13 +17,11 @@ class UserPermissionSet {
 	}
 }
 
+UserPermissionSet.Delete     = Data.Delete.bind(UserPermissionSet.Delete)
 UserPermissionSet.prototype.tablename = tablename
-UserPermissionSet.Delete = Data.Delete.bind(UserPermissionSet.Delete)
-UserPermissionSet.Page = Data.Page.bind(UserPermissionSet.Page)
-UserPermissionSet.List = Data.List.bind(UserPermissionSet.List)
-UserPermissionSet.Save = Data.Save.bind(UserPermissionSet.Save)
-UserPermissionSet.Sync = Data.Sync.bind(UserPermissionSet.Sync)
-UserPermissionSet.Search = Data.Search.bind(UserPermissionSet.Search)
-UserPermissionSet.Update = Data.Update.bind(UserPermissionSet.Update)
-module.exports = UserPermissionSet
-module.exports.tablename = tablename
+UserPermissionSet.Page       = Data.Page.bind(UserPermissionSet.Page)
+UserPermissionSet.List       = Data.List.bind(UserPermissionSet.List)
+UserPermissionSet.Save       = Data.Save.bind(UserPermissionSet.Save)
+UserPermissionSet.Sync       = Data.Sync.bind(UserPermissionSet.Sync)
+UserPermissionSet.Search     = Data.Search.bind(UserPermissionSet.Search)
+UserPermissionSet.Update     = Data.Update.bind(UserPermissionSet.Update)

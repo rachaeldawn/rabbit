@@ -4,8 +4,8 @@ var Data = require("../data")
  * @property entry_id: Id of the entry to be bound
  * @property tag_id: Id of the tag to be bound
  */
-const tablename = 'employee_workjournal_entry_tag'
-class EmployeeWorkjournalEntryTag {
+export const tablename = 'employee_workjournal_entry_tag'
+export default class EmployeeWorkjournalEntryTag {
 	constructor(id, entry_id, tag_id){
 		this.id = id
 		this.entry_id = entry_id
@@ -17,13 +17,11 @@ class EmployeeWorkjournalEntryTag {
 	}
 }
 
+EmployeeWorkjournalEntryTag.Delete     = Data.Delete.bind(EmployeeWorkjournalEntryTag.Delete)
 EmployeeWorkjournalEntryTag.prototype.tablename = tablename
-EmployeeWorkjournalEntryTag.Delete = Data.Delete.bind(EmployeeWorkjournalEntryTag.Delete)
-EmployeeWorkjournalEntryTag.Page = Data.Page.bind(EmployeeWorkjournalEntryTag.Page)
-EmployeeWorkjournalEntryTag.List = Data.List.bind(EmployeeWorkjournalEntryTag.List)
-EmployeeWorkjournalEntryTag.Save = Data.Save.bind(EmployeeWorkjournalEntryTag.Save)
-EmployeeWorkjournalEntryTag.Sync = Data.Sync.bind(EmployeeWorkjournalEntryTag.Sync)
-EmployeeWorkjournalEntryTag.Search = Data.Search.bind(EmployeeWorkjournalEntryTag.Search)
-EmployeeWorkjournalEntryTag.Update = Data.Update.bind(EmployeeWorkjournalEntryTag.Update)
-module.exports = EmployeeWorkjournalEntryTag
-module.exports.tablename = tablename
+EmployeeWorkjournalEntryTag.Page       = Data.Page.bind(EmployeeWorkjournalEntryTag.Page)
+EmployeeWorkjournalEntryTag.List       = Data.List.bind(EmployeeWorkjournalEntryTag.List)
+EmployeeWorkjournalEntryTag.Save       = Data.Save.bind(EmployeeWorkjournalEntryTag.Save)
+EmployeeWorkjournalEntryTag.Sync       = Data.Sync.bind(EmployeeWorkjournalEntryTag.Sync)
+EmployeeWorkjournalEntryTag.Search     = Data.Search.bind(EmployeeWorkjournalEntryTag.Search)
+EmployeeWorkjournalEntryTag.Update     = Data.Update.bind(EmployeeWorkjournalEntryTag.Update)

@@ -8,8 +8,8 @@ var Data = require("../data")
  * @property start_time: Optional Start time of the event. 
  * @property end_time: Optional End time of the event. If null, and start time does exist, it means it starts at start_time and ends at 23:59 of occurs_on.
  */
-const tablename = 'calendar_event'
-class CalendarEvent {
+export const tablename = 'calendar_event'
+export default class CalendarEvent {
 	constructor(id, user_id, title, message, occurs_on, start_time, end_time){
 		this.id = id
 		this.user_id = user_id
@@ -25,13 +25,11 @@ class CalendarEvent {
 	}
 }
 
+CalendarEvent.Delete     = Data.Delete.bind(CalendarEvent.Delete)
 CalendarEvent.prototype.tablename = tablename
-CalendarEvent.Delete = Data.Delete.bind(CalendarEvent.Delete)
-CalendarEvent.Page = Data.Page.bind(CalendarEvent.Page)
-CalendarEvent.List = Data.List.bind(CalendarEvent.List)
-CalendarEvent.Save = Data.Save.bind(CalendarEvent.Save)
-CalendarEvent.Sync = Data.Sync.bind(CalendarEvent.Sync)
-CalendarEvent.Search = Data.Search.bind(CalendarEvent.Search)
-CalendarEvent.Update = Data.Update.bind(CalendarEvent.Update)
-module.exports = CalendarEvent
-module.exports.tablename = tablename
+CalendarEvent.Page       = Data.Page.bind(CalendarEvent.Page)
+CalendarEvent.List       = Data.List.bind(CalendarEvent.List)
+CalendarEvent.Save       = Data.Save.bind(CalendarEvent.Save)
+CalendarEvent.Sync       = Data.Sync.bind(CalendarEvent.Sync)
+CalendarEvent.Search     = Data.Search.bind(CalendarEvent.Search)
+CalendarEvent.Update     = Data.Update.bind(CalendarEvent.Update)

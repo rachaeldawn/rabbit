@@ -5,8 +5,8 @@ var Data = require("../data")
  * @property sender_id: The user_account id of the person who sent the message
  * @property message: The message (max 2400 characters)
  */
-const tablename = 'message'
-class Message {
+export const tablename = 'message'
+export default class Message {
 	constructor(id, conversation_id, sender_id, message){
 		this.id = id
 		this.conversation_id = conversation_id
@@ -19,13 +19,11 @@ class Message {
 	}
 }
 
+Message.Delete     = Data.Delete.bind(Message.Delete)
 Message.prototype.tablename = tablename
-Message.Delete = Data.Delete.bind(Message.Delete)
-Message.Page = Data.Page.bind(Message.Page)
-Message.List = Data.List.bind(Message.List)
-Message.Save = Data.Save.bind(Message.Save)
-Message.Sync = Data.Sync.bind(Message.Sync)
-Message.Search = Data.Search.bind(Message.Search)
-Message.Update = Data.Update.bind(Message.Update)
-module.exports = Message
-module.exports.tablename = tablename
+Message.Page       = Data.Page.bind(Message.Page)
+Message.List       = Data.List.bind(Message.List)
+Message.Save       = Data.Save.bind(Message.Save)
+Message.Sync       = Data.Sync.bind(Message.Sync)
+Message.Search     = Data.Search.bind(Message.Search)
+Message.Update     = Data.Update.bind(Message.Update)
