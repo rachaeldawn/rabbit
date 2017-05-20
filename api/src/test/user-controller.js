@@ -40,4 +40,25 @@ describe('#UserController', function() {
 	describe('GeneratePassword', function() {
 		it('Generates a hex password hash')
 	})
+	describe('CacheUsers', function() {
+		it('Gets all users')
+		it('Gets all password hashes')
+	})
+	describe('AddUserToCache', function() {
+		it('Refuses a non-existent user id')
+		it('Caches user')
+	})
+	describe('RemoveUserFromCache', function() {
+		it('Removes user from cache')
+		it('Refuses if user does not exist in cache already')
+	})
+	describe('GetCachedUser', function() {
+		it('Retrieves users that do exist')
+		it('Refuses if user does not exist')
+	})
+	describe('UpdateCachedUser', function() {
+		it('Updates from database')
+		it('Refuses if user does not exist in cache')
+		it('Errors if user does not exist in database')
+	})
 })

@@ -6,6 +6,7 @@ describe('#CommunicationController', function() {
 		it('Refuses if message is too long')
 		it('Refuses if user is not part of the conversation')
 		it('Refuses if the message is empty')
+		it('Makes necessary notifications')
 		it('Sends the message')
 	})
 	describe('CreateReceiptsForMessage', function() {
@@ -64,5 +65,21 @@ describe('#CommunicationController', function() {
 		it('Ignores if adder is not part of the conversation')
 		it('Ignores if the user is already part of the conversation')
 		it('Adds user to the conversation')
+	})
+	describe('SetMessageReceived', function() {
+		it('Refuses if user does not exist')
+		it('Refuses if message does not exist')
+		it('Refuses if the user is not part of the conversation the message is in')
+		it('Sets the message as read')
+	})
+	describe('GetParticipants', function() {
+		it('Reject if the conversation or user does not exist')
+		it('Reject if user is not in the conversation')
+		it('Returns every other participant than user')
+		it('Returns array of ConversationParticipants')
+	})
+	describe('SetAllMessagesRead', function() {
+		it('Refuses if conversation does not exist')
+		it('Refuses if user does not exist')
 	})
 })

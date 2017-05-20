@@ -706,6 +706,32 @@
                     "Refuses if conversation does not exist",
                     "Refuses if user does not exist"
                 ]
+            },
+            "GetUnreadConversations": {
+                "purpose": "Gets a page of unread conversations",
+                "params": {
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or user object to get the read messages for"
+                    },
+                    "amt" : {
+                        "type": "number",
+                        "comment": "The amount of unread conversations (with messages) to get",
+                        "default": 25
+                    },
+                    "page" : {
+                        "type": "number",
+                        "comment": "The page number of conversations to get (rare to use)",
+                        "default": 0
+                    }
+                },
+                "tests": [
+                    "Correct offset",
+                    "Only gets messages for this user",
+                    "Gets correct amount (retrieved <= amt)",
+                    "ignores non-existent users",
+                    "Gets only conversations for the user"
+                ]
             }
         },
         "dependencies": {
@@ -715,5 +741,77 @@
             "Message": "../data/message",
             "MessageReceipt": "../data/message_receipt"
         }
-    }
+    },
+    "NotificationController": {
+        "filename": "notification-controller",
+        "folder": "controllers",
+        "type": "functional",
+        "functions": {
+            "GetNotifications": {
+                "purpose": "Gets the notifications for the user",
+                "params": {
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or user to get the notifications for"
+                    }
+                },
+                "tests": [
+                    "Gets notifications for user",
+                    "Ignores nonexistent users",
+                    "Gets notifications only for the user specified"
+                ]
+            },
+            "CreateNotification": {
+                "purpose": "Creates a notification for a user (if it can not be derived)",
+                "params": {
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or the user object to create the notification for"
+                    },
+                    "origin" : {
+                        "type": "string",
+                        "comment": "The origin of the notification"
+                    },
+                    "message" : {
+                        "type": "string",
+                        "comment": "The message to give to the user"
+                    }
+                },
+                "tests": [
+                    "Creates notification",
+                    "Refuses a non-existent user id",
+                    "Refuses if origin or message is null or empty",
+                    "Caches notification"
+                ]
+            },
+            "RemoveNotification": {
+                "purpose": "Removes a notification that has been viewed",
+                "params": {
+                    "notification" : {
+                        "type": "number|Notification",
+                        "comment": "The notification to remove"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or user object requesting the removal"
+                    }
+                },
+                "tests": [
+                    "Removes notification",
+                    "Refuses if the notification does not belong to the user",
+                    "Refuses if the user does not exist",
+                    "Refuses if the notification does not exist"
+                ]
+            },
+            "CacheNotifications": {
+                "purpose": "Caches all notifications for performance sake by pulling all of them from the database, and finding the notifications that need to exist.",
+                "params": {
+                    
+                },
+                "tests": [
+                    "Caches notifications"
+                ]
+            },
+        }
+    },
 }

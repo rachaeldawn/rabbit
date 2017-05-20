@@ -297,6 +297,8 @@ function CountsAsNumber(obj) {
 }
 
 // Abstracted this out because #yolo
+// DO NOT call this if there is already a defined function.
+// Only controllers should be using custom query functions.
 export var Query = async function(str: string, args: any = undefined) {
     try {
         var Client = await DataPool.connect()

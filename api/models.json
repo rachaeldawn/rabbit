@@ -476,5 +476,14 @@
             "is_complete": "A true/false value on whether or not the task is complete",
             "message": "The message indicating what the todo is"
         }
+    },
+    "notification": {
+        "Purpose": "Notification objects for the user",
+        "Fields": {
+            "id": "The id of the notification object",
+            "user_id": "The user id the notification belongs to",
+            "origin": "A max 400 character long string indicating to the system where the notification came from",
+            "message": "A max 400 character long string indicating what the notification is (shown to user)"
+        }
     }
 }

@@ -1,3 +1,8 @@
+import {UserAccount as User} from "../data/user_account"
+import Conversation from "../data/conversation"
+import ConversationParticipant from "../data/conversation_participant"
+import Message from "../data/message"
+import MessageReceipt from "../data/message_receipt"
 
 
 /*
@@ -11,6 +16,9 @@
  * 	PageMessages: Gets a page of messages for a single conversation
  * 	GetReceipts: Gets receipts for a message
  * 	AddParticipant: Adds a participant to a conversation
+ * 	SetMessageReceived: Sets a single message as read
+ * 	GetParticipants: Retrieves the participants in the conversation. Returns ConversationParticipant[]
+ * 	SetAllMessagesRead: Sets all of the messages in the conversation as being read
  * Private Functions: 
  */
 /*
@@ -87,6 +95,30 @@ export function GetReceipts(user: number|User, message: number|Message) {
  * @param adder: The person adding the other to the conversation (default: undefined)
  */
 export function AddParticipant(user: number|User, conversation: number|Conversation, adder: number|User) {
+	throw 'Not implemented'
+}
+/*
+ * Purpose: Sets a single message as read
+ * @param message: The message to be set as read (default: undefined)
+ * @param user: The user that read it (default: undefined)
+ */
+export function SetMessageReceived(message: number|Message, user: number|User) {
+	throw 'Not implemented'
+}
+/*
+ * Purpose: Retrieves the participants in the conversation. Returns ConversationParticipant[]
+ * @param user: The id or user to get the conversation for. (default: undefined)
+ * @param conversation: The conversation to get the participants for (default: undefined)
+ */
+export function GetParticipants(user: number|User, conversation: number|Conversation) {
+	throw 'Not implemented'
+}
+/*
+ * Purpose: Sets all of the messages in the conversation as being read
+ * @param user: The id or user object to have 'read' the messages (default: undefined)
+ * @param conversation: the id or conversation to have the messages set to read (default: undefined)
+ */
+export function SetAllMessagesRead(user: number|User, conversation: number|Conversation) {
 	throw 'Not implemented'
 }
 

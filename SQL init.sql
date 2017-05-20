@@ -336,7 +336,12 @@ CREATE TABLE taskboard_participant (
     can_delete boolean DEFAULT FALSE NOT NULL,
     can_invite boolean DEFAULT FALSE NOT NULL
 );
-
+CREATE TABLE notification {
+    id SERIAL PRIMARY KEY,
+    user_id integer references user_account(id) NOT NULL,
+    origin varchar(400) NOT NULL,
+    message varchar(400) NOT NULL
+}
 GRANT ALL ON SCHEMA rabbitschema TO "Developer";
 GRANT ALL ON ALL TABLES IN SCHEMA rabbitschema TO "Developer";
 GRANT ALL ON ALL SEQUENCES IN SCHEMA rabbitschema TO "Developer";

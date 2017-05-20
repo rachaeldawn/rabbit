@@ -13,6 +13,11 @@ import {default as User} from "../data/user_account"
  * 	CreateUser: Creates a new user. Utility function for user registration. Returns id
  * 	ResetPassword: Uses a token to reset the user's password
  * 	GeneratePassword: Dependency injection capable hasher
+ * 	CacheUsers: Caches all of the users locally so lookups in the database are not so arduous. To be done ONCE on application startup.
+ * 	AddUserToCache: Adds a new user to the cache
+ * 	RemoveUserFromCache: Removes a deactivated user from the cache
+ * 	GetCachedUser: Gets a cached user
+ * 	UpdateCachedUser: Updates a user that was already cached.
  * Private Functions: 
  */
 /*
@@ -81,6 +86,40 @@ export function ResetPassword(newPassword: string, resetToken: string) {
  * @param algo: The hashing algorithm to be used (default: undefined)
  */
 export function GeneratePassword(password: string, algo: (password: string|Buffer, salt: string|Buffer, iterations: number, keylen: number, digest: string, callback: (err: Error, derivedKey: Buffer) => any) => any)) {
+	throw 'Not implemented'
+}
+/*
+ * Purpose: Caches all of the users locally so lookups in the database are not so arduous. To be done ONCE on application startup.
+ */
+export function CacheUsers() {
+	throw 'Not implemented'
+}
+/*
+ * Purpose: Adds a new user to the cache
+ * @param user: The id or the User object to store (default: undefined)
+ */
+export function AddUserToCache(user: number|User) {
+	throw 'Not implemented'
+}
+/*
+ * Purpose: Removes a deactivated user from the cache
+ * @param user: The id or user to remove from the cache (default: undefined)
+ */
+export function RemoveUserFromCache(user: number|User) {
+	throw 'Not implemented'
+}
+/*
+ * Purpose: Gets a cached user
+ * @param user: The user or id of the user to get (default: undefined)
+ */
+export function GetCachedUser(user: number|User) {
+	throw 'Not implemented'
+}
+/*
+ * Purpose: Updates a user that was already cached.
+ * @param user: The id or user to be updated from the database (default: undefined)
+ */
+export function UpdateCachedUser(user: number|User) {
 	throw 'Not implemented'
 }
 

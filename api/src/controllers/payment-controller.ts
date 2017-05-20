@@ -1,5 +1,5 @@
-import _ from "lodash"
-import StripeNode from "stripe"
+import * as _ from "lodash"
+import * as StripeNode from "stripe"
 
 
 /*
