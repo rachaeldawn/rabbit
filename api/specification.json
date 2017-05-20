@@ -811,7 +811,172 @@
                 "tests": [
                     "Caches notifications"
                 ]
+            }
+        },
+        "dependencies": {
+            "{UserAccount as User}": "../data/user_account",
+            "Notification": "../data/notification"
+        }
+    },
+    "AuthorizationController": {
+        "filename": "authorization-controller",
+        "folder": "controllers",
+        "type": "functional",
+        "functions": {
+            "Authorize": {
+                "purpose": "Authorizes a user's login. Uses a persistent token with a transient to verify a user's login. Persistent never changes, and is erased to log out, and the transient is to ensure a session is still valid.",
+                "params": {
+                    "persistentToken" : {
+                        "type": "string",
+                        "comment": "The token to be verified"
+                    },
+                    "transientToken" : {
+                        "type": "string",
+                        "comment": "The transient token to be verified"
+                    }
+                },
+                "tests": [
+                    "Generates a new hex transient token on validation",
+                    "Authorizes both the persistent and transient tokens",
+                    "Rejects request entirely when the transient token does not exist"
+                ]
             },
+            "Login": {
+                "purpose": "Logs a user in by hashing the password and validating a CSRF token",
+                "params": {
+                    "username" : {
+                        "type": "string",
+                        "comment": "The user name to log in (escape the HTML chars here)"
+                    },
+                    "password" : {
+                        "type": "string",
+                        "comment": "The password to hash and compare"
+                    },
+                    "token" : {
+                        "type": "string",
+                        "comment": "The token to prevent cross site request forgery"
+                    }
+                },
+                "tests": [
+                    "Refuses missing CSRF token",
+                    "Refuses request when the CSRF is invalid",
+                    "Rejects missing username or password",
+                    "Rejects usernames with invalid characters",
+                    "Tosses the persistent and transient session tokens into the response object when successful"
+                ]
+            },
+            "Logout": {
+                "purpose": "Logs a user out by removing the session on the server side. It is the client's responsibility to clean up themselves.",
+                "params": {
+                    "persistentToken" : {
+                        "type": "string",
+                        "comment": "The token that was being used to verify the user"
+                    },
+                    "transientToken" : {
+                        "type": "string",
+                        "comment": "The transient token last sent to the user"
+                    }
+                },
+                "tests": [
+                    "Removes transient token from cache",
+                    "Removes persistent token from cache",
+                    "Rejects if the persistent and transient tokens do not exist"
+                ]
+            },
+            "GenerateToken": {
+                "purpose": "Generates a token",
+                "params": {
+                    
+                },
+                "tests": [
+                    "Generates a random 128 character token (run 100,000 times, and check if there are any repeats)"
+                ]
+            },
+            "CachePersistentToken": {
+                "purpose": "Caches a persistent token",
+                "params": {
+                    "token" : {
+                        "type": "string",
+                        "comment": "The persistent token to be cached"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or user object the persistent token belongs to"
+                    }
+                },
+                "tests": [
+                    "Ignores invalid users",
+                    "Saves token"
+                ]
+            },
+            "CacheTransientToken": {
+                "purpose": "Caches a transient token",
+                "params": {
+                    "token" : {
+                        "type": "string",
+                        "comment": "The transient token to be cached"
+                    },
+                    "persistentToken" : {
+                        "type": "string",
+                        "comment": "The persistent token this transient token belongs to"
+                    }
+                },
+                "tests": [
+                    "Refuses if the persistent token does not exist",
+                    "Caches the transient token"
+                ]
+            },
+            "CacheCSRFToken": {
+                "purpose": "Caches a CSRF token for logins",
+                "params": {
+                    "token" : {
+                        "type": "string",
+                        "comment": "The token to be cached"
+                    },
+                    "ip" : {
+                        "type": "string",
+                        "comment": "The IP address that requested the CSRF token"
+                    }
+                },
+                "tests": [
+                    "Caches the token"
+                ]
+            },
+            "ValidateAuthTokens": {
+                "purpose": "Validates a transient and persistent token together",
+                "params": {
+                    "transient" : {
+                        "type": "string",
+                        "comment": "The transient token to be validated"
+                    },
+                    "persistent" : {
+                        "type": "string",
+                        "comment": "The persisten token to be validated"
+                    }
+                },
+                "tests": [
+                    "Rejects if the transient does not match the persistent",
+                    "Rejects if any parameters are missing"
+                ]
+            },
+            "ValidateCSRFToken": {
+                "purpose": "Validates a CSRF token for logins",
+                "params": {
+                    "token" : {
+                        "type": "string",
+                        "comment": "The token string to be validated"
+                    },
+                    "ip" : {
+                        "type": "string",
+                        "comment": "The ip that is requesting the validation"
+                    }
+                },
+                "tests": [
+                    "Rejects if the IP does not match",
+                    "Rejects if the token does not match",
+                    "Resolves to true if it worked"
+                ]
+            }
         }
     },
 }
