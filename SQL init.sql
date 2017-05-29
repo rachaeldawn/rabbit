@@ -1,5 +1,8 @@
+DROP SCHEMA rabbitschema CASCADE;
 -- SCHEMA: RabbitSchema
 
+CREATE SCHEMA rabbitschema
+    AUTHORIZATION "Developer";
 
 GRANT ALL ON SCHEMA rabbitschema TO postgres;
 
@@ -57,7 +60,7 @@ CREATE TABLE conversation (
     creator_id integer references user_account(id) NOT NULL
 );
 CREATE TABLE conversation_participant (
-    id serial PRIMARY KEY REFERENCES conversation(id),
+    id serial PRIMARY KEY,
     user_id integer REFERENCES user_account(id) NOT NULL,
     conversation_id integer references conversation(id) NOT NULL
 );
@@ -120,24 +123,24 @@ CREATE TABLE employee_workday (
     clock_out timestamp WITH TIME ZONE 
 );
 -- Work journal is a written rubber duck debugging. Strongly encourage to use this, but not required.
-CREATE TABLE employee_workjournal (
+CREATE TABLE workjournal (
     id serial PRIMARY KEY,
-    employee_id integer REFERENCES employee(id) NOT NULL,
+    employee_id integer REFERENCES employee(id) ON DELETE CASCADE NOT NULL,
     name varchar(120) NOT NULL
 );
 -- Tagging a workday means that the entry will be visible by management. 
-CREATE TABLE employee_workjournal_entry (
+CREATE TABLE workjournal_entry (
     id serial PRIMARY KEY,
-    journal_id integer REFERENCES employee_workjournal(id) NOT NULL,
+    journal_id integer REFERENCES workjournal(id) ON DELETE CASCADE NOT NULL,
     message varchar(5000) NOT NULL,
     time_stamp timestamp WITH TIME ZONE  DEFAULT NOW() NOT NULL,
     -- OPTIONAL --
     workday_id integer REFERENCES employee_workday(id),
     CONSTRAINT message CHECK (char_length(message) > 15)
 );
-CREATE TABLE employee_workjournal_entry_tag (
+CREATE TABLE workjournal_entry_tag (
     id serial PRIMARY KEY,
-    entry_id integer REFERENCES employee_workjournal_entry(id) NOT NULL,
+    entry_id integer REFERENCES workjournal_entry(id) ON DELETE CASCADE NOT NULL,
     tag_id integer REFERENCES tag(id) NOT NULL
 );
 CREATE TABLE service (
@@ -185,7 +188,8 @@ CREATE TABLE workorder (
     id serial PRIMARY KEY,
     customer_id integer REFERENCES customer(id),
     rep_id integer REFERENCES employee(id),
-    open_date TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
+    open_date TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+    close_date TIMESTAMP WITH TIME ZONE
 );
 
 CREATE TABLE workorder_contact (
@@ -201,7 +205,7 @@ CREATE TABLE workorder_item (
 );
 CREATE TABLE workorder_transaction (
     id serial PRIMARY KEY,
-    workorder_id integer REFERENCES workorder(id) NOT NULL,
+    workorder_id integer REFERENCES workorder(id) ON DELETE RESTRICT NOT NULL,
     contact_id integer REFERENCES customer_contact(id) NOT NULL,
     transaction_id integer REFERENCES transaction(id) NOT NULL
 );
@@ -217,7 +221,7 @@ CREATE TABLE purchase_order_tag (
 );
 CREATE TABLE purchase_order_item (
     id serial PRIMARY KEY,
-    purchase_order_id integer REFERENCES purchase_order(id) NOT NULL,
+    purchase_order_id integer REFERENCES purchase_order(id) ON DELETE CASCADE NOT NULL,
     name varchar(64) NOT NULL,
     description varchar(360),
     quantity integer NOT NULL CONSTRAINT quantity CHECK (quantity > 0),
@@ -225,7 +229,7 @@ CREATE TABLE purchase_order_item (
 );
 CREATE TABLE purchase_order_transaction (
     id serial PRIMARY KEY,
-    purchase_order_id integer REFERENCES purchase_order(id) NOT NULL,
+    purchase_order_id integer REFERENCES purchase_order(id) ON DELETE RESTRICT NOT NULL,
     transaction_id integer REFERENCES transaction(id) NOT NULL
 );
 CREATE TABLE asset (
@@ -258,7 +262,7 @@ CREATE TABLE bill (
     billing_date date NOT NULL DEFAULT CURRENT_DATE
 );
 CREATE TABLE bill_transaction (
-    id integer REFERENCES bill(id),
+    id integer REFERENCES bill(id) ON DELETE RESTRICT,
     transaction_id integer REFERENCES transaction(id)
 );
 CREATE TABLE pay_period (
@@ -280,7 +284,7 @@ CREATE TABLE payroll_item (
     quantity numeric(15, 2) NOT NULL
 );
 CREATE TABLE payroll_transaction (
-    id integer REFERENCES payroll(id),
+    id integer REFERENCES payroll(id) ON DELETE RESTRICT,
     transaction_id integer REFERENCES transaction(id),
     memo varchar(400)
 );
@@ -316,7 +320,8 @@ CREATE TABLE taskboard (
 );
 CREATE TABLE tasklist (
     id serial PRIMARY KEY,
-    board_id integer REFERENCES taskboard(id)
+    board_id integer REFERENCES taskboard(id),
+    name varchar(255) NOT NULL
 );
 -- Get parents = SELECT * FROM `tasklist_task` WHERE (parent_task_id == null)
 -- Get children = SELECT * FROM `tasklist_task` WHERE (parent_task_id == parent_id) -- Recursive
@@ -336,12 +341,12 @@ CREATE TABLE taskboard_participant (
     can_delete boolean DEFAULT FALSE NOT NULL,
     can_invite boolean DEFAULT FALSE NOT NULL
 );
-CREATE TABLE notification {
+CREATE TABLE notification (
     id SERIAL PRIMARY KEY,
     user_id integer references user_account(id) NOT NULL,
     origin varchar(400) NOT NULL,
     message varchar(400) NOT NULL
-}
+);
 GRANT ALL ON SCHEMA rabbitschema TO "Developer";
 GRANT ALL ON ALL TABLES IN SCHEMA rabbitschema TO "Developer";
 GRANT ALL ON ALL SEQUENCES IN SCHEMA rabbitschema TO "Developer";

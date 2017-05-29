@@ -15,9 +15,9 @@
      * @property employee_id: Id of the employee that owns the work journal
      * @property name: The name of the work journal
      */
-    exports.tablename = 'employee_workjournal';
-    var EmployeeWorkjournal = (function () {
-        function EmployeeWorkjournal(id, employee_id, name) {
+    exports.tablename = 'workjournal';
+    var Workjournal = (function () {
+        function Workjournal(id, employee_id, name) {
             this.id = id;
             this.employee_id = employee_id;
             this.name = name;
@@ -26,15 +26,15 @@
             this.Save = Data.Save.bind(this.Save, this);
             this.Delete = Data.Delete.bind(this.Delete, this);
         }
-        return EmployeeWorkjournal;
+        return Workjournal;
     }());
-    exports["default"] = EmployeeWorkjournal;
-    EmployeeWorkjournal.Delete = Data.Delete.bind(EmployeeWorkjournal.Delete);
-    EmployeeWorkjournal.prototype.tablename = exports.tablename;
-    EmployeeWorkjournal.Page = Data.Page.bind(EmployeeWorkjournal.Page);
-    EmployeeWorkjournal.List = Data.List.bind(EmployeeWorkjournal.List);
-    EmployeeWorkjournal.Save = Data.Save.bind(EmployeeWorkjournal.Save);
-    EmployeeWorkjournal.Sync = Data.Sync.bind(EmployeeWorkjournal.Sync);
-    EmployeeWorkjournal.Search = Data.Search.bind(EmployeeWorkjournal.Search);
-    EmployeeWorkjournal.Update = Data.Update.bind(EmployeeWorkjournal.Update);
+    exports["default"] = Workjournal;
+    Workjournal.Delete = Data.Delete.bind(Workjournal.Delete);
+    Workjournal.prototype.tablename = exports.tablename;
+    Workjournal.Page = Data.Page.bind(Workjournal.Page);
+    Workjournal.List = Data.List.bind(Workjournal.List);
+    Workjournal.Save = Data.Save.bind(Workjournal.Save);
+    Workjournal.Sync = Data.Sync.bind(Workjournal.Sync);
+    Workjournal.Search = Data.Search.bind(Workjournal.Search);
+    Workjournal.Update = Data.Update.bind(Workjournal.Update);
 });

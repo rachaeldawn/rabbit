@@ -143,7 +143,7 @@
         }
     },
         
-    "employee_workjournal": {
+    "workjournal": {
         "Purpose": "Work journal is a written rubber duck debugging. It is strongly encouraged to use this, but not required. An employee can use this to keep note of everything that they are doing, and to remember where they were the previous day. Eventually this will be replaced by storing the files as XML in files, then referencing the locations of the files.",
         "Fields": {
             "id":             "Id of a single work-journal (employees can have many)",
@@ -152,7 +152,7 @@
         }
     },
 
-    "employee_workjournal_entry": {
+    "workjournal_entry": {
         "Purpose": "A single entry within a journal. Tagging an entry with a workday means that this entry will be visible to management.",
         "Fields": {
             "id":             "Id of a single entry",
@@ -163,7 +163,7 @@
         }
     },
         
-    "employee_workjournal_entry_tag": {
+    "workjournal_entry_tag": {
         "Purpose": "Permits a tagging system for employees to use for future searching. ",
         "Fields": {
             "id":         "Id of a single tag binding",
@@ -383,7 +383,8 @@
             "id":             "The Id of a specific workorder",
             "customer_id":    "The customer_id attached to the workorder",
             "rep_id":         "The id of the employee that opened the workorder",
-            "open_date":      "Timestamp that defaults to now "
+            "open_date":      "Timestamp that defaults to now",
+            "close_date":     "The timestamp of when the workorder was closed."
         }
     },
         
@@ -465,7 +466,8 @@
         "Purpose": "A single todo list",
         "Fields": {
             "id": "The id of the entry of the tasklist",
-            "board_id": "The id of the board this tasklist belongs to"
+            "board_id": "The id of the board this tasklist belongs to",
+            "name": "A 255 character long tasklist name (the card title)"
         }
     },
     "tasklist_task": {

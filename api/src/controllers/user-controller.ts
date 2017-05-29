@@ -85,7 +85,7 @@ export function ResetPassword(newPassword: string, resetToken: string) {
  * @param password: The password to be used by the algo (default: undefined)
  * @param algo: The hashing algorithm to be used (default: undefined)
  */
-export function GeneratePassword(password: string, algo: (password: string|Buffer, salt: string|Buffer, iterations: number, keylen: number, digest: string, callback: (err: Error, derivedKey: Buffer) => any) => any)) {
+export function GeneratePassword(password: string, algo: (password: string|Buffer, salt: string|Buffer, iterations: number, keylen: number, digest: string, callback: (err: Error, derivedKey: Buffer) => any) => any) {
 	throw 'Not implemented'
 }
 /*

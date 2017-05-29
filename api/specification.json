@@ -23,16 +23,16 @@
                 "purpose": "Process payments by taking the id of a token, verifying it is a valid token, then processing a payment of amount amt.",
                 "params": {
                     "tokenId" : {
-                       "type": "string",
-                       "comment": "The stripe token"
+                    "type": "string",
+                    "comment": "The stripe token"
                     },
                     "amt" : {
-                       "type": "number",
-                       "comment": "The amount of the payment"
+                    "type": "number",
+                    "comment": "The amount of the payment"
                     },
                     "description" : {
-                       "type": "string",
-                       "comment": "The reason or description for/of the payment"
+                    "type": "string",
+                    "comment": "The reason or description for/of the payment"
                     },
                     "save": {
                         "type": "boolean",
@@ -51,8 +51,8 @@
                 "purpose": "Easier validation of tokens to make testing easier.",
                 "params": {
                     "tokenId" : {
-                       "type": "number",
-                       "comment": "The stripe token id"
+                    "type": "number",
+                    "comment": "The stripe token id"
                     }
                 },
                 "tests": [
@@ -65,13 +65,13 @@
                 "purpose": "Refund a payment to a customer",
                 "params": {
                     "transaction" : {
-                       "type": "any",
-                       "comment": "A charge object"
+                    "type": "any",
+                    "comment": "A charge object"
                     },
                     "amount" : {
-                       "type": "number",
-                       "comment": "Amount to refund. -1 means full amount",
-                       "default": "-1"
+                    "type": "number",
+                    "comment": "Amount to refund. -1 means full amount",
+                    "default": "-1"
                     }
                 },
                 "tests": [
@@ -84,12 +84,12 @@
                 "purpose": "Adjust a previously made payment (refund, and makepayment, or just a refund if is less)",
                 "params": {
                     "transaction" : {
-                       "type": "any",
-                       "comment": "Positive or negative decimal"
+                    "type": "any",
+                    "comment": "Positive or negative decimal"
                     },
                     "amount" : {
-                       "type": "number",
-                       "comment": "Positive or negative decimal"
+                    "type": "number",
+                    "comment": "Positive or negative decimal"
                     }
                 },
                 "tests": [
@@ -116,7 +116,23 @@
                 "tests": [
                     "Retrieves proper balance"
                 ]
-            }
+            },
+            "TagTransaction": {
+                "purpose": "Tags a transaction for easier lookup",
+                "params": {
+                    "transaction" : {
+                        "type": "number|Transaction",
+                        "comment": "The id or Transaction object to add the tag to"
+                    },
+                    "tagName" : {
+                        "type": "",
+                        "comment": ""
+                    },
+                },
+                "tests": [
+                    
+                ]
+            },
         },
         "dependencies": {
             "* as _": "lodash",
@@ -262,7 +278,7 @@
                         "comment": "The password to be used by the algo"
                     },
                     "algo" : {
-                        "type": "(password: string|Buffer, salt: string|Buffer, iterations: number, keylen: number, digest: string, callback: (err: Error, derivedKey: Buffer) => any) => any)",
+                        "type": "(password: string|Buffer, salt: string|Buffer, iterations: number, keylen: number, digest: string, callback: (err: Error, derivedKey: Buffer) => any) => any",
                         "comment": "The hashing algorithm to be used"
                     }
                 },
@@ -277,7 +293,8 @@
                 },
                 "tests": [
                     "Gets all users",
-                    "Gets all password hashes"
+                    "Gets all password hashes",
+                    "Categorizes users into Employees and Customers (if !employee then customer)"
                 ]
             },
             "AddUserToCache": {
@@ -735,7 +752,7 @@
             }
         },
         "dependencies": {
-            "{UserAccount as User}": "../data/user_account",
+            "{default as User}": "../data/user_account",
             "Conversation": "../data/conversation",
             "ConversationParticipant": "../data/conversation_participant",
             "Message": "../data/message",
@@ -811,10 +828,27 @@
                 "tests": [
                     "Caches notifications"
                 ]
+            },
+            "SetRead": {
+                "purpose": "Sets a notification (or notification set) as read",
+                "params": {
+                    "notification" : {
+                        "type": "Notification|Notification[]",
+                        "comment": ""
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or user object setting the notification to read"
+                    }
+                },
+                "tests": [
+                    "Rejects if the notification does not belong to the user",
+                    "Rejects if the notification does not exist"
+                ]
             }
         },
         "dependencies": {
-            "{UserAccount as User}": "../data/user_account",
+            "{default as User}": "../data/user_account",
             "Notification": "../data/notification"
         }
     },
@@ -977,6 +1011,1007 @@
                     "Resolves to true if it worked"
                 ]
             }
+        },
+        "dependencies": {
+            "* as crypto": "crypto",
+            "{default as User}": "../data/user_account"
+        }
+    },
+    "TaskboardController": {
+        "filename": "taskboard-controller",
+        "folder": "controllers",
+        "type": "functional",
+        "functions": {
+            "CreateTaskboard": {
+                "purpose": "Creates a taskboard for an employee",
+                "params": {
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or user object the taskboard belongs to"
+                    },
+                    "name" : {
+                        "type": "string",
+                        "comment": "The name of the taskboard"
+                    }
+                },
+                "tests": [
+                    "Refuses if the user is not an employee",
+                    "Creates the taskboard"
+                ]
+            },
+            "DeleteTaskboard": {
+                "purpose": "Deletes a taskboard for an employee",
+                "params": {
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or user object doing the deleting"
+                    },
+                    "taskboard" : {
+                        "type": "number|Taskboard",
+                        "comment": "The id or taskboard object to be deleted"
+                    }
+                },
+                "tests": [
+                    "Refuses if user does not own taskboard",
+                    "Deletes taskboard",
+                    "Removes all participants"
+                ]
+            },
+            "GetPopulatedTaskboard": {
+                "purpose": "Gets a complete taskboard, with populated tasks and tasklists. Data will have to be sorted and organized.",
+                "params": {
+                    "taskboard" : {
+                        "type": "number|Taskboard",
+                        "comment": "The taskboard to pull the tasks from"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The user pulling the taskboard"
+                    }
+                },
+                "tests": [
+                    "Refuses if the user does not exist",
+                    "Refuses if the user does not have permission to view tasks",
+                    "Refuses if the taskboard does not exist",
+                    "Organizes the retrieved data",
+                    "Returns a populated taskboard"
+                ]
+            },
+            "AddTasklist": {
+                "purpose": "Adds a tasklist to a task board",
+                "params": {
+                    "name" : {
+                        "type": "string",
+                        "comment": "The name of the tasklist"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or user to add the tasklist to"
+                    },
+                    "taskboard" : {
+                        "type": "number|Taskboard",
+                        "comment": "the id or taskboard to add the tasklist to"
+                    }
+                },
+                "tests": [
+                    "Refuses if the user is not part of the board",
+                    "Refuses if the name is too long",
+                    "Refuses if the user does not exist",
+                    "Creates the tasklist",
+                    "Creates the tasklist in the taskboard"
+                ]
+            },
+            "DeleteTasklist": {
+                "purpose": "Removes a tasklist from a task board",
+                "params": {
+                    "tasklist" : {
+                        "type": "number|Tasklist",
+                        "comment": "The id or Tasklist object to be removed"
+                    },
+                    "user" : {
+                        "type": "number|Tasklist",
+                        "comment": "The user removing the tasklist"
+                    }
+                },
+                "tests": [
+                    "Refuses if user does not have permission to remove the list",
+                    "Refuses if the user is not part of the board",
+                    "Refuses if the tasklist does not exist",
+                    "Refuses if the user does not exist",
+                    "Removes the tasklist"
+                ]
+            },
+            "MoveTaskList": {
+                "purpose": "Moves tasklist to another board",
+                "params": {
+                    "tasklist" : {
+                        "type": "number|Tasklist",
+                        "comment": "The tasklist to be moved"
+                    },
+                    "board" : {
+                        "type": "number|Taskboard",
+                        "comment": "The taskboard to move the tasklist to"
+                    }
+                },
+                "tests": [
+                    "Refuses if the user does not have write permissions in either board",
+                    "Refuses if the user does not have read permissions from the original board",
+                    "Refuses if the user does not exist",
+                    "Refuses if the new board does not exist",
+                    "Moves the tasklist"
+                ]
+            },
+            "ChangeTasklistName": {
+                "purpose": "Changes a tasklist's name",
+                "params": {
+                    "newname" : {
+                        "type": "string",
+                        "comment": "The new name for the tasklist"
+                    },
+                    "tasklist" : {
+                        "type": "number|Tasklist",
+                        "comment": "The id or tasklist object to rename"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or User object doing the renaming"
+                    }
+                },
+                "tests": [
+                    "Refuses if the tasklist does not exist",
+                    "Refuses if the user does not exist",
+                    "Refuses if the name is already the new name",
+                    "Updates the name"
+                ]
+            },
+            "GetPopulatedTasklist": {
+                "purpose": "Gets a task list with all the tasks",
+                "params": {
+                    "tasklist" : {
+                        "type": "number|Tasklist",
+                        "comment": "The tasklist to get. Id can not be unset."
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The user requesting the tasklist"
+                    }
+                },
+                "tests": [
+                    "Refuses if the tasklist does not exist",
+                    "Refuses if the user does not exist",
+                    "Refuses if the user is not allowed to see the tasklist",
+                    "Gets a tasklist with a .tasks populated"
+                ]
+            },
+            "CreateTask": {
+                "purpose": "Creates a task inside of a tasklist",
+                "params": {
+                    "message" : {
+                        "type": "string",
+                        "comment": "The task to be completed"
+                    },
+                    "tasklist" : {
+                        "type": "number|Tasklist",
+                        "comment": "The id or tasklist object to add the task to"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or User object adding the task"
+                    },
+                    "completed" : {
+                        "type": "boolean",
+                        "comment": "Whether or not it should be set to completed",
+                        "default": false
+                    }
+                },
+                "tests": [
+                    "Refuses if the user does not have permission to add the task",
+                    "Refuses if the user does not exist",
+                    "Refuses if the tasklist does not exist",
+                    "Creates the task"
+                ]
+            },
+            "SetTaskStatus": {
+                "purpose": "Sets a single task as status, or all of its children to status",
+                "params": {
+                    "task" : {
+                        "type": "number|Task",
+                        "comment": "The id or task object to set as complete"
+                    },
+                    "isCompleted" : {
+                        "type": "boolean",
+                        "comment": "The value to give to IsCompleted"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or user object setting the task to isCompleted"
+                    }
+                },
+                "tests": [
+                    "Refuses if the user does not have permission to set the task status",
+                    "Refuses if the user does not exist",
+                    "Refuses if the task does not exist",
+                    "Sets a single task status",
+                    "Sets all children task statuses"
+                ]
+            },
+            "GetTasks": {
+                "purpose": "Gets the tasks in a single tasklist",
+                "params": {
+                    "tasklist" : {
+                        "type": "number|Tasklist",
+                        "comment": "The tasklist to get the tasks from"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The user requesting the tasks"
+                    }
+                },
+                "tests": [
+                    "Refuses if the user does not exist",
+                    "Refuses if the user does not have permission to view tasks",
+                    "Refuses if the tasklist does not exist",
+                    "Refuses if the tasklist passed in is unset",
+                    "Returns tasks to only the tasklist",
+                    "Performs as advertised"                    
+                ]
+            },
+            "SetTaskText": {
+                "purpose": "Sets the text of a single task",
+                "params": {
+                    "task" : {
+                        "type": "number|Task",
+                        "comment": "The task to update"
+                    },
+                    "newText" : {
+                        "type": "string",
+                        "comment": "The new text for the task"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The user setting the text"
+                    }
+                },
+                "tests": [
+                    "Refuses if the user does not have read permissions",
+                    "Refuses if the user does not have write permissions",
+                    "Refuses if the user does not exist",
+                    "Refuses if the task does not exist",
+                    "Performs as advertised"
+                ]
+            },
+            "DeleteTask": {
+                "purpose": "Deletes a single task",
+                "params": {
+                    "task" : {
+                        "type": "number|Task",
+                        "comment": "The task to be deleted"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The user deleting the task"
+                    }
+                },
+                "tests": [
+                    "Refuses if user does not have delete permissions",
+                    "Refuses if user does not have read permissions",
+                    "Refuses if user does not exist",
+                    "Refuses if task does not exist",
+                    "Deletes the task"
+                ]
+            },
+            "SetTaskParent": {
+                "purpose": "Sets the task parent to another id. Undefined means remove parent.",
+                "params": {
+                    "task" : {
+                        "type": "number|Task",
+                        "comment": "The task that is being set"
+                    },
+                    "parent" : {
+                        "type": "number|Task",
+                        "comment": "The id or task of the parent"
+                    }
+                },
+                "tests": [
+                    "Refuses if the user does not have write permissions",
+                    "Refuses if the user does not have read permissions",
+                    "Refuses if the user does not exist",
+                    "Removes parent if parent is undefined or null",
+                    "Sets parent to the new parent if defined"
+                ]
+            }
+        },
+        "dependencies": {
+            "{default as User}": "../data/user_account",
+            "Taskboard": "../data/taskboard",
+            "{default as Participant}": "../data/taskboard_participant",
+            "Tasklist": "../data/tasklist",
+            "{default as Task}": "../data/tasklist_task",
+            "PermissionController": "./permission-controller"
+        }
+    },
+    "WorkorderController": {
+        "filename": "invoice-controller",
+        "folder": "controllers",
+        "type": "functional",
+        "functions": {
+            "CreateWorkorder": {
+                "purpose": "Creates an invoice for use",
+                "params": {
+                    "customer" : {
+                        "type": "number|Customer",
+                        "comment": "The id or customer object for the invoice"
+                    },
+                    "employee" : {
+                        "type": "number|User",
+                        "comment": "The id or the user object to look up the employee for"
+                    }
+                },
+                "tests": [
+                    "Refuses if the customer does not exist",
+                    "Refuses if the employee can not be found using the user id",
+                    "Refuses if the user does not exist",
+                    "Refuses if the user does not have permission to create workorders",
+                    "Creates a workorder",
+                    "Returns a workorder object"
+                ]
+            },
+            "RequestWorkorderLock": {
+                "purpose": "Requests a lock for read/write on a workorder. The workorder id is the dictionary key",
+                "params": {
+                    "workorder" : {
+                        "type": "number|Workorder",
+                        "comment": "The id or workorder object to request the lock for"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or user object requesting the lock"
+                    }
+                },
+                "tests": [
+                    "Refuses if the user does not have read permissions on workorder",
+                    "Refuses if the user does not have write permissions on workorder",
+                    "Refuses if the workorder does not exist",
+                    "Refuses if the user does not exist",
+                    "Refuses if the workorder is already locked",
+                    "Refuses if the user is not an employee",
+                    "Returns true"
+                ]
+            },
+            "IsWorkorderLocked": {
+                "purpose": "Checks whether or not the workorder is locked",
+                "params": {
+                    "workorder" : {
+                        "type": "number|Workorder",
+                        "comment": "The workorder to check"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": ""
+                    }
+                },
+                "tests": [
+                    "Refuses if the user does not exist",
+                    "Refuses if the user does not have read permissions on the invoice",
+                    "Refuses if the user does not have write permissions on the invoice",
+                    "Refuses if the workorder does not exist",
+                    "Returns whether or not the invoice is locked"
+                ]
+            },
+            "ReleaseWorkorderLock": {
+                "purpose": "Release the lock on a workorder object",
+                "params": {
+                    "lock" : {
+                        "type": "number",
+                        "comment": "The workorder id that is locked"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The user releasing the workorder lock"
+                    }
+                },
+                "tests": [
+                    "Refuses if the user does not have the lock",
+                    "Refuses if the user does not exist",
+                    "Refuses if the user is not an employee",
+                    "Ignores if the workorder is not locked",
+                    "Removes the lock from the workorder"
+                ]
+            },
+            "AddToWorkorder": {
+                "purpose": "Adds an item to the workorder",
+                "params": {
+                    "service" : {
+                        "type": "number|Service",
+                        "comment": "The service to add to the workorder"
+                    },
+                    "workorder" : {
+                        "type": "number|Workorder",
+                        "comment": "The workorder to add the service to"
+                    },
+                    "quantity" : {
+                        "type": "number",
+                        "comment": "The amount of the service to add to the workorder"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or user object adding to the invoice"
+                    }
+                },
+                "tests": [
+                    "Refuses if the user does not have permission to modify the invoice",
+                    "Refuses if the user does not exist",
+                    "Refuses if the user is not an employee",
+                    "Refuses if the employee can not be found using the user id",
+                    "Refuses if the service does not exist",
+                    "Refuses if the workorder does not exist",
+                    "Adds service to the workorder"
+                ]
+            },
+            "RemoveFromWorkorder": {
+                "purpose": "Removes a service from a workorder",
+                "params": {
+                    "item" : {
+                        "type": "number|WorkorderItem",
+                        "comment": "The workorder item to remove from the invoice"
+                    },
+                    "workorder" : {
+                        "type": "number|Workorder",
+                        "comment": "The workorder to remove the item from"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The user trying to remove the item"
+                    }
+                },
+                "tests": [
+                    "Refuses if the user does not exist",
+                    "Refuses if the workorder does not exist",
+                    "Refuses if the workorder item does not exist",
+                    "Refuses if the employee can not be found using the user id",
+                    "Refuses if the user does not have permission to modify the invoice",
+                    "Removes from the workorder"
+                ]
+            },
+            "CloseWorkorder": {
+                "purpose": "Closes a workorder that is currently open.",
+                "params": {
+                    "workorder" : {
+                        "type": "number|Workorder",
+                        "comment": "The id or Workorder object to be closed"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or User object attempting to close the workorder"
+                    }
+                },
+                "tests": [
+                    "Refuses if the user does not exist",
+                    "Refuses if the user does not have permission to modify the invoice",
+                    "Refuses if the workorder does not exist",
+                    "Refuses if another user has the lock on the invoice",
+                    "Automatically releases any locks after closure"
+                ]
+            },
+            "AddWorkorderContact": {
+                "purpose": "Adds a contact to a workorder",
+                "params": {
+                    "contact" : {
+                        "type": "number|CustomerContact",
+                        "comment": "The id or Contact object to be added to the workorder"
+                    },
+                    "workorder" : {
+                        "type": "number|Workorder",
+                        "comment": "The workorder to add the contact to"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or user adding the contact"
+                    }
+                },
+                "tests": [
+                    "Refuses if the user does not exist",
+                    "Refuses if the workorder does not exist",
+                    "Refuses if the contact does not exist",
+                    "Refuses if the user does not have write permissions on the invoice",
+                    "Refuses if the user does not have read permissions on the invoice",
+                    "Adds the contact to the workorder"
+                ]
+            },
+            "RemoveWorkorderContact": {
+                "purpose": "Removes a contact from a workorder",
+                "params": {
+                    "contact" : {
+                        "type": "number|WorkorderContact",
+                        "comment": "The id or contact object to remove from the workorder"
+                    },
+                    "workorder" : {
+                        "type": "number|Workorder",
+                        "comment": "The id or workorder object to remove the contact from"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The user removing the contact from the board"
+                    }
+                },
+                "tests": [
+                    "Refuses if the user does not exist",
+                    "Refuses if the workorder does not exist",
+                    "Refuses if the contact does not exist",
+                    "Refuses if the user does not have write permissions on the invoice",
+                    "Refuses if the user does not have read permissions on the invoice",
+                    "Removes the contact from the workorder"
+                ]
+            },
+            "AddTransaction": {
+                "purpose": "Adds a transaction to a workorder",
+                "params": {
+                    "transaction" : {
+                        "type": "number|Transaction",
+                        "comment": "The transaction object"
+                    },
+                    "workorder" : {
+                        "type": "number|Workorder",
+                        "comment": "The workorder to add the transaction to"
+                    },
+                    "contact" : {
+                        "type": "number|Contact",
+                        "comment": "The contact that authorized the transaction"
+                    }
+                },
+                "tests": [
+                    "Refuses if user does not exist",
+                    "Refuses if the workorder does not exist",
+                    "Refuses if the contact does not exist",
+                    "Refuses if the contact is not allowed to make payments",
+                    "Refuses if the contact is not a contact of the invoice",
+                    "Refuses if the transaction object does not exist with stripe",
+                    "Links transaction to the workorder"
+                ]
+            },
+            "ConvertEstimateToWorkorder": {
+                "purpose": "Converts an estimate into a workorder",
+                "params": {
+                    "estimate" : {
+                        "type": "number|Estimate",
+                        "comment": "The id or Estimate object to convert"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or user object requesting the conversion"
+                    }
+                },
+                "tests": [
+                    "Refuses if the user does not exist",
+                    "Refuses if the estimate does not exist",
+                    "Refuses if the user does not have permission to create invoices",
+                    "Creates a workorder based on the estimate",
+                    "New estimate contains all items of estimate",
+                    "New estimate contains all contacts of estimate"
+                ]
+            },
+            "GetWorkorder": {
+                "purpose": "Gets a populated workorder for use",
+                "params": {
+                    "workorder" : {
+                        "type": "number|Workorder",
+                        "comment": "The id or workorder object to get the populated version of"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The user requesting the workorder"
+                    }
+                },
+                "tests": [
+                    "Refuses if the user does not exist",
+                    "Refuses if the workorder does not exist",
+                    "Refuses if the user does not have read permissions on the invoice",
+                    "Gets a populated version of the workorder"
+                ]
+            }
+        },
+        "dependencies": {
+            "Workorder": "../data/workorder",
+            "WorkorderContact": "../data/workorder_contact",
+            "CustomerContact": "../data/customer_contact",
+            "WorkorderTransaction": "../data/workorder_transaction",
+            "Transaction": "../data/transaction",
+            "{default as User}": "../data/user_account",
+            "WorkorderItem": "../data/workorder_item"
+        }
+    },
+    "EstimateController": {
+        "filename": "estimate-controller",
+        "folder": "controllers",
+        "type": "functional",
+        "functions": {
+            "CreateEstimate": {
+                "purpose": "Creates an estimate. Allows customers to see what things should cost before they commit.",
+                "params": {
+                    "customer" : {
+                        "type": "number|Customer",
+                        "comment": "The id or Customer object the estimate is for"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or User object creating the estimate"
+                    },
+                    "validity_period" : {
+                        "type": "number",
+                        "default": 14,
+                        "comment": "A positive integer "
+                    },
+                    "items" : {
+                        "type": "Service[]",
+                        "comment": "An array of service Ids or service objects to add to the estimate. Optional parameter",
+                        "default": null
+                    }
+                },
+                "tests": [
+                    "Refuses if the user does not exist",
+                    "Refuses if the user is not an employee",
+                    "Refuses if the validity period is not above 0",
+                    "Refuses if the the customer does not exist",
+                    "Refuses if the user does not have permission to create estimates",
+                    "Ignores the invalid services",
+                    "Creates the estimate"
+                ]
+            },
+            "AddItem": {
+                "purpose": "Adds an item to the estimate",
+                "params": {
+                    "service" : {
+                        "type": "number|Service",
+                        "comment": "The id or Service object to add to the invoice"
+                    },
+                    "estimate" : {
+                        "type": "number|Estimate",
+                        "comment": "The id or Estimate object to add to the invoice"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or user object adding to the invoice"
+                    }
+                },
+                "tests": [
+                    "Refuses if the user does not exist",
+                    "Refuses if the user is not an employee",
+                    "Refuses if the user does not have write permissions on the invoice",
+                    "Refuses if the user does not have read permissions on the invoice",
+                    "Refuses if the service does not exist",
+                    "Refuses if the estimate does not exist",
+                    "Adds item to the estimate"
+                ]
+            },
+            "RemoveItem": {
+                "purpose": "Removes an item from an estimate",
+                "params": {
+                    "item" : {
+                        "type": "number|EstimateItem",
+                        "comment": "The id or EstimateItem object to remove"
+                    },
+                    "estimate" : {
+                        "type": "number|Estimate",
+                        "comment": "The id or estimate object to have the item removed"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The user object removing the item from the estimate"
+                    }
+                },
+                "tests": [
+                    "Refuses if the user does not exist",
+                    "Refuses if the estimate does not exist",
+                    "Refuses if the item does not exist on the estimate",
+                    "Refuses if the user does not have write permissions on the estimate",
+                    "Refuses if the user does not have read permissions on the estimate",
+                    "Removes the item from the estimate"
+                ]
+            },
+            "SetValidityPeriod": {
+                "purpose": "Sets the validity period of the estimate. Must be greater than 0",
+                "params": {
+                    "period" : {
+                        "type": "number",
+                        "comment": "How many days the estimate is valid for after opening"
+                    },
+                    "estimate" : {
+                        "type": "number|Estimate",
+                        "comment": "The id or estimate object to have the period set"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The user setting the estimate period"
+                    }
+                },
+                "tests": [
+                    "Refuses if the user does not exist",
+                    "Refuses if the estimate does not exist",
+                    "Refuses if the user does not have write permissions on the estimate",
+                    "Refuses if the user does not have read permissions on the estimate",
+                    "Refuses if the validity period is not above 0",
+                    "Sets the validity period"
+                ]
+            },
+            "GetEstimate": {
+                "purpose": "Gets a populated estimate",
+                "params": {
+                    "estimate" : {
+                        "type": "number|Estimate",
+                        "comment": "The id or estimate object to work with"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or user object requesting the estimate"
+                    }
+                },
+                "tests": [
+                    "Refuses if the user does not exist",
+                    "Refuses if the estimate does not exist",
+                    "Refuses if the user does not have read permissions",
+                    "Gets a populated version of the estimate"
+                ]
+            },
+            "AddContact": {
+                "purpose": "Adds a contact to the estimate",
+                "params": {
+                    "contact" : {
+                        "type": "number|CustomerContact",
+                        "comment": "The id or CustomerContact object to add to the estimate"
+                    },
+                    "estimate" : {
+                        "type": "number|Estimate",
+                        "comment": "The id or estimate object to add the contact to"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The user adding the contact to the estimate"
+                    }
+                },
+                "tests": [
+                    "Refuses if the user does not exist",
+                    "Refuses if the contact does not exist",
+                    "Refuses if the estimate does not exist",
+                    "Refuses if the user does not have read permissions",
+                    "Refuses if the user does not have write permissions",
+                    "Refuses if the user is not an employee",
+                    "Adds the contact to the estimate"
+                ]
+            },
+            "RemoveContact": {
+                "purpose": "Removes a contact from the estimate",
+                "params": {
+                    "contact" : {
+                        "type": "number|WorkorderContact",
+                        "comment": "The id or WorkorderContact object to remove from the estimate"
+                    },
+                    "estimate" : {
+                        "type": "number|Estimate",
+                        "comment": "The id or Estimate object to remove the contact from"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or user object removing the contact"
+                    }
+                },
+                "tests": [
+                    "Refuses if the user does not exist",
+                    "Refuses if the user does not have write permissions on the estimate",
+                    "Refuses if the user does not have read permissions on the estimate",
+                    "Ignores if the contact is not in the estimate",
+                    "Refuses if the estimate does not exist",
+                    "Removes the contact from the estimate"
+                ]
+            }
+        },
+        "dependencies": {
+            "Estimate": "../data/estimate",
+            "EstimateContact": "../data/estimate_contact",
+            "CustomerContact": "../data/customer_contact",
+            "EstimateItem": "../data/estimate_item",
+            "{default as User}": "../data/UserAccount"
+        }
+    },
+    "EmployeeController": {
+        "filename": "employee-controller",
+        "folder": "controllers",
+        "type": "functional",
+        "functions": {
+            "ClockIn": {
+                "purpose": "Clock an employee in",
+                "params": {
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or user object of the employee clocking in"
+                    }
+                },
+                "tests": [
+                    "Refuses if the user is not an employee",
+                    "Refuses if the user does not exist",
+                    "Returns message saying they're clocked in if there's an active workday going."
+                ]
+            },
+            "ClockOut": {
+                "purpose": "Clock an employee out",
+                "params": {
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or user object of the employee clocking out"
+                    }
+                },
+                "tests": [
+                    "Refuses if the user is not an employee",
+                    "Refuses if the user does not exist",
+                    "Refuses if there is not an active workday going."
+                ]
+            },
+            "AddEmployee": {
+                "purpose": "Creates a new employee",
+                "params": {
+                    "employeeOrFirstName" : {
+                        "type": "Employee|string",
+                        "comment": "Either an employee object (ignores other params), or a string for the first name"
+                    },
+                    "middle" : {
+                        "type": "string",
+                        "comment": "The middle name of the employee"
+                    },
+                    "last" : {
+                        "type": "string",
+                        "comment": "The last name of the employee"
+                    },
+                    "phone" : {
+                        "type": "string",
+                        "comment": "The phone number of the employee"
+                    },
+                    "address" : {
+                        "type": "string",
+                        "comment": "The home address of the employee"
+                    },
+                    "postal_code" : {
+                        "type": "string",
+                        "comment": "The postal code of the employee"
+                    },
+                    "sin" : {
+                        "type": "string",
+                        "comment": "A 9 character long string for the employee's SIN"
+                    },
+                    "birthday" : {
+                        "type": "Date",
+                        "comment": "The birthdate of the employee"
+                    },
+                    "is_active" : {
+                        "type": "boolean",
+                        "comment": "Whether or not the employee is to be set as active right now",
+                        "default": false
+                    },
+                    "about" : {
+                        "type": "string",
+                        "comment": "The about for the employee",
+                        "default": null
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or user object to be linked"
+                    }
+                },
+                "tests": [
+                    "Checks if the first param is employee, and runs with it if it is",
+                    "Ignores the other parameters if type of first parameter is employee",
+                    "Refuses if any of the required fields are missing",
+                    "Refuses if the user does not exist",
+                    "Refuses if the user already has an employee linked",
+                    "Refuses if the user is inactive",
+                    "Creates a new employee"
+                ]
+            },
+            "GetEmployee": {
+                "purpose": "Gets a single employee (checks cache first)",
+                "params": {
+                    "employee" : {
+                        "type": "number|Employee",
+                        "comment": "The id or Employee object. Fills Employee object and returns, or returns Employee object."
+                    }
+                },
+                "tests": [
+                    "Refuses if the user does not exist",
+                    "Gets filled employee object"
+                ]
+            },
+            "GetEmployeeFromUser": {
+                "purpose": "Gets an employee object",
+                "params": {
+                    "employee" : {
+                        "type": "number|User",
+                        "comment": "The User to get the employee from"
+                    }
+                },
+                "tests": [
+                    "Returns null if there is no employee",
+                    "Returns employee"
+                ]
+            },
+            "FireEmployee": {
+                "purpose": "Fires an employee",
+                "params": {
+                    "employee" : {
+                        "type": "number|Employee",
+                        "comment": "The employee to set as inactive"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The user firing the employee. Used for permission checking."
+                    }
+                },
+                "tests": [
+                    "Refuses if the user does not have permission to fire.",
+                    "Refuses if the user does not exist",
+                    "Refuses if the employee does not exist",
+                    "Refuses if the user is not an employee",
+                    "Sets the employee as inactive."
+                ]
+            },
+            "LoadEmployees": {
+                "purpose": "Caches all employees into memory for easy lookup. Only active employees.",
+                "params": {
+                    
+                },
+                "tests": [
+                    "Loads all employees",
+                    "Loads only active"
+                ]
+            },
+            "CacheEmployee": {
+                "purpose": "Adds an employee to the cache after creating a new employee",
+                "params": {
+                    "employee" : {
+                        "type": "Employee",
+                        "comment": "A populated, valid, employee object"
+                    }
+                },
+                "tests": [
+                    "Adds employee object to the cache"
+                ]
+            },
+            "UncacheEmployee": {
+                "purpose": "Removes an employee that has been fired from the cache",
+                "params": {
+                    "employee" : {
+                        "type": "number|Employee",
+                        "comment": "The employee object to remove from the cache"
+                    }
+                },
+                "tests": [
+                    "Refuses if the Employee object is invalid",
+                    "Refuses if the employee does not exist",
+                    "Errors if the employee can not be found",
+                    "Removes the employee from the cache"
+                ]
+            }
+        },
+        "dependencies": {
+            "Employee": "../data/employee",
+            "{default as User}": "../data/user_account",
+            "{default as Workday}": "../data/employee_workday"
+        }
+    },
+    "ServiceController": {
+        "filename": "service-controller",
+        "folder": "controllers",
+        "type": "functional",
+        "functions": {
+            "CreateService": {
+                "purpose": "Creates a new service",
+                "params": {
+                    "name" : {
+                        "type": "string|Service",
+                        "comment": "The name of the service, or new service object"
+                    },
+                },
+                "tests": [
+                    
+                ]
+            },
         }
     },
 }

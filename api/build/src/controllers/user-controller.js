@@ -100,11 +100,10 @@
      * @param password: The password to be used by the algo (default: undefined)
      * @param algo: The hashing algorithm to be used (default: undefined)
      */
-    function GeneratePassword(password, algo) { }
-    exports.GeneratePassword = GeneratePassword;
-    {
+    function GeneratePassword(password, algo) {
         throw 'Not implemented';
     }
+    exports.GeneratePassword = GeneratePassword;
     /*
      * Purpose: Caches all of the users locally so lookups in the database are not so arduous. To be done ONCE on application startup.
      */

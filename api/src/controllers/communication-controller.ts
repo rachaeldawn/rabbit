@@ -1,4 +1,4 @@
-import {UserAccount as User} from "../data/user_account"
+import {default as User} from "../data/user_account"
 import Conversation from "../data/conversation"
 import ConversationParticipant from "../data/conversation_participant"
 import Message from "../data/message"
@@ -19,6 +19,7 @@ import MessageReceipt from "../data/message_receipt"
  * 	SetMessageReceived: Sets a single message as read
  * 	GetParticipants: Retrieves the participants in the conversation. Returns ConversationParticipant[]
  * 	SetAllMessagesRead: Sets all of the messages in the conversation as being read
+ * 	GetUnreadConversations: Gets a page of unread conversations
  * Private Functions: 
  */
 /*
@@ -119,6 +120,15 @@ export function GetParticipants(user: number|User, conversation: number|Conversa
  * @param conversation: the id or conversation to have the messages set to read (default: undefined)
  */
 export function SetAllMessagesRead(user: number|User, conversation: number|Conversation) {
+	throw 'Not implemented'
+}
+/*
+ * Purpose: Gets a page of unread conversations
+ * @param user: The id or user object to get the read messages for (default: undefined)
+ * @param amt: The amount of unread conversations (with messages) to get (default: 25)
+ * @param page: The page number of conversations to get (rare to use) (default: 0)
+ */
+export function GetUnreadConversations(user: number|User, amt: number = 25, page: number = 0) {
 	throw 'Not implemented'
 }
 

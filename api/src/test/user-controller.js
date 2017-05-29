@@ -43,6 +43,7 @@ describe('#UserController', function() {
 	describe('CacheUsers', function() {
 		it('Gets all users')
 		it('Gets all password hashes')
+		it('Categorizes users into Employees and Customers (if !employee then customer)')
 	})
 	describe('AddUserToCache', function() {
 		it('Refuses a non-existent user id')

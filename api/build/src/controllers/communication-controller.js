@@ -23,6 +23,7 @@
      * 	SetMessageReceived: Sets a single message as read
      * 	GetParticipants: Retrieves the participants in the conversation. Returns ConversationParticipant[]
      * 	SetAllMessagesRead: Sets all of the messages in the conversation as being read
+     * 	GetUnreadConversations: Gets a page of unread conversations
      * Private Functions:
      */
     /*
@@ -140,4 +141,16 @@
         throw 'Not implemented';
     }
     exports.SetAllMessagesRead = SetAllMessagesRead;
+    /*
+     * Purpose: Gets a page of unread conversations
+     * @param user: The id or user object to get the read messages for (default: undefined)
+     * @param amt: The amount of unread conversations (with messages) to get (default: 25)
+     * @param page: The page number of conversations to get (rare to use) (default: 0)
+     */
+    function GetUnreadConversations(user, amt, page) {
+        if (amt === void 0) { amt = 25; }
+        if (page === void 0) { page = 0; }
+        throw 'Not implemented';
+    }
+    exports.GetUnreadConversations = GetUnreadConversations;
 });

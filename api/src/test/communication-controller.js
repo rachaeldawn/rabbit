@@ -82,4 +82,11 @@ describe('#CommunicationController', function() {
 		it('Refuses if conversation does not exist')
 		it('Refuses if user does not exist')
 	})
+	describe('GetUnreadConversations', function() {
+		it('Correct offset')
+		it('Only gets messages for this user')
+		it('Gets correct amount (retrieved <= amt)')
+		it('ignores non-existent users')
+		it('Gets only conversations for the user')
+	})
 })

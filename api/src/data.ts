@@ -1,7 +1,6 @@
 // TODO: Dependency inject this later from a config file to support _tests vs _production DBs
 
 import { clone, keys, isString, isNumber, isDate, isFunction, has, toLower, forEach } from "lodash"
-import * as Promse from "bluebird"
 import * as Validator from "Validator"
 import * as fs from "fs"
 import * as pg from "pg"

@@ -6,8 +6,8 @@ var Data = require("../data")
  * @property time_stamp: Default of NOW(), timestamp of when the journal was created. This is not updateable.
  * @property workday_id: Id of a workday, in case an employee wishes to tag what they're working on for payroll purposes.
  */
-export const tablename = 'employee_workjournal_entry'
-export default class EmployeeWorkjournalEntry {
+export const tablename = 'workjournal_entry'
+export default class WorkjournalEntry {
 	constructor(id, journal_id, message, time_stamp, workday_id){
 		this.id = id
 		this.journal_id = journal_id
@@ -21,11 +21,11 @@ export default class EmployeeWorkjournalEntry {
 	}
 }
 
-EmployeeWorkjournalEntry.Delete     = Data.Delete.bind(EmployeeWorkjournalEntry.Delete)
-EmployeeWorkjournalEntry.prototype.tablename = tablename
-EmployeeWorkjournalEntry.Page       = Data.Page.bind(EmployeeWorkjournalEntry.Page)
-EmployeeWorkjournalEntry.List       = Data.List.bind(EmployeeWorkjournalEntry.List)
-EmployeeWorkjournalEntry.Save       = Data.Save.bind(EmployeeWorkjournalEntry.Save)
-EmployeeWorkjournalEntry.Sync       = Data.Sync.bind(EmployeeWorkjournalEntry.Sync)
-EmployeeWorkjournalEntry.Search     = Data.Search.bind(EmployeeWorkjournalEntry.Search)
-EmployeeWorkjournalEntry.Update     = Data.Update.bind(EmployeeWorkjournalEntry.Update)
+WorkjournalEntry.Delete     = Data.Delete.bind(WorkjournalEntry.Delete)
+WorkjournalEntry.prototype.tablename = tablename
+WorkjournalEntry.Page       = Data.Page.bind(WorkjournalEntry.Page)
+WorkjournalEntry.List       = Data.List.bind(WorkjournalEntry.List)
+WorkjournalEntry.Save       = Data.Save.bind(WorkjournalEntry.Save)
+WorkjournalEntry.Sync       = Data.Sync.bind(WorkjournalEntry.Sync)
+WorkjournalEntry.Search     = Data.Search.bind(WorkjournalEntry.Search)
+WorkjournalEntry.Update     = Data.Update.bind(WorkjournalEntry.Update)
