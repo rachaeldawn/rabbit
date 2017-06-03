@@ -1,6 +1,11 @@
 var PermissionController = require("../controllers/permission-controller")
 describe('#PermissionController', function() {
-	describe('GivePermission', function() {
+	describe('CreatePermission', function() {
+		it('Creates the permission for usage')
+		it('Refuses if the permission already exists')
+		it('Returns created permission')
+	})
+	describe('GrantPermission', function() {
 		it('Refuses if giver does not have permission to provide permission')
 		it('Refuses if giver does not exist')
 		it('Refuses if user does not exist')

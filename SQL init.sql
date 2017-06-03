@@ -211,6 +211,7 @@ CREATE TABLE workorder_transaction (
 );
 CREATE TABLE purchase_order (
     id serial PRIMARY KEY,
+    memo VARCHAR(400),
     creator_id integer REFERENCES employee(id) NOT NULL,
     opened_on timestamp WITH TIME ZONE NOT NULL DEFAULT NOW(),
     completed_on date CONSTRAINT opened_on CHECK (opened_on < completed_on) DEFAULT NULL

@@ -116,27 +116,12 @@
                 "tests": [
                     "Retrieves proper balance"
                 ]
-            },
-            "TagTransaction": {
-                "purpose": "Tags a transaction for easier lookup",
-                "params": {
-                    "transaction" : {
-                        "type": "number|Transaction",
-                        "comment": "The id or Transaction object to add the tag to"
-                    },
-                    "tagName" : {
-                        "type": "",
-                        "comment": ""
-                    },
-                },
-                "tests": [
-                    
-                ]
-            },
+            }
         },
         "dependencies": {
             "* as _": "lodash",
-            "* as StripeNode": "stripe"
+            "* as StripeNode": "stripe",
+            "* as Data": "../data"
         }
     },
     "UserController": {
@@ -352,8 +337,9 @@
             }
         },
         "dependencies": {
-             "* as crypto": "crypto",
-             "{default as User}": "../data/user_account"
+            "* as crypto": "crypto",
+            "{default as User}": "../models/user_account",
+            "* as Data": "../data"
         }
     },
     "PermissionController": {
@@ -361,7 +347,21 @@
         "folder": "controllers",
         "type": "functional",
         "functions": {
-            "GivePermission": {
+            "CreatePermission": {
+                "purpose": "Creates a permission for usage by a controller",
+                "params": {
+                    "name" : {
+                        "type": "string",
+                        "comment": "A max 32 characters length permission name"
+                    }
+                },
+                "tests": [
+                    "Creates the permission for usage",
+                    "Refuses if the permission already exists",
+                    "Returns created permission"
+                ]
+            },
+            "GrantPermission": {
                 "purpose": "Give a user a permission, checking first if the user giving the permission is allowed.",
                 "params": {
                     "userId" : {
@@ -457,9 +457,10 @@
             }
         },
         "dependencies": {
-            "{default as User}": "../data/user_account",
-            "{default as Permission}": "../data/user_permission",
-            "{default as PermissionSet}": "../data/user_permission_set"
+            "{default as User}": "../models/user_account",
+            "{default as Permission}": "../models/user_permission",
+            "{default as PermissionSet}": "../models/user_permission_set",
+            "* as Data": "../data"
         }
     },
     "CommunicationController": {
@@ -752,11 +753,12 @@
             }
         },
         "dependencies": {
-            "{default as User}": "../data/user_account",
-            "Conversation": "../data/conversation",
-            "ConversationParticipant": "../data/conversation_participant",
-            "Message": "../data/message",
-            "MessageReceipt": "../data/message_receipt"
+            "{default as User}": "../models/user_account",
+            "Conversation": "../models/conversation",
+            "ConversationParticipant": "../models/conversation_participant",
+            "Message": "../models/message",
+            "MessageReceipt": "../models/message_receipt",
+            "* as Data": "../data"
         }
     },
     "NotificationController": {
@@ -848,8 +850,8 @@
             }
         },
         "dependencies": {
-            "{default as User}": "../data/user_account",
-            "Notification": "../data/notification"
+            "{default as User}": "../models/user_account",
+            "Notification": "../models/notification"
         }
     },
     "AuthorizationController": {
@@ -1014,7 +1016,7 @@
         },
         "dependencies": {
             "* as crypto": "crypto",
-            "{default as User}": "../data/user_account"
+            "{default as User}": "../models/user_account"
         }
     },
     "TaskboardController": {
@@ -1322,11 +1324,11 @@
             }
         },
         "dependencies": {
-            "{default as User}": "../data/user_account",
-            "Taskboard": "../data/taskboard",
-            "{default as Participant}": "../data/taskboard_participant",
-            "Tasklist": "../data/tasklist",
-            "{default as Task}": "../data/tasklist_task",
+            "{default as User}": "../models/user_account",
+            "Taskboard": "../models/taskboard",
+            "{default as Participant}": "../models/taskboard_participant",
+            "Tasklist": "../models/tasklist",
+            "{default as Task}": "../models/tasklist_task",
             "PermissionController": "./permission-controller"
         }
     },
@@ -1611,13 +1613,13 @@
             }
         },
         "dependencies": {
-            "Workorder": "../data/workorder",
-            "WorkorderContact": "../data/workorder_contact",
-            "CustomerContact": "../data/customer_contact",
-            "WorkorderTransaction": "../data/workorder_transaction",
-            "Transaction": "../data/transaction",
-            "{default as User}": "../data/user_account",
-            "WorkorderItem": "../data/workorder_item"
+            "Workorder": "../models/workorder",
+            "WorkorderContact": "../models/workorder_contact",
+            "CustomerContact": "../models/customer_contact",
+            "WorkorderTransaction": "../models/workorder_transaction",
+            "Transaction": "../models/transaction",
+            "{default as User}": "../models/user_account",
+            "WorkorderItem": "../models/workorder_item"
         }
     },
     "EstimateController": {
@@ -1805,11 +1807,11 @@
             }
         },
         "dependencies": {
-            "Estimate": "../data/estimate",
-            "EstimateContact": "../data/estimate_contact",
-            "CustomerContact": "../data/customer_contact",
-            "EstimateItem": "../data/estimate_item",
-            "{default as User}": "../data/UserAccount"
+            "Estimate": "../models/estimate",
+            "EstimateContact": "../models/estimate_contact",
+            "CustomerContact": "../models/customer_contact",
+            "EstimateItem": "../models/estimate_item",
+            "{default as User}": "../models/UserAccount"
         }
     },
     "EmployeeController": {
@@ -1911,10 +1913,22 @@
                     "employee" : {
                         "type": "number|Employee",
                         "comment": "The id or Employee object. Fills Employee object and returns, or returns Employee object."
+                    },
+                    "user" : {
+                        "type": "number|user",
+                        "comment": "The user requesting the employee object"
+                    },
+                    "confidentials" : {
+                        "type": "boolean",
+                        "comment": "Whether or not to include confidential information in the populated object"
                     }
                 },
                 "tests": [
+                    "Refuses if the user is not allowed to see employees",
                     "Refuses if the user does not exist",
+                    "Refuses if the confidentials true and user does not have permission",
+                    "Excludes confidentials if confidentials false",
+                    "Includes confidentials if confidentials true",
                     "Gets filled employee object"
                 ]
             },
@@ -1987,12 +2001,166 @@
                     "Errors if the employee can not be found",
                     "Removes the employee from the cache"
                 ]
+            },
+            "ListEmployees": {
+                "purpose": "Gets a list of active employees (max 100). Binding to Page, with page = 1",
+                "params": {
+                    "amt" : {
+                        "type": "number",
+                        "comment": "The amount to return"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The user requesting the listing"
+                    },
+                    "includeInactive" : {
+                        "type": "boolean",
+                        "comment": "Whether or not to include the inactive employees",
+                        "default": false
+                    },
+                    "confidentials" : {
+                        "type": "boolean",
+                        "comment": "Whether or not to return the confidential information",
+                        "default": false
+                    }
+                },
+                "tests": [
+                    "Returns only non-private details if confidentials false",
+                    "Includes inactive if includeInactive true",
+                    "Excludes inactive if includeInactive false",
+                    "Includes private details if confidentials true",
+                    "Refuses if the user is not allowed to see employees",
+                    "Refuses if confidentials is true, and user is not permitted to see confidential details",
+                    "Refuses if the user does not exist",
+                    "Caps out at 100",
+                    "Returns a list of populated employee objects"
+                ]
+            },
+            "PageEmployees": {
+                "purpose": "Gets a page of active employees",
+                "params": {
+                    "amt" : {
+                        "type": "number",
+                        "comment": "The amount to return"
+                    },
+                    "page" : {
+                        "type": "number",
+                        "comment": "The page number to return (start point 1)"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The user requesting the listing"
+                    },
+                    "includeInactive" : {
+                        "type": "boolean",
+                        "comment": "Whether or not to include the inactive employees",
+                        "default": false
+                    },
+                    "confidentials" : {
+                        "type": "boolean",
+                        "comment": "Whether or not to return the confidential information",
+                        "default": false
+                    }
+                },
+                "tests": [
+                    "Returns only non-private details if confidentials false",
+                    "Includes inactive if includeInactive true",
+                    "Excludes inactive if includeInactive false",
+                    "Includes private details if confidentials true",
+                    "Refuses if the user is not allowed to see employees",
+                    "Refuses if confidentials is true, and user is not permitted to see confidential details",
+                    "Refuses if the user does not exist",
+                    "Caps out at 100",
+                    "Returns a list of populated employee objects"
+                ]
             }
         },
         "dependencies": {
-            "Employee": "../data/employee",
-            "{default as User}": "../data/user_account",
-            "{default as Workday}": "../data/employee_workday"
+            "Employee": "../models/employee",
+            "{default as User}": "../models/user_account",
+            "{default as Workday}": "../models/employee_workday",
+            "* as Data": "../data"
+        }
+    },
+    "TagController": {
+        "filename": "tag-controller",
+        "folder": "controllers",
+        "type": "functional",
+        "functions": {
+            "TagObject": {
+                "purpose": "Tags an object",
+                "params": {
+                    "obj" : {
+                        "type": "Object",
+                        "comment": "Object to be tagged. NEEDS to have tablename."
+                    },
+                    "tagOrName" : {
+                        "type": "string|Tag",
+                        "comment": "The name of a new tag, or a Tag object"
+                    },
+                    "color" : {
+                        "type": "any",
+                        "comment": "Must have at least R, G, and B (upper or lower), with optional A (default 255), or a length 3-4 array. [r, g, b, a = undefined]"
+                    }
+                },
+                "tests": [
+                    "Refuses bad form color object",
+                    "Refuses bad form name",
+                    "Refuses object without tablename",
+                    "Creates new tag if it doesn't exist",
+                    "Creates tag pair using tablename"
+                ]
+            },
+            "UntagObject": {
+                "purpose": "Removes the tag from an object",
+                "params": {
+                    "obj" : {
+                        "type": "Object",
+                        "comment": "Must have tablename. The object to be untagged"
+                    },
+                    "tag" : {
+                        "type": "number|Tag",
+                        "comment": "The tag id"
+                    }
+                },
+                "tests": [
+                    "Refuses missing tablename",
+                    "Refuses nonexistent tag",
+                    "Removes tag",
+                    "Removes tag pair"
+                ]
+            },
+            "GetTags": {
+                "purpose": "Gets the tags for an object",
+                "params": {
+                    "obj" : {
+                        "type": "Object",
+                        "comment": "Requires tablename. Object to look up."
+                    }
+                },
+                "tests": [
+                    "Returns all tags belonging to an object",
+                    "Returns tag objects"
+                ]
+            },
+            "StripTags": {
+                "purpose": "Removes all tags from an object. Use custom SQL to reduce query count. DROP FROM tag WHERE id=, then DROP from tablename_tag WHERE tablename_id=Y",
+                "params": {
+                    "obj" : {
+                        "type": "Object",
+                        "comment": "Requires tablename. The object to remove all tags from."
+                    }
+                },
+                "tests": [
+                    "Ignores invalid object",
+                    "Removes all pairings",
+                    "Removes all tags"
+                ]
+            }
+        },
+        "dependencies": {
+            "Tag": "../models/tag",
+            "* as Data": "../data"
         }
     },
     "ServiceController": {
@@ -2003,13 +2171,352 @@
             "CreateService": {
                 "purpose": "Creates a new service",
                 "params": {
-                    "name" : {
+                    "nameOrService" : {
                         "type": "string|Service",
                         "comment": "The name of the service, or new service object"
                     },
+                    "description" : {
+                        "type": "string",
+                        "comment": "The description of the service"
+                    },
+                    "price" : {
+                        "type": "number",
+                        "comment": "The price of the service"
+                    },
+                    "default_quantity" : {
+                        "type": "number",
+                        "comment": "The default quantity of the service"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The user adding the service"
+                    }
                 },
                 "tests": [
-                    
+                    "Refuses missing parameters",
+                    "Refuses invalid types",
+                    "Refuses if the user does not have add permissions for the services",
+                    "Refuses if the user is not an employee",
+                    "Creates the service"
+                ]
+            },
+            "GetService": {
+                "purpose": "Gets a single service",
+                "params": {
+                    "svc" : {
+                        "type": "number|Service",
+                        "comment": "The id or service object to retrieve"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or user object requesting the service"
+                    }
+                },
+                "tests": [
+                    "Refuses if the user does not have permission to read services",
+                    "Refuses if the service does not exist",
+                    "Refuses if the user does not exist",
+                    "Refuses if the user is not an employee",
+                    "Returns a single service object"
+                ]
+            },
+            "ListServices": {
+                "purpose": "Gets a list of services alphabetically ordered. Bind to default.",
+                "params": {
+                    "amt" : {
+                        "type": "number",
+                        "comment": "The quantity to return. Max 100."
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The user requesting the services listing"
+                    }
+                },
+                "tests": [
+                    "Returns a list of Services",
+                    "Refuses if the user is not an employee"
+                ]
+            },
+            "PageServices": {
+                "purpose": "Gets a page of services. Bind to default.",
+                "params": {
+                    "amt" : {
+                        "type": "number",
+                        "comment": "The amout per page to get"
+                    },
+                    "page" : {
+                        "type": "number",
+                        "comment": "The page number (starting at 1) to get"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The user requesting the services listing"
+                    }
+                },
+                "tests": [
+                    "Refuses if the user is not an employee",
+                    "Returns a page of services"                    
+                ]
+            },
+            "UpdateService": {
+                "purpose": "Updates a service object.",
+                "params": {
+                    "service" : {
+                        "type": "number|Service",
+                        "comment": "The id or service object to update"
+                    },
+                    "obj" : {
+                        "type": "Object",
+                        "comment": "The update object. Accepts description, price, and default_quantity"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The user id or object requesting an update on the service"
+                    }
+                },
+                "tests": [
+                    "Refuses if the user does not have permission to update service",
+                    "Refuses if the user does not exist",
+                    "Refuses if the user is not an employee",
+                    "Refuses if the service does not exist",
+                    "Refuses bad form update object (no valid fields)",
+                    "Updates the service"
+                ]
+            }
+        },
+        "dependencies": {
+            "Service": "../models/service",
+            "* as Data": "../data"
+        }
+    },
+    "PurchaseOrderController": {
+        "filename": "purchase-order-controller",
+        "folder": "controllers",
+        "type": "functional",
+        "functions": {
+            "CreatePurchaseOrder": {
+                "purpose": "Creates a new purchase order",
+                "params": {
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or user object requesting the creation of the PO"
+                    },
+                    "memo" : {
+                        "type": "string",
+                        "comment": "A max 400 character memo for the purchase order"
+                    },
+                    "... tags" : {
+                        "type": "Array<Tag>",
+                        "comment": "Optional tags to add to the purchase order"
+                    }
+                },
+                "tests": [
+                    "Refuses if the user does not exist",
+                    "Refuses if the user is not an employee",
+                    "Refuses if the user does not have read permissions on purchase orders",
+                    "Refuses if the user does not have write permissions on purchase orders",
+                    "Creates tags if the tags exist",
+                    "Creates purchase order",
+                    "Returns created purchase order object"
+                ]
+            },
+            "AddItem": {
+                "purpose": "Creates a new item, and adds it to the workorder.",
+                "params": {
+                    "name" : {
+                        "type": "string",
+                        "comment": "The SKU of the item to be purchased"
+                    },
+                    "description" : {
+                        "type": "string",
+                        "comment": "Max 360 characters, description of item to be purchased"
+                    },
+                    "quantity" : {
+                        "type": "number",
+                        "comment": "How many of the thing to buy"
+                    },
+                    "price" : {
+                        "type": "number",
+                        "comment": "The price of the thing to buy"
+                    },
+                    "po" : {
+                        "type": "number|PurchaseOrder",
+                        "comment": "The id or purchase order object to add the item to"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or user object to add this item to"
+                    }
+                },
+                "tests": [
+                    "Refuses if the user does not exist",
+                    "Refuses if the user does not have write permissions on purchase orders",
+                    "Refuses if the user does not have read permissions on purchase orders",
+                    "Refuses if the user is not an employee",
+                    "Refuses if there are missing fields",
+                    "Refuses if the PO does not exist",
+                    "Creates new item",
+                    "Adds item to the PO"
+                ]
+            },
+            "RemoveItem": {
+                "purpose": "Removes an item from the purchase order",
+                "params": {
+                    "poItem" : {
+                        "type": "number|PurchaseOrderItem",
+                        "comment": "The id or PurchaseOrderItem object to be removed"
+                    },
+                    "purchaseOrder" : {
+                        "type": "number|PurchaseOrder",
+                        "comment": "The id or purchase order object to have the item removed from"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or User object removing the item"
+                    }
+                },
+                "tests": [
+                    "Refuses if the user does not exist",
+                    "Refuses if the user does not have write permissions on purchase order",
+                    "Refuses if the user does not have read permissions on purchase order",
+                    "Refuses if the user is not an employee",
+                    "Removes item from invoice"
+                ]
+            },
+            "GetPurchaseOrder": {
+                "purpose": "Gets a single purchase order object",
+                "params": {
+                    "po" : {
+                        "type": "number|PurchaseOrder",
+                        "comment": "The id or PurchaseOrder object to retrieve"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or User object retrieving the object"
+                    }
+                },
+                "tests": [
+                    "Refuses if the user does not exist",
+                    "Refuses if the user does not have read permissions on the purchase order",
+                    "Refuses if the PO does not exist",
+                    "Returns a populated PO"
+                ]
+            },
+            "UpdateItem": {
+                "purpose": "Updates an item on a purchase order",
+                "params": {
+                    "poitem" : {
+                        "type": "number|PurchaseOrderItem",
+                        "comment": "The id or PurchaseOrderItem object to update"
+                    },
+                    "updateobj" : {
+                        "type": "Object",
+                        "comment": "The object used to update the PurchaseOrderItem"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or User object attempting to update the object"
+                    }
+                },
+                "tests": [
+                    "Refuses if the user does not exist",
+                    "Refuses if the item does not exist",
+                    "Refuses bad form update object (no valid fields)",
+                    "Refuses if user does not have read permissions on PO",
+                    "Refuses if user does not have write permissions on PO",
+                    "Updates poitem"
+                ]
+            },
+            "UpdateMemo": {
+                "purpose": "Updates the memo of a purchase order",
+                "params": {
+                    "memo" : {
+                        "type": "string",
+                        "comment": "The new memo"
+                    },
+                    "po" : {
+                        "type": "number|PurchaseOrder",
+                        "comment": "The PO to update"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or User object updating the memo"
+                    }
+                },
+                "tests": [
+                    "Refuses if the user does not exist",
+                    "Refuses if the user does not have read permissions on purchase orders",
+                    "Refuses if the user does not have write permissions on purchase orders",
+                    "Refuses if the purchase order does not exist",
+                    "Refuses if memo is longer than 400 characters",
+                    "Updates memo on a purchase order"
+                ]
+            },
+            "ListPurchaseOrders": {
+                "purpose": "Gets a list of purchase orders",
+                "params": {
+                    "amt" : {
+                        "type": "number",
+                        "comment": "The amount of purchase orders to get (max 100)"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or User object requesting the purchase orders"
+                    }
+                },
+                "tests": [
+                    "Returns a list of Purchase Orders",
+                    "Refuses if user does not exist",
+                    "Refuses if user does not have read permissions on purchase orders"
+                ]
+            },
+            "PagePurchaseOrders": {
+                "purpose": "Gets a page of purchase orders",
+                "params": {
+                    "amt" : {
+                        "type": "number",
+                        "comment": "The amount of purchase orders to get in a page"
+                    },
+                    "page" : {
+                        "type": "number",
+                        "comment": "The page number to get (start point 1)"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or User object requesting the purchase orders"
+                    }
+                },
+                "tests": [
+                    "Refuses if the user does not exist",
+                    "Refuses if the user does not have read permissions on purchase orders",
+                    "Returns a page of Purchase Orders"
+                ]
+            },
+            "DeletePurchaseOrder": {
+                "purpose": "Deletes a purchase order ",
+                "params": {
+                    "po" : {
+                        "type": "number|PurchaseOrder",
+                        "comment": "The id or purchase order object to be deleted"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or User object deleting the purchase order"
+                    },
+                    "force" : {
+                        "type": "boolean",
+                        "comment": "Whether or not to force deletion (deletes all items)",
+                        "default": false
+                    }
+                },
+                "tests": [
+                    "Refuses if user does not have write permissions on purchase orders",
+                    "Refuses if user does not have read permissions on purchase orders",
+                    "Refuses if user does not exist",
+                    "Refuses if purchase order does not exist",
+                    "Refuses if items exist in PO and force is false",
+                    "Deletes purchase order",
+                    "Deletes attached items when force is true"
                 ]
             },
         }

@@ -88,4 +88,10 @@ describe('#WorkorderController', function() {
 		it('New estimate contains all items of estimate')
 		it('New estimate contains all contacts of estimate')
 	})
+	describe('GetWorkorder', function() {
+		it('Refuses if the user does not exist')
+		it('Refuses if the workorder does not exist')
+		it('Refuses if the user does not have read permissions on the invoice')
+		it('Gets a populated version of the workorder')
+	})
 })

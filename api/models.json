@@ -263,6 +263,7 @@
         "Purpose": "A recording of a purchase order for assets to be acquired. This is a finalized agreement between another company and us ",
         "Fields": {
             "id":             "The id of a purchase order",
+            "memo": "Optional memo for the purchase order. (max 400 characters)",
             "creator_id":     "The id of the employee that created the purchase order.",
             "opened_on":      "When the purchase order was opened. This is not to be editable client side.",
             "completed_on":   "Null if incomplete, or the timestamp of when it was closed."
@@ -288,7 +289,7 @@
             "price":              "The price of the item to be purchased in the quantity * price equation"
         }
     },
-        
+
     "purchase_order_transaction": {
         "Purpose": "A transaction binding for a purchase order. Supports multiple transactions.",
         "Fields": {
@@ -312,8 +313,8 @@
     "tag": {
         "Purpose": "Global tagging system. Anything that can be tagged references here.",
         "Fields": {
-            "id":         "The identifier of the tag ",
-            "name":       "A string, max length 140 characters, of a tag. Required.",
+            "id": "The identifier of the tag ",
+            "name": "A string, max length 140 characters, of a tag. Required.",
             "red": "An integer between 0 and 255 symbolizing the red in RGBA",
             "blue": "An integer between 0 and 255 symbolizing the blue in RGBA",
             "green": "An integer between 0 and 255 symbolizing the green in RGBA",

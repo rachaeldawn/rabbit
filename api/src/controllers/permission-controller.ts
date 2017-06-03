@@ -5,7 +5,8 @@ import {default as PermissionSet} from "../data/user_permission_set"
 
 /*
  * Exported Functions: 
- * 	GivePermission: Give a user a permission, checking first if the user giving the permission is allowed.
+ * 	CreatePermission: Creates a permission for usage by a controller
+ * 	GrantPermission: Give a user a permission, checking first if the user giving the permission is allowed.
  * 	RevokePermission: Revokes a permisison off of a user, checking first if the revoker is allowed to revoke permission
  * 	HasPermission: Checks if the user has a permission
  * 	CachePermissionSet: To cache a user's permission set. Used to increase permission checking performance.
@@ -13,12 +14,19 @@ import {default as PermissionSet} from "../data/user_permission_set"
  * Private Functions: 
  */
 /*
+ * Purpose: Creates a permission for usage by a controller
+ * @param name: A max 32 characters length permission name (default: undefined)
+ */
+export function CreatePermission(name: string) {
+	throw 'Not implemented'
+}
+/*
  * Purpose: Give a user a permission, checking first if the user giving the permission is allowed.
  * @param userId: The userId or User object to have the permission set on (default: undefined)
  * @param permissionId: The id, or object, of the permission to be set on the user (default: undefined)
  * @param giverId: The userId or User object providing the permission (default: undefined)
  */
-export function GivePermission(userId: number|User, permissionId: number|Permission, giverId: number|User) {
+export function GrantPermission(userId: number|User, permissionId: number|Permission, giverId: number|User) {
 	throw 'Not implemented'
 }
 /*

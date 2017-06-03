@@ -91,7 +91,6 @@ function WriteClassFiles(Classes) {
 
 function GenerateClassText(obj) {
     var Lines = []
-    Lines.push(`var Data = require("../data")`)
     Lines.push('/*')
     for(var k in obj.PropertyDescriptions) {
         Lines.push(` * @property ${k}: ${obj.PropertyDescriptions[k]}`)
@@ -112,20 +111,8 @@ function GenerateClassText(obj) {
     for(var k in obj.Properties) {
         Lines.push(`\t\tthis.${obj.Properties[k]} = ${obj.Properties[k]}`)
     }
-    Lines.push(`\t\tthis.Update = Data.Update.bind(this.Update, this)`)
-    Lines.push(`\t\tthis.Sync = Data.Sync.bind(this.Sync, this)`)
-    Lines.push(`\t\tthis.Save = Data.Save.bind(this.Save, this)`)
-    Lines.push(`\t\tthis.Delete = Data.Delete.bind(this.Delete, this)`)
     Lines.push('\t}')
     Lines.push(`}\n`)
-    Lines.push(`${obj.Class}.Delete     = Data.Delete.bind(${obj.Class}.Delete)`)
-    Lines.push(`${obj.Class}.prototype.tablename = tablename`)
-    Lines.push(`${obj.Class}.Page       = Data.Page.bind(${obj.Class}.Page)`)
-    Lines.push(`${obj.Class}.List       = Data.List.bind(${obj.Class}.List)`)
-    Lines.push(`${obj.Class}.Save       = Data.Save.bind(${obj.Class}.Save)`)
-    Lines.push(`${obj.Class}.Sync       = Data.Sync.bind(${obj.Class}.Sync)`)
-    Lines.push(`${obj.Class}.Search     = Data.Search.bind(${obj.Class}.Search)`)
-    Lines.push(`${obj.Class}.Update     = Data.Update.bind(${obj.Class}.Update)`)
     return Lines.reduce(
         (prev, cur) => {
             prev += cur + '\n'

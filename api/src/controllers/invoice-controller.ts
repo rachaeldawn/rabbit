@@ -1,5 +1,6 @@
 import Workorder from "../data/workorder"
 import WorkorderContact from "../data/workorder_contact"
+import CustomerContact from "../data/customer_contact"
 import WorkorderTransaction from "../data/workorder_transaction"
 import Transaction from "../data/transaction"
 import {default as User} from "../data/user_account"
@@ -19,6 +20,7 @@ import WorkorderItem from "../data/workorder_item"
  * 	RemoveWorkorderContact: Removes a contact from a workorder
  * 	AddTransaction: Adds a transaction to a workorder
  * 	ConvertEstimateToWorkorder: Converts an estimate into a workorder
+ * 	GetWorkorder: Gets a populated workorder for use
  * Private Functions: 
  */
 /*
@@ -86,7 +88,7 @@ export function CloseWorkorder(workorder: number|Workorder, user: number|User) {
  * @param workorder: The workorder to add the contact to (default: undefined)
  * @param user: The id or user adding the contact (default: undefined)
  */
-export function AddWorkorderContact(contact: number|Contact, workorder: number|Workorder, user: number|User) {
+export function AddWorkorderContact(contact: number|CustomerContact, workorder: number|Workorder, user: number|User) {
 	throw 'Not implemented'
 }
 /*
@@ -95,7 +97,7 @@ export function AddWorkorderContact(contact: number|Contact, workorder: number|W
  * @param workorder: The id or workorder object to remove the contact from (default: undefined)
  * @param user: The user removing the contact from the board (default: undefined)
  */
-export function RemoveWorkorderContact(contact: number|Contact, workorder: number|Workorder, user: number|User) {
+export function RemoveWorkorderContact(contact: number|WorkorderContact, workorder: number|Workorder, user: number|User) {
 	throw 'Not implemented'
 }
 /*
@@ -113,6 +115,14 @@ export function AddTransaction(transaction: number|Transaction, workorder: numbe
  * @param user: The id or user object requesting the conversion (default: undefined)
  */
 export function ConvertEstimateToWorkorder(estimate: number|Estimate, user: number|User) {
+	throw 'Not implemented'
+}
+/*
+ * Purpose: Gets a populated workorder for use
+ * @param workorder: The id or workorder object to get the populated version of (default: undefined)
+ * @param user: The user requesting the workorder (default: undefined)
+ */
+export function GetWorkorder(workorder: number|Workorder, user: number|User) {
 	throw 'Not implemented'
 }
 

@@ -1,1 +1,1 @@
-var thing: string[] = ['hello']
+var thing: Object = {}
