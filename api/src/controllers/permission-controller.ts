@@ -1,6 +1,7 @@
-import {default as User} from "../data/user_account"
-import {default as Permission} from "../data/user_permission"
-import {default as PermissionSet} from "../data/user_permission_set"
+import {default as User} from "../models/user_account"
+import {default as Permission} from "../models/user_permission"
+import {default as PermissionSet} from "../models/user_permission_set"
+import * as Data from "../data"
 
 
 /*

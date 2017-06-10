@@ -1,10 +1,10 @@
-import Workorder from "../data/workorder"
-import WorkorderContact from "../data/workorder_contact"
-import CustomerContact from "../data/customer_contact"
-import WorkorderTransaction from "../data/workorder_transaction"
-import Transaction from "../data/transaction"
-import {default as User} from "../data/user_account"
-import WorkorderItem from "../data/workorder_item"
+import Workorder from "../models/workorder"
+import WorkorderContact from "../models/workorder_contact"
+import CustomerContact from "../models/customer_contact"
+import WorkorderTransaction from "../models/workorder_transaction"
+import Transaction from "../models/transaction"
+import {default as User} from "../models/user_account"
+import WorkorderItem from "../models/workorder_item"
 
 
 /*

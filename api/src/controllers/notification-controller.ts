@@ -1,5 +1,5 @@
-import {default as User} from "../data/user_account"
-import Notification from "../data/notification"
+import {default as User} from "../models/user_account"
+import Notification from "../models/notification"
 
 
 /*

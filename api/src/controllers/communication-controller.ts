@@ -1,8 +1,9 @@
-import {default as User} from "../data/user_account"
-import Conversation from "../data/conversation"
-import ConversationParticipant from "../data/conversation_participant"
-import Message from "../data/message"
-import MessageReceipt from "../data/message_receipt"
+import {default as User} from "../models/user_account"
+import Conversation from "../models/conversation"
+import ConversationParticipant from "../models/conversation_participant"
+import Message from "../models/message"
+import MessageReceipt from "../models/message_receipt"
+import * as Data from "../data"
 
 
 /*

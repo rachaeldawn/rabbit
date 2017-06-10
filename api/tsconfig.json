@@ -3,6 +3,8 @@
     "compilerOptions": {
         "allowJs": true,
         "allowUnusedLabels": false,
+        "allowUnreachableCode": false,
+        "noUnusedLocals": true,
         "baseUrl": ".",
         "listFiles": true,
         "module": "umd",
@@ -11,7 +13,6 @@
         "outDir": "build/",
         "sourceRoot": "src",
         "sourceMap": false,
-        "noImplicitAny": false,
         "lib": [
             "es7",
             "esnext"

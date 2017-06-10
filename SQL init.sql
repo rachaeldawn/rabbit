@@ -123,24 +123,24 @@ CREATE TABLE employee_workday (
     clock_out timestamp WITH TIME ZONE 
 );
 -- Work journal is a written rubber duck debugging. Strongly encourage to use this, but not required.
-CREATE TABLE workjournal (
+CREATE TABLE journal (
     id serial PRIMARY KEY,
     employee_id integer REFERENCES employee(id) ON DELETE CASCADE NOT NULL,
     name varchar(120) NOT NULL
 );
 -- Tagging a workday means that the entry will be visible by management. 
-CREATE TABLE workjournal_entry (
+CREATE TABLE journal_entry (
     id serial PRIMARY KEY,
-    journal_id integer REFERENCES workjournal(id) ON DELETE CASCADE NOT NULL,
+    journal_id integer REFERENCES journal(id) ON DELETE CASCADE NOT NULL,
     message varchar(5000) NOT NULL,
     time_stamp timestamp WITH TIME ZONE  DEFAULT NOW() NOT NULL,
     -- OPTIONAL --
     workday_id integer REFERENCES employee_workday(id),
     CONSTRAINT message CHECK (char_length(message) > 15)
 );
-CREATE TABLE workjournal_entry_tag (
+CREATE TABLE journal_entry_tag (
     id serial PRIMARY KEY,
-    entry_id integer REFERENCES workjournal_entry(id) ON DELETE CASCADE NOT NULL,
+    entry_id integer REFERENCES journal_entry(id) ON DELETE CASCADE NOT NULL,
     tag_id integer REFERENCES tag(id) NOT NULL
 );
 CREATE TABLE service (

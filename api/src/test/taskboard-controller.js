@@ -9,7 +9,7 @@ describe('#TaskboardController', function() {
 		it('Deletes taskboard')
 		it('Removes all participants')
 	})
-	describe('GetPopulatedTaskboard', function() {
+	describe('GetTaskboard', function() {
 		it('Refuses if the user does not exist')
 		it('Refuses if the user does not have permission to view tasks')
 		it('Refuses if the taskboard does not exist')

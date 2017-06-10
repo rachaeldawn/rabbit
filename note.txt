@@ -1,0 +1,10 @@
+Create
+Get
+Page
+List
+Update
+Delete
+
+
+BatchUpdate - Array of objects to update
+Search

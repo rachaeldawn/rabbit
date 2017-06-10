@@ -1,8 +1,8 @@
-import {default as User} from "../data/user_account"
-import Taskboard from "../data/taskboard"
-import {default as Participant} from "../data/taskboard_participant"
-import Tasklist from "../data/tasklist"
-import {default as Task} from "../data/tasklist_task"
+import {default as User} from "../models/user_account"
+import Taskboard from "../models/taskboard"
+import {default as Participant} from "../models/taskboard_participant"
+import Tasklist from "../models/tasklist"
+import {default as Task} from "../models/tasklist_task"
 import PermissionController from "./permission-controller"
 
 
@@ -10,7 +10,7 @@ import PermissionController from "./permission-controller"
  * Exported Functions: 
  * 	CreateTaskboard: Creates a taskboard for an employee
  * 	DeleteTaskboard: Deletes a taskboard for an employee
- * 	GetPopulatedTaskboard: Gets a complete taskboard, with populated tasks and tasklists. Data will have to be sorted and organized.
+ * 	GetTaskboard: Gets a complete taskboard, with populated tasks and tasklists. Data will have to be sorted and organized.
  * 	AddTasklist: Adds a tasklist to a task board
  * 	DeleteTasklist: Removes a tasklist from a task board
  * 	MoveTaskList: Moves tasklist to another board
@@ -45,7 +45,7 @@ export function DeleteTaskboard(user: number|User, taskboard: number|Taskboard) 
  * @param taskboard: The taskboard to pull the tasks from (default: undefined)
  * @param user: The user pulling the taskboard (default: undefined)
  */
-export function GetPopulatedTaskboard(taskboard: number|Taskboard, user: number|User) {
+export function GetTaskboard(taskboard: number|Taskboard, user: number|User) {
 	throw 'Not implemented'
 }
 /*

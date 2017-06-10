@@ -1,8 +1,8 @@
-import Estimate from "../data/estimate"
-import EstimateContact from "../data/estimate_contact"
-import CustomerContact from "../data/customer_contact"
-import EstimateItem from "../data/estimate_item"
-import {default as User} from "../data/UserAccount"
+import Estimate from "../models/estimate"
+import EstimateContact from "../models/estimate_contact"
+import CustomerContact from "../models/customer_contact"
+import EstimateItem from "../models/estimate_item"
+import {default as User} from "../models/UserAccount"
 
 
 /*

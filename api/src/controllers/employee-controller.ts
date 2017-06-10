@@ -1,6 +1,7 @@
-import Employee from "../data/employee"
-import {default as User} from "../data/user_account"
-import {default as Workday} from "../data/employee_workday"
+import Employee from "../models/employee"
+import {default as User} from "../models/user_account"
+import {default as Workday} from "../models/employee_workday"
+import * as Data from "../data"
 
 
 /*
@@ -14,6 +15,8 @@ import {default as Workday} from "../data/employee_workday"
  * 	LoadEmployees: Caches all employees into memory for easy lookup. Only active employees.
  * 	CacheEmployee: Adds an employee to the cache after creating a new employee
  * 	UncacheEmployee: Removes an employee that has been fired from the cache
+ * 	ListEmployees: Gets a list of active employees (max 100). Binding to Page, with page = 1
+ * 	PageEmployees: Gets a page of active employees
  * Private Functions: 
  */
 /*
@@ -50,8 +53,10 @@ export function AddEmployee(employeeOrFirstName: Employee|string, middle: string
 /*
  * Purpose: Gets a single employee (checks cache first)
  * @param employee: The id or Employee object. Fills Employee object and returns, or returns Employee object. (default: undefined)
+ * @param user: The user requesting the employee object (default: undefined)
+ * @param confidentials: Whether or not to include confidential information in the populated object (default: undefined)
  */
-export function GetEmployee(employee: number|Employee) {
+export function GetEmployee(employee: number|Employee, user: number|user, confidentials: boolean) {
 	throw 'Not implemented'
 }
 /*
@@ -87,6 +92,27 @@ export function CacheEmployee(employee: Employee) {
  * @param employee: The employee object to remove from the cache (default: undefined)
  */
 export function UncacheEmployee(employee: number|Employee) {
+	throw 'Not implemented'
+}
+/*
+ * Purpose: Gets a list of active employees (max 100). Binding to Page, with page = 1
+ * @param amt: The amount to return (default: undefined)
+ * @param user: The user requesting the listing (default: undefined)
+ * @param includeInactive: Whether or not to include the inactive employees (default: false)
+ * @param confidentials: Whether or not to return the confidential information (default: false)
+ */
+export function ListEmployees(amt: number, user: number|User, includeInactive: boolean = false, confidentials: boolean = false) {
+	throw 'Not implemented'
+}
+/*
+ * Purpose: Gets a page of active employees
+ * @param amt: The amount to return (default: undefined)
+ * @param page: The page number to return (start point 1) (default: undefined)
+ * @param user: The user requesting the listing (default: undefined)
+ * @param includeInactive: Whether or not to include the inactive employees (default: false)
+ * @param confidentials: Whether or not to return the confidential information (default: false)
+ */
+export function PageEmployees(amt: number, page: number, user: number|User, includeInactive: boolean = false, confidentials: boolean = false) {
 	throw 'Not implemented'
 }
 
