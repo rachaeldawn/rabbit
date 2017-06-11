@@ -1,6 +1,6 @@
-import {default as User} from "../models/user_account"
-import {default as Permission} from "../models/user_permission"
-import {default as PermissionSet} from "../models/user_permission_set"
+import {default as User} from "../data/user_account"
+import {default as Permission} from "../data/user_permission"
+import {default as PermissionSet} from "../data/user_permission_set"
 import * as Data from "../data"
 
 
@@ -18,7 +18,7 @@ import * as Data from "../data"
  * Purpose: Creates a permission for usage by a controller
  * @param name: A max 32 characters length permission name (default: undefined)
  */
-export function CreatePermission(name: string) {
+export function CreatePermission(name: string ) {
 	throw 'Not implemented'
 }
 /*
@@ -27,7 +27,7 @@ export function CreatePermission(name: string) {
  * @param permissionId: The id, or object, of the permission to be set on the user (default: undefined)
  * @param giverId: The userId or User object providing the permission (default: undefined)
  */
-export function GrantPermission(userId: number|User, permissionId: number|Permission, giverId: number|User) {
+export function GrantPermission(userId: number|User , permissionId: number|Permission , giverId: number|User ) {
 	throw 'Not implemented'
 }
 /*
@@ -36,7 +36,7 @@ export function GrantPermission(userId: number|User, permissionId: number|Permis
  * @param permission: The id or object of the permission to be provided (default: undefined)
  * @param revoker: The id or the object of the user revoking the permission (default: undefined)
  */
-export function RevokePermission(revokeee: number|User, permission: number|Permission, revoker: number|User) {
+export function RevokePermission(revokeee: number|User , permission: number|Permission , revoker: number|User ) {
 	throw 'Not implemented'
 }
 /*
@@ -44,21 +44,21 @@ export function RevokePermission(revokeee: number|User, permission: number|Permi
  * @param user: User id or the user object to be checked (default: undefined)
  * @param permission: The permission to be checked (default: undefined)
  */
-export function HasPermission(user: number|User, permission: number|Permission) {
+export function HasPermission(user: number|User , permission: number|Permission ) {
 	throw 'Not implemented'
 }
 /*
  * Purpose: To cache a user's permission set. Used to increase permission checking performance.
  * @param user: The user or id of the user to have their permissions cached (default: undefined)
  */
-export function CachePermissionSet(user: number|User) {
+export function CachePermissionSet(user: number|User ) {
 	throw 'Not implemented'
 }
 /*
  * Purpose: Deletes a user's permissions from cache after a period of time
  * @param user: The id or User object to remove the permissions from (default: undefined)
  */
-export function DeleteFromCache(user: number|User) {
+export function DeleteFromCache(user: number|User ) {
 	throw 'Not implemented'
 }
 

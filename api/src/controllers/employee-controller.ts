@@ -1,6 +1,6 @@
-import Employee from "../models/employee"
-import {default as User} from "../models/user_account"
-import {default as Workday} from "../models/employee_workday"
+import Employee from "../data/employee"
+import {default as User} from "../data/user_account"
+import {default as Workday} from "../data/employee_workday"
 import * as Data from "../data"
 
 
@@ -23,14 +23,14 @@ import * as Data from "../data"
  * Purpose: Clock an employee in
  * @param user: The id or user object of the employee clocking in (default: undefined)
  */
-export function ClockIn(user: number|User) {
+export function ClockIn(user: number|User ) {
 	throw 'Not implemented'
 }
 /*
  * Purpose: Clock an employee out
  * @param user: The id or user object of the employee clocking out (default: undefined)
  */
-export function ClockOut(user: number|User) {
+export function ClockOut(user: number|User ) {
 	throw 'Not implemented'
 }
 /*
@@ -47,7 +47,7 @@ export function ClockOut(user: number|User) {
  * @param about: The about for the employee (default: null)
  * @param user: The id or user object to be linked (default: undefined)
  */
-export function AddEmployee(employeeOrFirstName: Employee|string, middle: string, last: string, phone: string, address: string, postal_code: string, sin: string, birthday: Date, is_active: boolean = false, about: string, user: number|User) {
+export function AddEmployee(employeeOrFirstName: Employee|string , middle: string , last: string , phone: string , address: string , postal_code: string , sin: string , birthday: Date , is_active: boolean , about: string , user: number|User ) {
 	throw 'Not implemented'
 }
 /*
@@ -56,14 +56,14 @@ export function AddEmployee(employeeOrFirstName: Employee|string, middle: string
  * @param user: The user requesting the employee object (default: undefined)
  * @param confidentials: Whether or not to include confidential information in the populated object (default: undefined)
  */
-export function GetEmployee(employee: number|Employee, user: number|user, confidentials: boolean) {
+export function GetEmployee(employee: number|Employee , user: number|User , confidentials: boolean ) {
 	throw 'Not implemented'
 }
 /*
  * Purpose: Gets an employee object
  * @param employee: The User to get the employee from (default: undefined)
  */
-export function GetEmployeeFromUser(employee: number|User) {
+export function GetEmployeeFromUser(employee: number|User ) {
 	throw 'Not implemented'
 }
 /*
@@ -71,7 +71,7 @@ export function GetEmployeeFromUser(employee: number|User) {
  * @param employee: The employee to set as inactive (default: undefined)
  * @param user: The user firing the employee. Used for permission checking. (default: undefined)
  */
-export function FireEmployee(employee: number|Employee, user: number|User) {
+export function FireEmployee(employee: number|Employee , user: number|User ) {
 	throw 'Not implemented'
 }
 /*
@@ -84,14 +84,14 @@ export function LoadEmployees() {
  * Purpose: Adds an employee to the cache after creating a new employee
  * @param employee: A populated, valid, employee object (default: undefined)
  */
-export function CacheEmployee(employee: Employee) {
+export function CacheEmployee(employee: Employee ) {
 	throw 'Not implemented'
 }
 /*
  * Purpose: Removes an employee that has been fired from the cache
  * @param employee: The employee object to remove from the cache (default: undefined)
  */
-export function UncacheEmployee(employee: number|Employee) {
+export function UncacheEmployee(employee: number|Employee ) {
 	throw 'Not implemented'
 }
 /*
@@ -101,7 +101,7 @@ export function UncacheEmployee(employee: number|Employee) {
  * @param includeInactive: Whether or not to include the inactive employees (default: false)
  * @param confidentials: Whether or not to return the confidential information (default: false)
  */
-export function ListEmployees(amt: number, user: number|User, includeInactive: boolean = false, confidentials: boolean = false) {
+export function ListEmployees(amt: number , user: number|User , includeInactive: boolean , confidentials: boolean ) {
 	throw 'Not implemented'
 }
 /*
@@ -112,7 +112,7 @@ export function ListEmployees(amt: number, user: number|User, includeInactive: b
  * @param includeInactive: Whether or not to include the inactive employees (default: false)
  * @param confidentials: Whether or not to return the confidential information (default: false)
  */
-export function PageEmployees(amt: number, page: number, user: number|User, includeInactive: boolean = false, confidentials: boolean = false) {
+export function PageEmployees(amt: number , page: number , user: number|User , includeInactive: boolean , confidentials: boolean ) {
 	throw 'Not implemented'
 }
 

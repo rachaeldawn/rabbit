@@ -1,3 +1,8 @@
+import PurchaseOrder from "../data/purchase_order"
+import PurchaseOrderItem from "../data/purchase_order_item"
+import {default as User} from "../data/user_account"
+import Tag from "../data/tag"
+import * as Data from "../data"
 
 
 /*
@@ -19,7 +24,7 @@
  * @param memo: A max 400 character memo for the purchase order (default: undefined)
  * @param ... tags: Optional tags to add to the purchase order (default: undefined)
  */
-export function CreatePurchaseOrder(user: number|User, memo: string, ... tags: Array<Tag>) {
+export function CreatePurchaseOrder(user: number|User , memo: string , ... tags: Tag[] ) {
 	throw 'Not implemented'
 }
 /*
@@ -31,7 +36,7 @@ export function CreatePurchaseOrder(user: number|User, memo: string, ... tags: A
  * @param po: The id or purchase order object to add the item to (default: undefined)
  * @param user: The id or user object to add this item to (default: undefined)
  */
-export function AddItem(name: string, description: string, quantity: number, price: number, po: number|PurchaseOrder, user: number|User) {
+export function AddItem(name: string , description: string , quantity: number , price: number , po: number|PurchaseOrder , user: number|User ) {
 	throw 'Not implemented'
 }
 /*
@@ -40,7 +45,7 @@ export function AddItem(name: string, description: string, quantity: number, pri
  * @param purchaseOrder: The id or purchase order object to have the item removed from (default: undefined)
  * @param user: The id or User object removing the item (default: undefined)
  */
-export function RemoveItem(poItem: number|PurchaseOrderItem, purchaseOrder: number|PurchaseOrder, user: number|User) {
+export function RemoveItem(poItem: number|PurchaseOrderItem , purchaseOrder: number|PurchaseOrder , user: number|User ) {
 	throw 'Not implemented'
 }
 /*
@@ -48,7 +53,7 @@ export function RemoveItem(poItem: number|PurchaseOrderItem, purchaseOrder: numb
  * @param po: The id or PurchaseOrder object to retrieve (default: undefined)
  * @param user: The id or User object retrieving the object (default: undefined)
  */
-export function GetPurchaseOrder(po: number|PurchaseOrder, user: number|User) {
+export function GetPurchaseOrder(po: number|PurchaseOrder , user: number|User ) {
 	throw 'Not implemented'
 }
 /*
@@ -57,7 +62,7 @@ export function GetPurchaseOrder(po: number|PurchaseOrder, user: number|User) {
  * @param updateobj: The object used to update the PurchaseOrderItem (default: undefined)
  * @param user: The id or User object attempting to update the object (default: undefined)
  */
-export function UpdateItem(poitem: number|PurchaseOrderItem, updateobj: Object, user: number|User) {
+export function UpdateItem(poitem: number|PurchaseOrderItem , updateobj: Object , user: number|User ) {
 	throw 'Not implemented'
 }
 /*
@@ -66,7 +71,7 @@ export function UpdateItem(poitem: number|PurchaseOrderItem, updateobj: Object, 
  * @param po: The PO to update (default: undefined)
  * @param user: The id or User object updating the memo (default: undefined)
  */
-export function UpdateMemo(memo: string, po: number|PurchaseOrder, user: number|User) {
+export function UpdateMemo(memo: string , po: number|PurchaseOrder , user: number|User ) {
 	throw 'Not implemented'
 }
 /*
@@ -74,7 +79,7 @@ export function UpdateMemo(memo: string, po: number|PurchaseOrder, user: number|
  * @param amt: The amount of purchase orders to get (max 100) (default: undefined)
  * @param user: The id or User object requesting the purchase orders (default: undefined)
  */
-export function ListPurchaseOrders(amt: number, user: number|User) {
+export function ListPurchaseOrders(amt: number , user: number|User ) {
 	throw 'Not implemented'
 }
 /*
@@ -83,7 +88,7 @@ export function ListPurchaseOrders(amt: number, user: number|User) {
  * @param page: The page number to get (start point 1) (default: undefined)
  * @param user: The id or User object requesting the purchase orders (default: undefined)
  */
-export function PagePurchaseOrders(amt: number, page: number, user: number|User) {
+export function PagePurchaseOrders(amt: number , page: number , user: number|User ) {
 	throw 'Not implemented'
 }
 /*
@@ -92,7 +97,7 @@ export function PagePurchaseOrders(amt: number, page: number, user: number|User)
  * @param user: The id or User object deleting the purchase order (default: undefined)
  * @param force: Whether or not to force deletion (deletes all items) (default: false)
  */
-export function DeletePurchaseOrder(po: number|PurchaseOrder, user: number|User, force: boolean = false) {
+export function DeletePurchaseOrder(po: number|PurchaseOrder , user: number|User , force: boolean ) {
 	throw 'Not implemented'
 }
 

@@ -1,0 +1,22 @@
+{
+    "compileOnSave": true,
+    "compilerOptions": {
+        "allowJs": true,
+        "allowUnusedLabels": false,
+        "removeComments": true,
+        "allowUnreachableCode": false,
+        "baseUrl": "src",
+        "module": "umd",
+        "moduleResolution": "node",
+        "pretty": true,
+        "outDir": "../build",
+        "sourceMap": false,
+        "lib": [
+            "es7",
+            "esnext"
+        ],
+        "paths": {
+            "controllers": [ "controllers/" ]
+        }
+    }
+}

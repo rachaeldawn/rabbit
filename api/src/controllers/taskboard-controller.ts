@@ -1,9 +1,9 @@
-import {default as User} from "../models/user_account"
-import Taskboard from "../models/taskboard"
-import {default as Participant} from "../models/taskboard_participant"
-import Tasklist from "../models/tasklist"
-import {default as Task} from "../models/tasklist_task"
-import PermissionController from "./permission-controller"
+import {default as User} from "../data/user_account"
+import Taskboard from "../data/taskboard"
+import {default as Participant} from "../data/taskboard_participant"
+import Tasklist from "../data/tasklist"
+import {default as Task} from "../data/tasklist_task"
+import * as PermissionController from "./permission-controller"
 
 
 /*
@@ -29,7 +29,7 @@ import PermissionController from "./permission-controller"
  * @param user: The id or user object the taskboard belongs to (default: undefined)
  * @param name: The name of the taskboard (default: undefined)
  */
-export function CreateTaskboard(user: number|User, name: string) {
+export function CreateTaskboard(user: number|User , name: string ) {
 	throw 'Not implemented'
 }
 /*
@@ -37,7 +37,7 @@ export function CreateTaskboard(user: number|User, name: string) {
  * @param user: The id or user object doing the deleting (default: undefined)
  * @param taskboard: The id or taskboard object to be deleted (default: undefined)
  */
-export function DeleteTaskboard(user: number|User, taskboard: number|Taskboard) {
+export function DeleteTaskboard(user: number|User , taskboard: number|Taskboard ) {
 	throw 'Not implemented'
 }
 /*
@@ -45,7 +45,7 @@ export function DeleteTaskboard(user: number|User, taskboard: number|Taskboard) 
  * @param taskboard: The taskboard to pull the tasks from (default: undefined)
  * @param user: The user pulling the taskboard (default: undefined)
  */
-export function GetTaskboard(taskboard: number|Taskboard, user: number|User) {
+export function GetTaskboard(taskboard: number|Taskboard , user: number|User ) {
 	throw 'Not implemented'
 }
 /*
@@ -54,7 +54,7 @@ export function GetTaskboard(taskboard: number|Taskboard, user: number|User) {
  * @param user: The id or user to add the tasklist to (default: undefined)
  * @param taskboard: the id or taskboard to add the tasklist to (default: undefined)
  */
-export function AddTasklist(name: string, user: number|User, taskboard: number|Taskboard) {
+export function AddTasklist(name: string , user: number|User , taskboard: number|Taskboard ) {
 	throw 'Not implemented'
 }
 /*
@@ -62,7 +62,7 @@ export function AddTasklist(name: string, user: number|User, taskboard: number|T
  * @param tasklist: The id or Tasklist object to be removed (default: undefined)
  * @param user: The user removing the tasklist (default: undefined)
  */
-export function DeleteTasklist(tasklist: number|Tasklist, user: number|Tasklist) {
+export function DeleteTasklist(tasklist: number|Tasklist , user: number|Tasklist ) {
 	throw 'Not implemented'
 }
 /*
@@ -70,7 +70,7 @@ export function DeleteTasklist(tasklist: number|Tasklist, user: number|Tasklist)
  * @param tasklist: The tasklist to be moved (default: undefined)
  * @param board: The taskboard to move the tasklist to (default: undefined)
  */
-export function MoveTaskList(tasklist: number|Tasklist, board: number|Taskboard) {
+export function MoveTaskList(tasklist: number|Tasklist , board: number|Taskboard ) {
 	throw 'Not implemented'
 }
 /*
@@ -79,7 +79,7 @@ export function MoveTaskList(tasklist: number|Tasklist, board: number|Taskboard)
  * @param tasklist: The id or tasklist object to rename (default: undefined)
  * @param user: The id or User object doing the renaming (default: undefined)
  */
-export function ChangeTasklistName(newname: string, tasklist: number|Tasklist, user: number|User) {
+export function ChangeTasklistName(newname: string , tasklist: number|Tasklist , user: number|User ) {
 	throw 'Not implemented'
 }
 /*
@@ -87,7 +87,7 @@ export function ChangeTasklistName(newname: string, tasklist: number|Tasklist, u
  * @param tasklist: The tasklist to get. Id can not be unset. (default: undefined)
  * @param user: The user requesting the tasklist (default: undefined)
  */
-export function GetPopulatedTasklist(tasklist: number|Tasklist, user: number|User) {
+export function GetPopulatedTasklist(tasklist: number|Tasklist , user: number|User ) {
 	throw 'Not implemented'
 }
 /*
@@ -97,7 +97,7 @@ export function GetPopulatedTasklist(tasklist: number|Tasklist, user: number|Use
  * @param user: The id or User object adding the task (default: undefined)
  * @param completed: Whether or not it should be set to completed (default: false)
  */
-export function CreateTask(message: string, tasklist: number|Tasklist, user: number|User, completed: boolean = false) {
+export function CreateTask(message: string , tasklist: number|Tasklist , user: number|User , completed: boolean ) {
 	throw 'Not implemented'
 }
 /*
@@ -106,7 +106,7 @@ export function CreateTask(message: string, tasklist: number|Tasklist, user: num
  * @param isCompleted: The value to give to IsCompleted (default: undefined)
  * @param user: The id or user object setting the task to isCompleted (default: undefined)
  */
-export function SetTaskStatus(task: number|Task, isCompleted: boolean, user: number|User) {
+export function SetTaskStatus(task: number|Task , isCompleted: boolean , user: number|User ) {
 	throw 'Not implemented'
 }
 /*
@@ -114,7 +114,7 @@ export function SetTaskStatus(task: number|Task, isCompleted: boolean, user: num
  * @param tasklist: The tasklist to get the tasks from (default: undefined)
  * @param user: The user requesting the tasks (default: undefined)
  */
-export function GetTasks(tasklist: number|Tasklist, user: number|User) {
+export function GetTasks(tasklist: number|Tasklist , user: number|User ) {
 	throw 'Not implemented'
 }
 /*
@@ -123,7 +123,7 @@ export function GetTasks(tasklist: number|Tasklist, user: number|User) {
  * @param newText: The new text for the task (default: undefined)
  * @param user: The user setting the text (default: undefined)
  */
-export function SetTaskText(task: number|Task, newText: string, user: number|User) {
+export function SetTaskText(task: number|Task , newText: string , user: number|User ) {
 	throw 'Not implemented'
 }
 /*
@@ -131,7 +131,7 @@ export function SetTaskText(task: number|Task, newText: string, user: number|Use
  * @param task: The task to be deleted (default: undefined)
  * @param user: The user deleting the task (default: undefined)
  */
-export function DeleteTask(task: number|Task, user: number|User) {
+export function DeleteTask(task: number|Task , user: number|User ) {
 	throw 'Not implemented'
 }
 /*
@@ -139,7 +139,7 @@ export function DeleteTask(task: number|Task, user: number|User) {
  * @param task: The task that is being set (default: undefined)
  * @param parent: The id or task of the parent (default: undefined)
  */
-export function SetTaskParent(task: number|Task, parent: number|Task) {
+export function SetTaskParent(task: number|Task , parent: number|Task ) {
 	throw 'Not implemented'
 }
 

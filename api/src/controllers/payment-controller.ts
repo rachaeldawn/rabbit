@@ -20,14 +20,14 @@ import * as Data from "../data"
  * @param description: The reason or description for/of the payment (default: undefined)
  * @param save: Whether or not the card details should be saved through Stripe for future re-use. (default: false)
  */
-export function ReceivePayment(tokenId: string, amt: number, description: string, save: boolean = false) {
+export function ReceivePayment(tokenId: string , amt: number , description: string , save: boolean ) {
 	throw 'Not implemented'
 }
 /*
  * Purpose: Easier validation of tokens to make testing easier.
  * @param tokenId: The stripe token id (default: undefined)
  */
-export function ValidateToken(tokenId: number) {
+export function ValidateToken(tokenId: number ) {
 	throw 'Not implemented'
 }
 /*
@@ -35,7 +35,7 @@ export function ValidateToken(tokenId: number) {
  * @param transaction: A charge object (default: undefined)
  * @param amount: Amount to refund. -1 means full amount (default: -1)
  */
-export function Refund(transaction: any, amount: number = -1) {
+export function Refund(transaction: any , amount: number  = -1) {
 	throw 'Not implemented'
 }
 /*
@@ -43,7 +43,7 @@ export function Refund(transaction: any, amount: number = -1) {
  * @param transaction: Positive or negative decimal (default: undefined)
  * @param amount: Positive or negative decimal (default: undefined)
  */
-export function Adjust(transaction: any, amount: number) {
+export function Adjust(transaction: any , amount: number ) {
 	throw 'Not implemented'
 }
 /*

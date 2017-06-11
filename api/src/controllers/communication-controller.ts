@@ -1,8 +1,8 @@
-import {default as User} from "../models/user_account"
-import Conversation from "../models/conversation"
-import ConversationParticipant from "../models/conversation_participant"
-import Message from "../models/message"
-import MessageReceipt from "../models/message_receipt"
+import {default as User} from "../data/user_account"
+import Conversation from "../data/conversation"
+import ConversationParticipant from "../data/conversation_participant"
+import Message from "../data/message"
+import MessageReceipt from "../data/message_receipt"
 import * as Data from "../data"
 
 
@@ -29,7 +29,7 @@ import * as Data from "../data"
  * @param conversation: the id or conversation object to send the message to (default: undefined)
  * @param msg: The message the user has sent (default: undefined)
  */
-export function SendMessage(sender: number|User, conversation: number|Conversation, msg: string) {
+export function SendMessage(sender: number|User , conversation: number|Conversation , msg: string ) {
 	throw 'Not implemented'
 }
 /*
@@ -37,7 +37,7 @@ export function SendMessage(sender: number|User, conversation: number|Conversati
  * @param message: The id or the message object to create receipts for (default: undefined)
  * @param conversation: The id or the Conversation object to create receipts for (default: undefined)
  */
-export function CreateReceiptsForMessage(message: id|Message, conversation: number|Conversation) {
+export function CreateReceiptsForMessage(message: number|Message , conversation: number|Conversation ) {
 	throw 'Not implemented'
 }
 /*
@@ -45,7 +45,7 @@ export function CreateReceiptsForMessage(message: id|Message, conversation: numb
  * @param user: The user requesting the conversation (default: undefined)
  * @param conversation: The object to retrieve the conversation (just use sync) (default: undefined)
  */
-export function GetConversation(user: id|User, conversation: number|Conversation) {
+export function GetConversation(user: number|User , conversation: number|Conversation ) {
 	throw 'Not implemented'
 }
 /*
@@ -53,7 +53,7 @@ export function GetConversation(user: id|User, conversation: number|Conversation
  * @param userId: The user to get a list of conversations for (default: undefined)
  * @param amt: The quantity of conversations to get (max 20) (default: 20)
  */
-export function ListConversations(userId: number|User, amt: number = 20) {
+export function ListConversations(userId: number|User , amt: number  = 20) {
 	throw 'Not implemented'
 }
 /*
@@ -62,7 +62,7 @@ export function ListConversations(userId: number|User, amt: number = 20) {
  * @param amt: The amount of conversations to get (default: undefined)
  * @param page: The page number (default: 1)
  */
-export function PageConversations(userId: number|User, amt: number, page: number = 1) {
+export function PageConversations(userId: number|User , amt: number , page: number  = 1) {
 	throw 'Not implemented'
 }
 /*
@@ -70,7 +70,7 @@ export function PageConversations(userId: number|User, amt: number, page: number
  * @param conversation: The id or Conversation (default: undefined)
  * @param user: The id or User to get the messages in a conversation for (default: undefined)
  */
-export function ListMessages(conversation: number|Conversation, user: number|User) {
+export function ListMessages(conversation: number|Conversation , user: number|User ) {
 	throw 'Not implemented'
 }
 /*
@@ -79,7 +79,7 @@ export function ListMessages(conversation: number|Conversation, user: number|Use
  * @param amt: The number of messages to get in the conversation (default: undefined)
  * @param page: The page number (default: 1)
  */
-export function PageMessages(user: number|User, amt: number, page: number = 1) {
+export function PageMessages(user: number|User , amt: number , page: number  = 1) {
 	throw 'Not implemented'
 }
 /*
@@ -87,7 +87,7 @@ export function PageMessages(user: number|User, amt: number, page: number = 1) {
  * @param user: The user to get the receipts for (default: undefined)
  * @param message: The message to get the receipt(s) for (default: undefined)
  */
-export function GetReceipts(user: number|User, message: number|Message) {
+export function GetReceipts(user: number|User , message: number|Message ) {
 	throw 'Not implemented'
 }
 /*
@@ -96,7 +96,7 @@ export function GetReceipts(user: number|User, message: number|Message) {
  * @param conversation: The conversation to be added to (default: undefined)
  * @param adder: The person adding the other to the conversation (default: undefined)
  */
-export function AddParticipant(user: number|User, conversation: number|Conversation, adder: number|User) {
+export function AddParticipant(user: number|User , conversation: number|Conversation , adder: number|User ) {
 	throw 'Not implemented'
 }
 /*
@@ -104,7 +104,7 @@ export function AddParticipant(user: number|User, conversation: number|Conversat
  * @param message: The message to be set as read (default: undefined)
  * @param user: The user that read it (default: undefined)
  */
-export function SetMessageReceived(message: number|Message, user: number|User) {
+export function SetMessageReceived(message: number|Message , user: number|User ) {
 	throw 'Not implemented'
 }
 /*
@@ -112,7 +112,7 @@ export function SetMessageReceived(message: number|Message, user: number|User) {
  * @param user: The id or user to get the conversation for. (default: undefined)
  * @param conversation: The conversation to get the participants for (default: undefined)
  */
-export function GetParticipants(user: number|User, conversation: number|Conversation) {
+export function GetParticipants(user: number|User , conversation: number|Conversation ) {
 	throw 'Not implemented'
 }
 /*
@@ -120,7 +120,7 @@ export function GetParticipants(user: number|User, conversation: number|Conversa
  * @param user: The id or user object to have 'read' the messages (default: undefined)
  * @param conversation: the id or conversation to have the messages set to read (default: undefined)
  */
-export function SetAllMessagesRead(user: number|User, conversation: number|Conversation) {
+export function SetAllMessagesRead(user: number|User , conversation: number|Conversation ) {
 	throw 'Not implemented'
 }
 /*
@@ -129,7 +129,7 @@ export function SetAllMessagesRead(user: number|User, conversation: number|Conve
  * @param amt: The amount of unread conversations (with messages) to get (default: 25)
  * @param page: The page number of conversations to get (rare to use) (default: 0)
  */
-export function GetUnreadConversations(user: number|User, amt: number = 25, page: number = 0) {
+export function GetUnreadConversations(user: number|User , amt: number  = 25, page: number ) {
 	throw 'Not implemented'
 }
 

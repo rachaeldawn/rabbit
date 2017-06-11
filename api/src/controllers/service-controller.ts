@@ -1,4 +1,5 @@
-import Service from "../models/service"
+import Service from "../data/service"
+import {default as User} from "../data/user_account"
 import * as Data from "../data"
 
 
@@ -19,7 +20,7 @@ import * as Data from "../data"
  * @param default_quantity: The default quantity of the service (default: undefined)
  * @param user: The user adding the service (default: undefined)
  */
-export function CreateService(nameOrService: string|Service, description: string, price: number, default_quantity: number, user: number|User) {
+export function CreateService(nameOrService: string|Service , description: string , price: number , default_quantity: number , user: number|User ) {
 	throw 'Not implemented'
 }
 /*
@@ -27,7 +28,7 @@ export function CreateService(nameOrService: string|Service, description: string
  * @param svc: The id or service object to retrieve (default: undefined)
  * @param user: The id or user object requesting the service (default: undefined)
  */
-export function GetService(svc: number|Service, user: number|User) {
+export function GetService(svc: number|Service , user: number|User ) {
 	throw 'Not implemented'
 }
 /*
@@ -35,7 +36,7 @@ export function GetService(svc: number|Service, user: number|User) {
  * @param amt: The quantity to return. Max 100. (default: undefined)
  * @param user: The user requesting the services listing (default: undefined)
  */
-export function ListServices(amt: number, user: number|User) {
+export function ListServices(amt: number , user: number|User ) {
 	throw 'Not implemented'
 }
 /*
@@ -44,7 +45,7 @@ export function ListServices(amt: number, user: number|User) {
  * @param page: The page number (starting at 1) to get (default: undefined)
  * @param user: The user requesting the services listing (default: undefined)
  */
-export function PageServices(amt: number, page: number, user: number|User) {
+export function PageServices(amt: number , page: number , user: number|User ) {
 	throw 'Not implemented'
 }
 /*
@@ -53,7 +54,7 @@ export function PageServices(amt: number, page: number, user: number|User) {
  * @param obj: The update object. Accepts description, price, and default_quantity (default: undefined)
  * @param user: The user id or object requesting an update on the service (default: undefined)
  */
-export function UpdateService(service: number|Service, obj: Object, user: number|User) {
+export function UpdateService(service: number|Service , obj: Object , user: number|User ) {
 	throw 'Not implemented'
 }
 

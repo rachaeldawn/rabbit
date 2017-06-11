@@ -1,5 +1,5 @@
-import {default as User} from "../models/user_account"
-import Notification from "../models/notification"
+import {default as User} from "../data/user_account"
+import Notification from "../data/notification"
 
 
 /*
@@ -15,7 +15,7 @@ import Notification from "../models/notification"
  * Purpose: Gets the notifications for the user
  * @param user: The id or user to get the notifications for (default: undefined)
  */
-export function GetNotifications(user: number|User) {
+export function GetNotifications(user: number|User ) {
 	throw 'Not implemented'
 }
 /*
@@ -24,7 +24,7 @@ export function GetNotifications(user: number|User) {
  * @param origin: The origin of the notification (default: undefined)
  * @param message: The message to give to the user (default: undefined)
  */
-export function CreateNotification(user: number|User, origin: string, message: string) {
+export function CreateNotification(user: number|User , origin: string , message: string ) {
 	throw 'Not implemented'
 }
 /*
@@ -32,7 +32,7 @@ export function CreateNotification(user: number|User, origin: string, message: s
  * @param notification: The notification to remove (default: undefined)
  * @param user: The id or user object requesting the removal (default: undefined)
  */
-export function RemoveNotification(notification: number|Notification, user: number|User) {
+export function RemoveNotification(notification: number|Notification , user: number|User ) {
 	throw 'Not implemented'
 }
 /*
@@ -46,7 +46,7 @@ export function CacheNotifications() {
  * @param notification:  (default: undefined)
  * @param user: The id or user object setting the notification to read (default: undefined)
  */
-export function SetRead(notification: Notification|Notification[], user: number|User) {
+export function SetRead(notification: Notification|Notification[] , user: number|User ) {
 	throw 'Not implemented'
 }
 

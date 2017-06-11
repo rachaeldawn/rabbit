@@ -72,6 +72,10 @@ function LinesToString(Lines) {
 }
 
 function generateClassFile(obj, key) {
+    console.log("Generating: " + key)
+    if(obj.todo) {
+        for(let i = 0; i < obj.todo.length; i++) console.log(' `- Todo:  ' + obj.todo[i])
+    }
     var tabLevel = 0
     var tabs = function() {
         return tabber(tabLevel)
@@ -79,12 +83,15 @@ function generateClassFile(obj, key) {
     
     var paramsList = function(func) {
         var keys = []
-        for(var k in func.params) {
-            if(func.params[k].default != undefined) {
-                keys.push(`${k}: ${func.params[k].type ? func.params[k].type: 'any'} = ${func.params[k].default}`)
+        var params = func.params || func
+        for(var k in params) {
+            keys.push(`${k}: ${params[k].type ? params[k].type: 'any'} ${params[k].default ? " = " + params[k].default : ""}`)
+            /*
+            if(params[k].default != undefined) {
+                keys.push(`${k}: ${params[k].type ? params[k].type: 'any'} = ${params[k].default}`)
             } else {
-                keys.push(`${k}: ${func.params[k].type ? func.params[k].type: 'any'}`)
-            }
+                keys.push(`${k}: ${params[k].type ? params[k].type: 'any'}`)
+            }*/
         }
         keys = keys.reduce(
             function(prev, cur) {
@@ -171,6 +178,15 @@ function generateClassFile(obj, key) {
             obj.functions[funcName].visibility == 'private' && Lines.push(`${tabs()}function ${funcName}(${paramsList(obj.functions[funcName])}) {\n${tabs()}\tthrow 'Not implemented'\n}`)
         }
         Lines.push('\n')
+    } else if(obj.type == 'interface') {
+        Lines.push('/*')
+        for(var k in obj.fields) Lines.push(` * Field: ${k}\n *     Type: ${obj.fields[k].type}${obj.fields[k].default ? `\n *     default: ${obj.fields[k].default}` : ''}`)
+        Lines.push('*/')
+        Lines.push(`export interface ${key} {`)
+        for(var k in obj.fields) {
+            Lines.push(`    ${k}: ${obj.fields[k].type}${obj.fields[k].default != undefined ? ` = ${obj.fields[k].default}` : ''}`)
+        }
+        Lines.push('}')
     } else if(obj.type == 'functional' && obj.functions) {
         Lines.push('/*')
         Lines.push(` * ${tabs()}Exported Functions: `)
@@ -242,10 +258,11 @@ function generateTestFile(obj, key) {
     tabLevel += 1
     for(var funcName in obj.functions) {
         if(funcName != 'constructor') {
-            Lines.push(`${tabs()}describe('${funcName}', function() {`)
+            Lines.push(tabs() + 'describe(`' + funcName + '`, function() {')
             tabLevel += 1
             for(var test in obj.functions[funcName].tests) {
-                Lines.push(`${tabs()}it('${obj.functions[funcName].tests[test]}')`)
+                Lines.push(tabs() + 'it(`' + obj.functions[funcName].tests[test] + '`)')
+                //Lines.push(`${tabs()}it('${obj.functions[funcName].tests[test]}')`)
             }
             tabLevel -= 1
             Lines.push(`${tabs()}})`)

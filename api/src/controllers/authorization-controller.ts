@@ -1,5 +1,5 @@
 import * as crypto from "crypto"
-import {default as User} from "../models/user_account"
+import {default as User} from "../data/user_account"
 
 
 /*
@@ -20,7 +20,7 @@ import {default as User} from "../models/user_account"
  * @param persistentToken: The token to be verified (default: undefined)
  * @param transientToken: The transient token to be verified (default: undefined)
  */
-export function Authorize(persistentToken: string, transientToken: string) {
+export function Authorize(persistentToken: string , transientToken: string ) {
 	throw 'Not implemented'
 }
 /*
@@ -29,7 +29,7 @@ export function Authorize(persistentToken: string, transientToken: string) {
  * @param password: The password to hash and compare (default: undefined)
  * @param token: The token to prevent cross site request forgery (default: undefined)
  */
-export function Login(username: string, password: string, token: string) {
+export function Login(username: string , password: string , token: string ) {
 	throw 'Not implemented'
 }
 /*
@@ -37,7 +37,7 @@ export function Login(username: string, password: string, token: string) {
  * @param persistentToken: The token that was being used to verify the user (default: undefined)
  * @param transientToken: The transient token last sent to the user (default: undefined)
  */
-export function Logout(persistentToken: string, transientToken: string) {
+export function Logout(persistentToken: string , transientToken: string ) {
 	throw 'Not implemented'
 }
 /*
@@ -51,7 +51,7 @@ export function GenerateToken() {
  * @param token: The persistent token to be cached (default: undefined)
  * @param user: The id or user object the persistent token belongs to (default: undefined)
  */
-export function CachePersistentToken(token: string, user: number|User) {
+export function CachePersistentToken(token: string , user: number|User ) {
 	throw 'Not implemented'
 }
 /*
@@ -59,7 +59,7 @@ export function CachePersistentToken(token: string, user: number|User) {
  * @param token: The transient token to be cached (default: undefined)
  * @param persistentToken: The persistent token this transient token belongs to (default: undefined)
  */
-export function CacheTransientToken(token: string, persistentToken: string) {
+export function CacheTransientToken(token: string , persistentToken: string ) {
 	throw 'Not implemented'
 }
 /*
@@ -67,7 +67,7 @@ export function CacheTransientToken(token: string, persistentToken: string) {
  * @param token: The token to be cached (default: undefined)
  * @param ip: The IP address that requested the CSRF token (default: undefined)
  */
-export function CacheCSRFToken(token: string, ip: string) {
+export function CacheCSRFToken(token: string , ip: string ) {
 	throw 'Not implemented'
 }
 /*
@@ -75,7 +75,7 @@ export function CacheCSRFToken(token: string, ip: string) {
  * @param transient: The transient token to be validated (default: undefined)
  * @param persistent: The persisten token to be validated (default: undefined)
  */
-export function ValidateAuthTokens(transient: string, persistent: string) {
+export function ValidateAuthTokens(transient: string , persistent: string ) {
 	throw 'Not implemented'
 }
 /*
@@ -83,7 +83,7 @@ export function ValidateAuthTokens(transient: string, persistent: string) {
  * @param token: The token string to be validated (default: undefined)
  * @param ip: The ip that is requesting the validation (default: undefined)
  */
-export function ValidateCSRFToken(token: string, ip: string) {
+export function ValidateCSRFToken(token: string , ip: string ) {
 	throw 'Not implemented'
 }
 

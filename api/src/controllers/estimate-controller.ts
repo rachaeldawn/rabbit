@@ -1,8 +1,10 @@
-import Estimate from "../models/estimate"
-import EstimateContact from "../models/estimate_contact"
-import CustomerContact from "../models/customer_contact"
-import EstimateItem from "../models/estimate_item"
-import {default as User} from "../models/UserAccount"
+import Estimate from "../data/estimate"
+import EstimateContact from "../data/estimate_contact"
+import Customer from "../data/customer"
+import CustomerContact from "../data/customer_contact"
+import EstimateItem from "../data/estimate_item"
+import {default as User} from "../data/user_account"
+import Service from "../data/service"
 
 
 /*
@@ -23,7 +25,7 @@ import {default as User} from "../models/UserAccount"
  * @param validity_period: A positive integer  (default: 14)
  * @param items: An array of service Ids or service objects to add to the estimate. Optional parameter (default: null)
  */
-export function CreateEstimate(customer: number|Customer, user: number|User, validity_period: number = 14, items: Service[]) {
+export function CreateEstimate(customer: number|Customer , user: number|User , validity_period: number  = 14, items: Service[] ) {
 	throw 'Not implemented'
 }
 /*
@@ -32,7 +34,7 @@ export function CreateEstimate(customer: number|Customer, user: number|User, val
  * @param estimate: The id or Estimate object to add to the invoice (default: undefined)
  * @param user: The id or user object adding to the invoice (default: undefined)
  */
-export function AddItem(service: number|Service, estimate: number|Estimate, user: number|User) {
+export function AddItem(service: number|Service , estimate: number|Estimate , user: number|User ) {
 	throw 'Not implemented'
 }
 /*
@@ -41,7 +43,7 @@ export function AddItem(service: number|Service, estimate: number|Estimate, user
  * @param estimate: The id or estimate object to have the item removed (default: undefined)
  * @param user: The user object removing the item from the estimate (default: undefined)
  */
-export function RemoveItem(item: number|EstimateItem, estimate: number|Estimate, user: number|User) {
+export function RemoveItem(item: number|EstimateItem , estimate: number|Estimate , user: number|User ) {
 	throw 'Not implemented'
 }
 /*
@@ -50,7 +52,7 @@ export function RemoveItem(item: number|EstimateItem, estimate: number|Estimate,
  * @param estimate: The id or estimate object to have the period set (default: undefined)
  * @param user: The user setting the estimate period (default: undefined)
  */
-export function SetValidityPeriod(period: number, estimate: number|Estimate, user: number|User) {
+export function SetValidityPeriod(period: number , estimate: number|Estimate , user: number|User ) {
 	throw 'Not implemented'
 }
 /*
@@ -58,7 +60,7 @@ export function SetValidityPeriod(period: number, estimate: number|Estimate, use
  * @param estimate: The id or estimate object to work with (default: undefined)
  * @param user: The id or user object requesting the estimate (default: undefined)
  */
-export function GetEstimate(estimate: number|Estimate, user: number|User) {
+export function GetEstimate(estimate: number|Estimate , user: number|User ) {
 	throw 'Not implemented'
 }
 /*
@@ -67,7 +69,7 @@ export function GetEstimate(estimate: number|Estimate, user: number|User) {
  * @param estimate: The id or estimate object to add the contact to (default: undefined)
  * @param user: The user adding the contact to the estimate (default: undefined)
  */
-export function AddContact(contact: number|CustomerContact, estimate: number|Estimate, user: number|User) {
+export function AddContact(contact: number|CustomerContact , estimate: number|Estimate , user: number|User ) {
 	throw 'Not implemented'
 }
 /*
@@ -76,7 +78,7 @@ export function AddContact(contact: number|CustomerContact, estimate: number|Est
  * @param estimate: The id or Estimate object to remove the contact from (default: undefined)
  * @param user: The id or user object removing the contact (default: undefined)
  */
-export function RemoveContact(contact: number|WorkorderContact, estimate: number|Estimate, user: number|User) {
+export function RemoveContact(contact: number|EstimateContact , estimate: number|Estimate , user: number|User ) {
 	throw 'Not implemented'
 }
 

@@ -51,8 +51,8 @@
                 "purpose": "Easier validation of tokens to make testing easier.",
                 "params": {
                     "tokenId" : {
-                    "type": "number",
-                    "comment": "The stripe token id"
+                        "type": "number",
+                        "comment": "The stripe token id"
                     }
                 },
                 "tests": [
@@ -65,13 +65,13 @@
                 "purpose": "Refund a payment to a customer",
                 "params": {
                     "transaction" : {
-                    "type": "any",
-                    "comment": "A charge object"
+                        "type": "any",
+                        "comment": "A charge object"
                     },
                     "amount" : {
-                    "type": "number",
-                    "comment": "Amount to refund. -1 means full amount",
-                    "default": "-1"
+                        "type": "number",
+                        "comment": "Amount to refund. -1 means full amount",
+                        "default": "-1"
                     }
                 },
                 "tests": [
@@ -335,7 +335,7 @@
         },
         "dependencies": {
             "* as crypto": "crypto",
-            "{default as User}": "../models/user_account",
+            "{default as User}": "../data/user_account",
             "* as Data": "../data"
         }
     },
@@ -454,9 +454,9 @@
             }
         },
         "dependencies": {
-            "{default as User}": "../models/user_account",
-            "{default as Permission}": "../models/user_permission",
-            "{default as PermissionSet}": "../models/user_permission_set",
+            "{default as User}": "../data/user_account",
+            "{default as Permission}": "../data/user_permission",
+            "{default as PermissionSet}": "../data/user_permission_set",
             "* as Data": "../data"
         }
     },
@@ -495,7 +495,7 @@
                 "purpose": "Creates the receipts in a conversation for the messages",
                 "params": {
                     "message" : {
-                        "type": "id|Message",
+                        "type": "number|Message",
                         "comment": "The id or the message object to create receipts for"
                     },
                     "conversation" : {
@@ -513,7 +513,7 @@
                 "purpose": "Retrieves a single conversation",
                 "params": {
                     "user" : {
-                        "type": "id|User",
+                        "type": "number|User",
                         "comment": "The user requesting the conversation"
                     },
                     "conversation" : {
@@ -750,11 +750,11 @@
             }
         },
         "dependencies": {
-            "{default as User}": "../models/user_account",
-            "Conversation": "../models/conversation",
-            "ConversationParticipant": "../models/conversation_participant",
-            "Message": "../models/message",
-            "MessageReceipt": "../models/message_receipt",
+            "{default as User}": "../data/user_account",
+            "Conversation": "../data/conversation",
+            "ConversationParticipant": "../data/conversation_participant",
+            "Message": "../data/message",
+            "MessageReceipt": "../data/message_receipt",
             "* as Data": "../data"
         }
     },
@@ -847,8 +847,8 @@
             }
         },
         "dependencies": {
-            "{default as User}": "../models/user_account",
-            "Notification": "../models/notification"
+            "{default as User}": "../data/user_account",
+            "Notification": "../data/notification"
         }
     },
     "AuthorizationController": {
@@ -1013,7 +1013,7 @@
         },
         "dependencies": {
             "* as crypto": "crypto",
-            "{default as User}": "../models/user_account"
+            "{default as User}": "../data/user_account"
         }
     },
     "TaskboardController": {
@@ -1322,16 +1322,16 @@
             }
         },
         "dependencies": {
-            "{default as User}": "../models/user_account",
-            "Taskboard": "../models/taskboard",
-            "{default as Participant}": "../models/taskboard_participant",
-            "Tasklist": "../models/tasklist",
-            "{default as Task}": "../models/tasklist_task",
-            "PermissionController": "./permission-controller"
+            "{default as User}": "../data/user_account",
+            "Taskboard": "../data/taskboard",
+            "{default as Participant}": "../data/taskboard_participant",
+            "Tasklist": "../data/tasklist",
+            "{default as Task}": "../data/tasklist_task",
+            "* as PermissionController": "./permission-controller"
         }
     },
     "WorkorderController": {
-        "filename": "invoice-controller",
+        "filename": "workorder-controller",
         "folder": "controllers",
         "type": "functional",
         "functions": {
@@ -1555,7 +1555,7 @@
                         "comment": "The workorder to add the transaction to"
                     },
                     "contact" : {
-                        "type": "number|Contact",
+                        "type": "number|CustomerContact",
                         "comment": "The contact that authorized the transaction"
                     }
                 },
@@ -1608,20 +1608,23 @@
                     "Refuses if the user does not have read permissions on the invoice",
                     "Gets a populated version of the workorder"
                 ]
-            }, 
-            "TODO": [
-                "Add the other basic CRUD operations"
-            ]
+            }
         },
         "dependencies": {
-            "Workorder": "../models/workorder",
-            "WorkorderContact": "../models/workorder_contact",
-            "CustomerContact": "../models/customer_contact",
-            "WorkorderTransaction": "../models/workorder_transaction",
-            "Transaction": "../models/transaction",
-            "{default as User}": "../models/user_account",
-            "WorkorderItem": "../models/workorder_item"
-        }
+            "Workorder": "../data/workorder",
+            "WorkorderContact": "../data/workorder_contact",
+            "CustomerContact": "../data/customer_contact",
+            "WorkorderTransaction": "../data/workorder_transaction",
+            "Transaction": "../data/transaction",
+            "{default as User}": "../data/user_account",
+            "Estimate": "../data/estimate",
+            "WorkorderItem": "../data/workorder_item",
+            "Service": "../data/service",
+            "Customer" : "../data/customer"
+        },
+        "todo": [
+            "Add the other basic CRUD operations"
+        ]
     },
     "EstimateController": {
         "filename": "estimate-controller",
@@ -1785,7 +1788,7 @@
                 "purpose": "Removes a contact from the estimate",
                 "params": {
                     "contact" : {
-                        "type": "number|WorkorderContact",
+                        "type": "number|EstimateContact",
                         "comment": "The id or WorkorderContact object to remove from the estimate"
                     },
                     "estimate" : {
@@ -1808,11 +1811,13 @@
             }
         },
         "dependencies": {
-            "Estimate": "../models/estimate",
-            "EstimateContact": "../models/estimate_contact",
-            "CustomerContact": "../models/customer_contact",
-            "EstimateItem": "../models/estimate_item",
-            "{default as User}": "../models/UserAccount"
+            "Estimate": "../data/estimate",
+            "EstimateContact": "../data/estimate_contact",
+            "Customer": "../data/customer",
+            "CustomerContact": "../data/customer_contact",
+            "EstimateItem": "../data/estimate_item",
+            "{default as User}": "../data/user_account",
+            "Service": "../data/service"
         }
     },
     "EmployeeController": {
@@ -1916,7 +1921,7 @@
                         "comment": "The id or Employee object. Fills Employee object and returns, or returns Employee object."
                     },
                     "user" : {
-                        "type": "number|user",
+                        "type": "number|User",
                         "comment": "The user requesting the employee object"
                     },
                     "confidentials" : {
@@ -2078,9 +2083,9 @@
             }
         },
         "dependencies": {
-            "Employee": "../models/employee",
-            "{default as User}": "../models/user_account",
-            "{default as Workday}": "../models/employee_workday",
+            "Employee": "../data/employee",
+            "{default as User}": "../data/user_account",
+            "{default as Workday}": "../data/employee_workday",
             "* as Data": "../data"
         }
     },
@@ -2161,7 +2166,7 @@
             }
         },
         "dependencies": {
-            "Tag": "../models/tag",
+            "Tag": "../data/tag",
             "* as Data": "../data"
         }
     },
@@ -2290,7 +2295,8 @@
             }
         },
         "dependencies": {
-            "Service": "../models/service",
+            "Service": "../data/service",
+            "{default as User}": "../data/user_account",
             "* as Data": "../data"
         }
     },
@@ -2311,7 +2317,7 @@
                         "comment": "A max 400 character memo for the purchase order"
                     },
                     "... tags" : {
-                        "type": "Array<Tag>",
+                        "type": "Tag[]",
                         "comment": "Optional tags to add to the purchase order"
                     }
                 },
@@ -2525,6 +2531,13 @@
                     "Deletes attached items when force is true"
                 ]
             }
+        },
+        "dependencies": {
+            "PurchaseOrder": "../data/purchase_order",
+            "PurchaseOrderItem": "../data/purchase_order_item",
+            "{default as User}": "../data/user_account",
+            "Tag": "../data/tag",
+            "* as Data": "../data"
         }
     },
     "PayrollController": {
@@ -2574,7 +2587,7 @@
                         "comment": "The id or PayPeriod object to add the user to."
                     },
                     "... items" : {
-                        "type": "Array<PayrollItem>",
+                        "type": "PayrollItem[]",
                         "comment": "The array of payroll items to add. (usage: Salary, automated bonus, etc)",
                         "default": null
                     }
@@ -2718,7 +2731,7 @@
                 "purpose": "Gets a single payroll object",
                 "params": {
                     "payroll" : {
-                        "type": "number|PayRoll",
+                        "type": "number|Payroll",
                         "comment": "The id or Payroll object to retrieve"
                     },
                     "user" : {
@@ -2849,12 +2862,12 @@
             }
         },
         "dependencies": {
-            "{default as User}": "../models/user_account",
-            "Payroll": "../models/payroll",
-            "PayrollItem": "../models/payroll_item",
-            "PayrollTransaction": "../models/payroll_transaction",
-            "PayPeriod": "../models/pay_period",
-            "Employee": "../models/employee"
+            "{default as User}": "../data/user_account",
+            "Payroll": "../data/payroll",
+            "PayrollItem": "../data/payroll_item",
+            "PayrollTransaction": "../data/payroll_transaction",
+            "PayPeriod": "../data/pay_period",
+            "Employee": "../data/employee"
         }
     },
     "ExpenseController": {
@@ -2987,36 +3000,19 @@
                     "user" : {
                         "type": "number|User",
                         "comment": "The id or User object requesting the bills"
-                    }
-                },
-                "tests": [
-                    "Undefined if user does not exist",
-                    "Refuses if user does not have read permission on expense",
-                    "Caps out at max 100",
-                    "Returns a list of bills"
-                ]
-            },
-            "ListBillsForExpense": {
-                "purpose": "Gets a list of bills specific to an expense",
-                "params": {
-                    "amt" : {
-                        "type": "number",
-                        "comment": "The amount of bills to return (max 100)"
-                    },
-                    "user" : {
-                        "type": "number|User",
-                        "comment": "The id or User object requesting the bills"
                     },
                     "expense" : {
                         "type": "number|Expense",
-                        "comment": "The id or Expense object the bills are related to"
+                        "comment": "The optional id or Expense the bills are to belong to",
+                        "default": -1
                     }
                 },
                 "tests": [
                     "Undefined if user does not exist",
                     "Refuses if user does not have read permission on expense",
                     "Caps out at max 100",
-                    "Returns a list of bills specific to expense"
+                    "Returns a list of bills specific to expense if expense defined",
+                    "Returns a list of bills"
                 ]
             },
             "PageExpenses": {
@@ -3055,6 +3051,11 @@
                     "user" : {
                         "type": "number|User",
                         "comment": "The Id or User requesting the page"
+                    },
+                    "expense" : {
+                        "type": "number|Expense",
+                        "comment": "The optional id or Expense object to retrieve a page of bills for",
+                        "default": -1
                     }
                 },
                 "tests": [
@@ -3063,34 +3064,6 @@
                     "Refuses if page is less than 1",
                     "Caps out at max 100",
                     "Returns page of bills"
-                ]
-            },
-            "PageBillsForExpense": {
-                "purpose": "Gets a page of bills for a specific expense",
-                "params": {
-                    "amt" : {
-                        "type": "number",
-                        "comment": "The amount to retrieve (page size, max 100)"
-                    },
-                    "page" : {
-                        "type": "number",
-                        "comment": "The page to get (starting 1)"
-                    },
-                    "expense" : {
-                        "type": "number|Expense",
-                        "comment": "The id or Expense object to get the page of bills for"
-                    },
-                    "user" : {
-                        "type": "number|User",
-                        "comment": "The id or User object requesting the page"
-                    }
-                },
-                "tests": [
-                    "Undefined if user does not exist",
-                    "Refuses if user does not have read permission on expense",
-                    "Refuses if page or amount are less than 1",
-                    "Caps out at max 100",
-                    "Returns bills for only this expense"
                 ]
             },
             "AdjustBill": {
@@ -3204,8 +3177,33 @@
                     "Sets the expense is_active to Status"
                 ]
             }
+        },
+        "dependencies": {
+            "Bill": "../data/bill",
+            "Expense": "../data/expense",
+            "{default as User}": "../data/user_account",
+            "* as Data": "../data"
         }
-    }, 
+    },
+    "iJournalEntryMoveBatch": {
+        "filename": "journal-entry-move-batch",
+        "folder": "interfaces",
+        "type": "interface",
+        "fields": {
+            "entry" : {
+                "type": "number|Entry",
+                "comment": "The id or Journal Entry object"
+            },
+            "destination" : {
+                "type": "number|Journal",
+                "comment": "The id or Journal object to move to"
+            }
+        },
+        "dependencies": {
+            "{default as Entry}": "../data/journal_entry",
+            "Journal": "../data/journal"
+        }
+    },
     "JournalController": {
         "filename": "journal-controller",
         "folder": "controllers",
@@ -3246,9 +3244,330 @@
                     }
                 },
                 "tests": [
-                    
+                    "Undefined if Journal or User does not exist",
+                    "Refuses if journal does not belong to user",
+                    "Retrieves basic journal information if populated false",
+                    "Retrieves journal with all entries if populated true"
                 ]
             },
+            "ListJournals": {
+                "purpose": "Gets a list of journals. Alias for PageJournals(page=1)",
+                "params": {
+                    "amt" : {
+                        "type": "number",
+                        "comment": "The quantity of Journals to return"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or User object requesting the journals"
+                    },
+                    "populated" : {
+                        "type": "boolean",
+                        "comment": "Whether or not the list of journals should be populated with entries",
+                        "default": false
+                    }
+                },
+                "tests": [
+                    "Undefined if user does not exist",
+                    "Refuses if user is not an employee",
+                    "Returns only journals belonging to the user",
+                    "Caps out at max 100",
+                    "Returns list of journals",
+                    "Returns list of populated journals if populated true"
+                ]
+            },
+            "PageJournals": {
+                "purpose": "Gets a page of Journals",
+                "params": {
+                    "amt" : {
+                        "type": "number",
+                        "comment": "The amount in a page to get"
+                    },
+                    "page" : {
+                        "type": "number",
+                        "comment": "The page to get (minimum 1)"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The user requesting the journals"
+                    },
+                    "populated" : {
+                        "type": "boolean",
+                        "comment": "Whether or not the journal returns should be populated"
+                    }
+                },
+                "tests": [
+                    "Undefined if user does not exist",
+                    "Refuses if user is not an employee",
+                    "Returns only journals belonging to the user",
+                    "Returns page of journals",
+                    "Caps out at max 100",
+                    "Returns populated page of journals if populated true"
+                ]
+            },
+            "UpdateJournal": {
+                "purpose": "Sets the name of a journal",
+                "params": {
+                    "journal" : {
+                        "type": "number|Journal",
+                        "comment": "The id or Journal object to be updated"
+                    },
+                    "obj" : {
+                        "type": "Object",
+                        "comment": "The update object. Supports name."
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or User object requesting the update"
+                    }
+                },
+                "tests": [
+                    "Undefined if user or journal does not exist",
+                    "Refuses if user is not an employee",
+                    "Refuses if Journal does not belong to user", 
+                    "Refuses bad form update object (no valid fields)",
+                    "Updates all fields"
+                ]
+            },
+            "DeleteJournal": {
+                "purpose": "Deletes a journal (and all entries)",
+                "params": {
+                    "journal" : {
+                        "type": "number|Journal",
+                        "comment": "The id or Journal object to be deleted"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or User object deleting the journal booklet"
+                    }
+                },
+                "tests": [
+                    "Refuses if Journal does not belong to User",
+                    "Refuses if user is not an employee",
+                    "Undefined if user or journal does not exist",
+                    "Deletes all journal entries",
+                    "Deletes journal"
+                ]
+            },
+            "CreateEntry": {
+                "purpose": "Creates a journal entry",
+                "params": {
+                    "journal" : {
+                        "type": "number|Journal",
+                        "comment": "The id or Journal the entry is being created in"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or User object requesting the creation of the entry"
+                    },
+                    "message" : {
+                        "type": "string",
+                        "comment": "A max 5000 character journal entry"
+                    },
+                    "workday" : {
+                        "type": "number|Workday",
+                        "comment": "The optional workday to attach this journal to",
+                        "default": -1
+                    }
+                },
+                "tests": [
+                    "Refuses if Journal does not belong to User",
+                    "Refuses if user is not an employee",
+                    "Undefined on invalid fields",
+                    "Undefined if journal or user does not exist",
+                    "Tags workday if workday set",
+                    "Creates journal entry"
+                ]
+            },
+            "GetEntry": {
+                "purpose": "Gets a single entry",
+                "params": {
+                    "entry" : {
+                        "type": "number|Entry",
+                        "comment": "The journal entry to retriev"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or User object requesting to see the journal"
+                    }
+                },
+                "tests": [
+                    "Refuses if entry does not belong to the user",
+                    "Refuses if user is not an employee",
+                    "Undefined if entry or user does not exist",
+                    "Gets entry"
+                ]
+            },
+            "ListEntries": {
+                "purpose": "Gets a list of entries. Alias for PageEntries(page = 1)",
+                "params": {
+                    "amt" : {
+                        "type": "number",
+                        "comment": "Max 100 number of journal entries"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or User object requesting the list"
+                    },
+                    "journal" : {
+                        "type": "number|Journal",
+                        "comment": "Optional id or Journal object the entries are to belong to",
+                        "default": -1
+                    }
+                },
+                "tests": [
+                    "Undefined if invalid fields",
+                    "Undefined if journal or user does not exist",
+                    "Refuses if user is not an employee",
+                    "Undefined if journal specified, but does not exist",
+                    "Returns list of Entries",
+                    "Returns list of entries specific to a journal if journal specified"
+                ]
+            },
+            "PageEntries": {
+                "purpose": "Gets a page of entries",
+                "params": {
+                    "amt" : {
+                        "type": "number",
+                        "comment": "The amount in a page to retrieve (max 100)"
+                    },
+                    "page" : {
+                        "type": "number",
+                        "comment": "The page number to get (starting point 1)"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or User object requesting the page"
+                    },
+                    "journal" : {
+                        "type": "number|Journal",
+                        "comment": "The optional id or Journal object the entries are specific to",
+                        "default": -1
+                    }
+                },
+                "tests": [
+                    "Undefined on invalid fields",
+                    "Undefined if user does not exist",
+                    "Undefined if journal specified, but does not exist",
+                    "Refuses if user is not an employee",
+                    "Caps out at max 100",
+                    "Returns page of entries",
+                    "Returns page of entries specific to journal if journal specified"
+                ]
+            },
+            "UpdateEntry": {
+                "purpose": "Updates an entry",
+                "params": {
+                    "entry" : {
+                        "type": "number|Entry",
+                        "comment": "The id or Entry object to update"
+                    },
+                    "obj" : {
+                        "type": "Object",
+                        "comment": "The update object. Supports fields message and workday"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or User object attempting to update entry"
+                    }
+                },
+                "tests": [
+                    "Undefined if user or entry does not exist",
+                    "Refuses bad form update object (no valid fields)",
+                    "Refuses if entry does not belong to user",
+                    "Updates all fields"
+                ]
+            },
+            "DeleteEntry": {
+                "purpose": "Deletes a single entry",
+                "params": {
+                    "entry" : {
+                        "type": "number|Entry",
+                        "comment": "The id or Entry object to delete"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or User object deleting the journal entry"
+                    }
+                },
+                "tests": [
+                    "Undefined if entry or user do not exist",
+                    "Refuses if entry does not belong to user",
+                    "Refuses if user is not an employee",
+                    "Deletes entry"
+                ]
+            },
+            "MoveEntry": {
+                "purpose": "Moves a single entry to another journal",
+                "params": {
+                    "entry" : {
+                        "type": "number|Entry",
+                        "comment": "The id or Entry object to move"
+                    },
+                    "destination" : {
+                        "type": "number|Journal",
+                        "comment": "The id or journal object to move the entry to"
+                    },
+                    "user" : {
+                        "type": "number",
+                        "comment": "The id or User object requesting the move"
+                    }
+                },
+                "tests": [
+                    "Refuses if destination or entry do not belong to user",
+                    "Refuses if user is not an employee",
+                    "Undefined if user, entry, or destination are undefined",
+                    "Moves entry"
+                ]
+            },
+            "DeleteEntryBatch": {
+                "purpose": "Deletes multiple entries",
+                "params": {
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or User object deleting the batch"
+                    },
+                    "... entries" : {
+                        "type": "Array<number|Entry>",
+                        "comment": "The array of ids or entries to delete"
+                    }
+                },
+                "tests": [
+                    "Deletes entries belonging to user",
+                    "Refuses all entries that do not belong to the user",
+                    "Refuses if user is not an employee",
+                    "Returns object {succeeded[], failed[]} format"
+                ]
+            },
+            "MoveEntryBatch": {
+                "purpose": "Move multiple entries to different locations",
+                "params": {
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or User object moving the journals"
+                    },
+                    "... batch" : {
+                        "type": "Array<iJournalEntryMoveBatch>",
+                        "comment": "The array of entry move batches"
+                    }
+                },
+                "tests": [
+                    "Refuses entries not belonging to user",
+                    "Refuses destinations not belonging to user",
+                    "Undefined on nonexistent user",
+                    "Refuses non-existent entries and destinations",
+                    "Moves entries where destination and entry both belong to user",
+                    "Returns object {succeeded[], failed[]} format"
+                ]
+            }
+        },
+        "dependencies": {
+            "{default as Entry}": "../data/journal_entry",
+            "Journal": "../data/journal",
+            "{default as User}": "../data/user_account",
+            "{iJournalEntryMoveBatch}": "../interfaces/journal-entry-move-batch",
+            "{default as Workday}": "../data/employee_workday",
+            "* as Data": "../data"
         }
-    },
+    }
 }

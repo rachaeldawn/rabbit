@@ -1,5 +1,5 @@
 import * as crypto from "crypto"
-import {default as User} from "../models/user_account"
+import {default as User} from "../data/user_account"
 import * as Data from "../data"
 
 
@@ -26,7 +26,7 @@ import * as Data from "../data"
  * @param username: The username that they will be signing up with (default: undefined)
  * @param password: The password they will be using (default: undefined)
  */
-export function RegisterUserAccount(username: string, password: string) {
+export function RegisterUserAccount(username: string , password: string ) {
 	throw 'Not implemented'
 }
 /*
@@ -34,7 +34,7 @@ export function RegisterUserAccount(username: string, password: string) {
  * @param user: The user id or user name that is to be registered (default: undefined)
  * @param token: The token string for the user registration (default: undefined)
  */
-export function FinishUserRegistration(user: number|string, token: string) {
+export function FinishUserRegistration(user: number|string , token: string ) {
 	throw 'Not implemented'
 }
 /*
@@ -42,21 +42,21 @@ export function FinishUserRegistration(user: number|string, token: string) {
  * @param userid: The user id that is to be verified with a token (default: undefined)
  * @param token: The token to be verified (default: undefined)
  */
-export function ValidateActivationToken(userid: number, token: string) {
+export function ValidateActivationToken(userid: number , token: string ) {
 	throw 'Not implemented'
 }
 /*
  * Purpose: Activates a user that has been deactivated
  * @param userId: The user Id that is to be activated (default: undefined)
  */
-export function ActivateUser(userId: number) {
+export function ActivateUser(userId: number ) {
 	throw 'Not implemented'
 }
 /*
  * Purpose: Deactivates a user that is currently active
  * @param userId: The user Id to be deactivated (default: undefined)
  */
-export function DeactivateUser(userId: number) {
+export function DeactivateUser(userId: number ) {
 	throw 'Not implemented'
 }
 /*
@@ -70,7 +70,7 @@ export function GetUserStatus() {
  * @param userName: The username to be used for logins. No spaces permitted. (default: undefined)
  * @param password: Password in plaintext form, pre-hash. (default: undefined)
  */
-export function CreateUser(userName: string, password: string) {
+export function CreateUser(userName: string , password: string ) {
 	throw 'Not implemented'
 }
 /*
@@ -78,7 +78,7 @@ export function CreateUser(userName: string, password: string) {
  * @param newPassword: The new password (default: undefined)
  * @param resetToken: The token to be used for resetting the user's password (default: undefined)
  */
-export function ResetPassword(newPassword: string, resetToken: string) {
+export function ResetPassword(newPassword: string , resetToken: string ) {
 	throw 'Not implemented'
 }
 /*
@@ -86,7 +86,7 @@ export function ResetPassword(newPassword: string, resetToken: string) {
  * @param password: The password to be used by the algo (default: undefined)
  * @param algo: The hashing algorithm to be used (default: undefined)
  */
-export function GeneratePassword(password: string, algo: (password: string|Buffer, salt: string|Buffer, iterations: number, keylen: number, digest: string, callback: (err: Error, derivedKey: Buffer) => any) => any) {
+export function GeneratePassword(password: string , algo: (password: string|Buffer, salt: string|Buffer, iterations: number, keylen: number, digest: string, callback: (err: Error, derivedKey: Buffer) => any) => any ) {
 	throw 'Not implemented'
 }
 /*
@@ -99,28 +99,28 @@ export function CacheUsers() {
  * Purpose: Adds a new user to the cache
  * @param user: The id or the User object to store (default: undefined)
  */
-export function AddUserToCache(user: number|User) {
+export function AddUserToCache(user: number|User ) {
 	throw 'Not implemented'
 }
 /*
  * Purpose: Removes a deactivated user from the cache
  * @param user: The id or user to remove from the cache (default: undefined)
  */
-export function RemoveUserFromCache(user: number|User) {
+export function RemoveUserFromCache(user: number|User ) {
 	throw 'Not implemented'
 }
 /*
  * Purpose: Gets a cached user
  * @param user: The user or id of the user to get (default: undefined)
  */
-export function GetCachedUser(user: number|User) {
+export function GetCachedUser(user: number|User ) {
 	throw 'Not implemented'
 }
 /*
  * Purpose: Updates a user that was already cached.
  * @param user: The id or user to be updated from the database (default: undefined)
  */
-export function UpdateCachedUser(user: number|User) {
+export function UpdateCachedUser(user: number|User ) {
 	throw 'Not implemented'
 }
 

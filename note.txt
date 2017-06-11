@@ -1,7 +1,7 @@
 Create
 Get
-Page
 List
+Page
 Update
 Delete
 
