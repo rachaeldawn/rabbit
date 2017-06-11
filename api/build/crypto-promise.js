@@ -1,3 +1,4 @@
+"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -33,32 +34,21 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-(function (factory) {
-    if (typeof module === "object" && typeof module.exports === "object") {
-        var v = factory(require, exports);
-        if (v !== undefined) module.exports = v;
+var _this = this;
+exports.__esModule = true;
+var crypto = require("crypto");
+var Promise = require("bluebird");
+exports.pbkdf2 = function (str, salt, iterations, keylen, digest) { return new Promise(function (resolve, reject) {
+    crypto.pbkdf2(str, salt, iterations, keylen, digest, function (err, key) {
+        err && reject(err);
+        resolve(key);
+    });
+}); };
+var GetHashed = function () { return __awaiter(_this, void 0, void 0, function () { return __generator(this, function (_a) {
+    switch (_a.label) {
+        case 0: return [4, exports.pbkdf2("Do the password thing", crypto.randomBytes(200), 140000, 512, 'sha256')];
+        case 1: return [2, (_a.sent()).toString('hex')];
     }
-    else if (typeof define === "function" && define.amd) {
-        define(["require", "exports", "crypto", "bluebird"], factory);
-    }
-})(function (require, exports) {
-    "use strict";
-    var _this = this;
-    exports.__esModule = true;
-    var crypto = require("crypto");
-    var Promise = require("bluebird");
-    exports.pbkdf2 = function (str, salt, iterations, keylen, digest) { return new Promise(function (resolve, reject) {
-        crypto.pbkdf2(str, salt, iterations, keylen, digest, function (err, key) {
-            err && reject(err);
-            resolve(key);
-        });
-    }); };
-    var GetHashed = function () { return __awaiter(_this, void 0, void 0, function () { return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4, exports.pbkdf2("Do the password thing", crypto.randomBytes(200), 140000, 512, 'sha256')];
-            case 1: return [2, (_a.sent()).toString('hex')];
-        }
-    }); }); };
-    GetHashed()
-        .then(function (res) { return console.log(res); });
-});
+}); }); };
+GetHashed()
+    .then(function (res) { return console.log(res); });

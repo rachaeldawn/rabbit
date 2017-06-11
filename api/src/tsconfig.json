@@ -6,7 +6,7 @@
         "removeComments": true,
         "allowUnreachableCode": false,
         "baseUrl": "src",
-        "module": "umd",
+        "module": "commonjs",
         "moduleResolution": "node",
         "pretty": true,
         "outDir": "../build",

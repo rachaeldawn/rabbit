@@ -1,23 +1,13 @@
-(function (factory) {
-    if (typeof module === "object" && typeof module.exports === "object") {
-        var v = factory(require, exports);
-        if (v !== undefined) module.exports = v;
+"use strict";
+exports.__esModule = true;
+exports.tablename = 'message_receipt';
+var MessageReceipt = (function () {
+    function MessageReceipt(message_id, recipient_id, received, read) {
+        this.message_id = message_id;
+        this.recipient_id = recipient_id;
+        this.received = received;
+        this.read = read;
     }
-    else if (typeof define === "function" && define.amd) {
-        define(["require", "exports"], factory);
-    }
-})(function (require, exports) {
-    "use strict";
-    exports.__esModule = true;
-    exports.tablename = 'message_receipt';
-    var MessageReceipt = (function () {
-        function MessageReceipt(message_id, recipient_id, received, read) {
-            this.message_id = message_id;
-            this.recipient_id = recipient_id;
-            this.received = received;
-            this.read = read;
-        }
-        return MessageReceipt;
-    }());
-    exports["default"] = MessageReceipt;
-});
+    return MessageReceipt;
+}());
+exports["default"] = MessageReceipt;
