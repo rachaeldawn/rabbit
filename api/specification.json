@@ -1591,15 +1591,20 @@
                 ]
             },
             "GetWorkorder": {
-                "purpose": "Gets a populated workorder for use",
+                "purpose": "Gets a workorder",
                 "params": {
                     "workorder" : {
                         "type": "number|Workorder",
-                        "comment": "The id or workorder object to get the populated version of"
+                        "comment": "The id or workorder object to retrieve"
                     },
                     "user" : {
                         "type": "number|User",
                         "comment": "The user requesting the workorder"
+                    },
+                    "populated" : {
+                        "type": "boolean",
+                        "comment": "Whether or not he workorders should also have items, transactions, contacts, etc",
+                        "default": false
                     }
                 },
                 "tests": [
@@ -1607,6 +1612,58 @@
                     "Undefined if the workorder does not exist",
                     "Refuses if the user does not have read permissions on the invoice",
                     "Gets a populated version of the workorder"
+                ]
+            },
+            "ListWorkorders": {
+                "purpose": "Gets a list of Workorders. Alias for PageWorkorders(page = 1)",
+                "params": {
+                    "amt" : {
+                        "type": "number",
+                        "comment": "The amount of workorders to get (max 100)"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or User object requesting the listing"
+                    },
+                    "populated" : {
+                        "type": "boolean",
+                        "comment": "Whether or not the workorders should also have items, transactions, contacts, etc",
+                        "default": false
+                    }
+                },
+                "tests": [
+                    "Undefined  if user does not exist",
+                    "Refuses if user does not have read permission on Workorders",
+                    "Returns list of workorders",
+                    "Returns list of workorders with populated items if populated true"
+                ]
+            },
+            "PageWorkorders": {
+                "purpose": "Gets a page of workorders.",
+                "params": {
+                    "amt" : {
+                        "type": "number",
+                        "comment": "The amount of workorders to get (max 100)"
+                    },
+                    "page" : {
+                        "type": "number",
+                        "comment": "The page number to get (starting point 1)"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or User object requesting the workorders"
+                    },
+                    "populated" : {
+                        "type": "boolean",
+                        "comment": "Whether or not he workorders should also have items, transactions, contacts, etc",
+                        "default": false
+                    }
+                },
+                "tests": [
+                    "Undefined  if user does not exist",
+                    "Refuses if user does not have read permission on Workorders",
+                    "Returns list of workorders",
+                    "Returns list of workorders with populated items if populated true"
                 ]
             }
         },
@@ -1621,10 +1678,7 @@
             "WorkorderItem": "../data/workorder_item",
             "Service": "../data/service",
             "Customer" : "../data/customer"
-        },
-        "todo": [
-            "Add the other basic CRUD operations"
-        ]
+        }
     },
     "EstimateController": {
         "filename": "estimate-controller",
