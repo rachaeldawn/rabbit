@@ -2292,6 +2292,67 @@
                     "Refuses bad form update object (no valid fields)",
                     "Updates the service"
                 ]
+            },
+            "ArchiveService": {
+                "purpose": "Sets a service to archived. Alias for SetServiceArchive = true",
+                "params": {
+                    "service" : {
+                        "type": "number|Service",
+                        "comment": "The id or service object to set to archived"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or User object archiving the service"
+                    }
+                },
+                "tests": [
+                    "Undefined if user or service are undefined",
+                    "Refuses if user does not have read permission on services",
+                    "Refuses if user does not have write permission on services",
+                    "Sets service to archived"
+                ]
+            },
+            "UnarchiveService": {
+                "purpose": "Sets a service to active. Alias for SetServiceArchived = false",
+                "params": {
+                    "service" : {
+                        "type": "number|Service",
+                        "comment": "The id or Service object to remove from archive"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or User object removing the object from the archive"
+                    }
+                },
+                "tests": [
+                    "Undefined if user or service are undefined",
+                    "Refuses if user does not have read permission on services",
+                    "Refuses if user does not have write permission on services",
+                    "Sets service to unarchived"
+                ]
+            },
+            "SetServiceArchived": {
+                "purpose": "Sets whether or not the service is archived",
+                "params": {
+                    "service" : {
+                        "type": "number|Service",
+                        "comment": "The id or Service object to set the archive status on"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The user object setting the archive status"
+                    },
+                    "status" : {
+                        "type": "boolean",
+                        "comment": "Whether or not the object is to be archived"
+                    }
+                },
+                "tests": [
+                    "Undefined if user or service are undefined",
+                    "Refuses if user does not have read permission on services",
+                    "Refuses if user does not have write permission on services",
+                    "Sets service to status"
+                ]
             }
         },
         "dependencies": {
@@ -3567,6 +3628,511 @@
             "{default as User}": "../data/user_account",
             "{iJournalEntryMoveBatch}": "../interfaces/journal-entry-move-batch",
             "{default as Workday}": "../data/employee_workday",
+            "* as Data": "../data"
+        }
+    },
+    "CustomerController": {
+        "filename": "customer-controller",
+        "folder": "controllers",
+        "type": "functional",
+        "functions": {
+            "CreateCustomer": {
+                "purpose": "Create a new customer. Required fields name, mailing address, postal code, country, phone number.",
+                "params": {
+                    "objOrName" : {
+                        "type": "Customer|string",
+                        "comment": "A customer object or string"
+                    },
+                    "phone" : {
+                        "type": "number",
+                        "comment": "The phone number of the company"
+                    },
+                    "mailingAddress" : {
+                        "type": "string",
+                        "comment": "The mailing address of the customer"
+                    },
+                    "mailingPostalCode" : {
+                        "type": "string",
+                        "comment": "The mailing postal code of the customer"
+                    },
+                    "mailingCountry" : {
+                        "type": "string",
+                        "comment": "The country of the mailing address"
+                    },
+                    "physicalAddress" : {
+                        "type": "string",
+                        "comment": "The physical address of the company",
+                        "default": null
+                    },
+                    "physicalPostalCode" : {
+                        "type": "string",
+                        "comment": "The physical address' postal code of the company"
+                    },
+                    "physicalCountry" : {
+                        "type": "string",
+                        "comment": "The physical country of the company"
+                    },
+                    "token" : {
+                        "type": "string",
+                        "comment": "The token created by an employee to validate registration"
+                    }
+                },
+                "tests": [
+                    "Refuses invalid token",
+                    "Refuses missing required fields",
+                    "Sets start date to now (within 20 minutes +/-)",
+                    "Creates new customer"
+                ]
+            },
+            "UpdateCustomer": {
+                "purpose": "Updates a customer object",
+                "params": {
+                    "cust" : {
+                        "type": "number|Customer",
+                        "comment": "The id or Customer object to update"
+                    },
+                    "obj" : {
+                        "type": "Object",
+                        "comment": "The update object. Supports fields company_name/name, mailing_address/mailingAddress, mailing_postal_code/mailingPostalCode, mailing_country/mailingCountry, physical_address/physicalAddress, physical_postal_code/physicalPostalCode, physical_country/physicalCountry, phone/phoneNumber"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The user updating the customer"
+                    }
+                },
+                "tests": [
+                    "Approves Customer user",
+                    "Approves Employee user with permission",
+                    "Undefined on invalid cust",
+                    "Undefined on invalid user",
+                    "Refuses bad form update object (no valid fields)",
+                    "Updates all fields"
+                ]
+            },
+            "GetCustomer": {
+                "purpose": "Gets a single customer object",
+                "params": {
+                    "cust" : {
+                        "type": "number|Customer",
+                        "comment": "The id or Customer object to retrieve"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or User object requesting the customer"
+                    }
+                },
+                "tests": [
+                    "Undefined if user does not exist",
+                    "Undefined if cust does not exist",
+                    "Refuses if user does not have permission to retrieve Customer object",
+                    "Returns customer object"
+                ]
+            },
+            "ListCustomer": {
+                "purpose": "Gets a list of customers. Alias for PageCustomer(page = 1)",
+                "params": {
+                    "amt" : {
+                        "type": "number",
+                        "comment": "The amount of customers to get (max 100)"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or User object to retrieve"
+                    },
+                    "populated" : {
+                        "type": "boolean",
+                        "comment": "Whether or not to also include the contacts in the listing",
+                        "default": false
+                    }
+                },
+                "tests": [
+                    "Undefined if user does not exist",
+                    "Refuses if user does not have read permission on customers",
+                    "Caps out at 100",
+                    "Returns list of customer",
+                    "Returns list of customer with contacts created if populated true"
+                ]
+            },
+            "PageCustomer": {
+                "purpose": "Gets a page of customers",
+                "params": {
+                    "amt" : {
+                        "type": "number",
+                        "comment": "The amount of customers to get"
+                    },
+                    "page" : {
+                        "type": "number",
+                        "comment": "The page number to get (starting point 1)"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or User object requesting the page"
+                    },
+                    "populated" : {
+                        "type": "boolean",
+                        "comment": "Whether or not the result should also include contacts"
+                    }
+                },
+                "tests": [
+                    "Undefined  if user does not exist",
+                    "Refuses if user does not have read permission on customer",
+                    "Caps out at 100",
+                    "Returns page of customer",
+                    "Returns page of customer with contacts created if populated true"
+                ]
+            },
+            "CreateContact": {
+                "purpose": "Creates a contact for a customer (does not create user)",
+                "params": {
+                    "customer" : {
+                        "type": "number|User",
+                        "comment": "The customer that the contact belongs to"
+                    },
+                    "firstName" : {
+                        "type": "string",
+                        "comment": "The first name of the contact"
+                    },
+                    "lastName" : {
+                        "type": "string",
+                        "comment": "The last name of the customer"
+                    },
+                    "phone" : {
+                        "type": "string",
+                        "comment": "The phone number for this contact"
+                    },
+                    "ext" : {
+                        "type": "number",
+                        "comment": "The extension the contact can be reached at (optional)",
+                        "default": -1
+                    },
+                    "about" : {
+                        "type": "string",
+                        "comment": "An optional description of the customer",
+                        "default": ""
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The user creating the contact"
+                    }
+                },
+                "tests": [
+                    "Refuses missing required fields",
+                    "Refuses if user is neither an employee, or the customer",
+                    "Refuses if user does not have read permission on customers",
+                    "Refuses if user does not have write permission on customers",
+                    "Creates new customer contact"
+                ]
+            },
+            "GetContact": {
+                "purpose": "Gets a single contact",
+                "params": {
+                    "contact" : {
+                        "type": "number|CustomerContact",
+                        "comment": "The id or CustomerContact to request"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The user requesting the contact"
+                    }
+                },
+                "tests": [
+                    "Refuses if user does not have read permission on contacts (if employee)",
+                    "Undefined if user does not exist",
+                    "Undefined if contact does not exist",
+                    "Refuses if user is not an employee or the customer the contact belongs to",
+                    "Gets contact"
+                ]
+            },
+            "ListContacts": {
+                "purpose": "Gets a list of contacts. Alias for PageContacts (page = 1)",
+                "params": {
+                    "amt" : {
+                        "type": "number",
+                        "comment": "The amount of contacts to retrieve"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or User object requesting the listing"
+                    },
+                    "customer" : {
+                        "type": "number|Customer",
+                        "comment": "The id or Customer object to get the list of contacts for",
+                        "default": -1
+                    }
+                },
+                "tests": [
+                    "Undefined if user does not exist",
+                    "Refuses if user does not have read permission on customer",
+                    "Approves if user is the customer defined in customer",
+                    "Caps out at max 100",
+                    "Undefined if customer specified, and customer has no contacts",
+                    "Returns list of contacts",
+                    "Returns list of contacts belonging to customer if customer specified"
+                ]
+            },
+            "PageContacts": {
+                "purpose": "Retrieves a page of customer contacts",
+                "params": {
+                    "amt" : {
+                        "type": "number",
+                        "comment": "The amount of customer contacts to retrieve"
+                    },
+                    "page" : {
+                        "type": "number",
+                        "comment": "The page number of contacts to retrieve (starting point 1)"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or User object requesting the page of contacts"
+                    },
+                    "customer" : {
+                        "type": "number|Customer",
+                        "comment": "The id or Customer object the contacts are to belong to",
+                        "default": -1
+                    }
+                },
+                "tests": [
+                    "Undefined if user does not exist",
+                    "Refuses if user does not have read permission on customer",
+                    "Approves if user is the customer defined in customer",
+                    "Caps out at max 100",
+                    "Undefined if customer specified, and customer has no contacts",
+                    "Returns list of contacts",
+                    "Returns list of contacts belonging to customer if customer specified"
+                ]
+            },
+            "UpdateContact": {
+                "purpose": "Updates a single contact",
+                "params": {
+                    "contact" : {
+                        "type": "number|CustomerContact",
+                        "comment": "The id or CustomerContact to update"
+                    },
+                    "obj" : {
+                        "type": "Object",
+                        "comment": "The update object. Supports fields first_name/firstName, last_name/lastName, phone/phone_number/phoneNumber, ext/extension"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or User object attempting to update the contact"
+                    }
+                },
+                "tests": [
+                    "Undefined if user or contact does not exist",
+                    "Refuses bad form update object (no valid fields)",
+                    "Refuses if user is not the customer, or an employee with read and write permissions",
+                    "Updates all fields"
+                ]
+            },
+            "DeleteContact": {
+                "purpose": "Sets a contact to deleted",
+                "params": {
+                    "contact" : {
+                        "type": "number|CustomerContact",
+                        "comment": "The id or CustomerContact object to be set to deleted"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or User object deleting the customer contact"
+                    }
+                },
+                "tests": [
+                    "Undefined if contact or user do not exist",
+                    "Refuses if user is not the customer that the contact belongs to, or an employee with read/write permissions on customers",
+                    "Sets contact to deleted"
+                ]
+            }
+        },
+        "dependencies": {
+            "CustomerContact": "../data/customer_contact",
+            "{default as User}": "../data/user_account",
+            "Customer": "../data/customer",
+            "* as Data": "../data"
+        }
+    },
+    "AssetController": {
+        "filename": "asset-controller",
+        "folder": "controllers",
+        "type": "functional",
+        "functions": {
+            "CreateAsset": {
+                "purpose": "Creates a new asset",
+                "params": {
+                    "name" : {
+                        "type": "string",
+                        "comment": "The name of the asset to be added"
+                    },
+                    "description" : {
+                        "type": "string",
+                        "comment": "The description of the asset"
+                    },
+                    "purchaseValue" : {
+                        "type": "number",
+                        "comment": "Represents how much the asset was purchased for"
+                    },
+                    "serial" : {
+                        "type": "string",
+                        "comment": "The serial key (optional)"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or User object creating the asset"
+                    }
+                },
+                "tests": [
+                    "Undefined if User does not exist",
+                    "Refuse if user does not have write permission on Assets",
+                    "Refuse missing required fields",
+                    "Creates new asset"
+                ]
+            },
+            "GetAsset": {
+                "purpose": "Gets a single asset",
+                "params": {
+                    "asset" : {
+                        "type": "number|Asset",
+                        "comment": "The id or Asset to retrieve"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or User object requesting the asset"
+                    }
+                },
+                "tests": [
+                    "Undefined if user or asset does not exist",
+                    "Refuses if user does not have read permission on Asset",
+                    "Returns asset"
+                ]
+            },
+            "ListAsset": {
+                "purpose": "Gets a list of assets. Alias for PageAssets(page = 1)",
+                "params": {
+                    "amt" : {
+                        "type": "number",
+                        "comment": "The amount to retrieve"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or User object requesting the asset listing"
+                    }
+                },
+                "tests": [
+                    "Undefined if user does not exist",
+                    "Caps out at 100",
+                    "Returns list of assets"
+                ]
+            },
+            "PageAsset": {
+                "purpose": "Gets a page of assets",
+                "params": {
+                    "amt" : {
+                        "type": "number",
+                        "comment": "The amount to retrieve in a page"
+                    },
+                    "page" : {
+                        "type": "number",
+                        "comment": "The page number to get (starting point 1)"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or User object requesting the page"
+                    }
+                },
+                "tests": [
+                    "Undefined if user does not exist",
+                    "Caps out at 100",
+                    "Returns list of assets"
+                ]
+            },
+            "UpdateAsset": {
+                "purpose": "Updates an asset object",
+                "params": {
+                    "asset" : {
+                        "type": "number|Asset",
+                        "comment": "The id or Asset object to update"
+                    },
+                    "obj" : {
+                        "type": "Object",
+                        "comment": "The update object. Supports fields name, desc/description, purchase_value/purchaseValue, serial/serialKey/serial_key"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or User object requesting the update"
+                    }
+                },
+                "tests": [
+                    "Undefined if user or asset does not exist",
+                    "Refuses bad form update object (no valid fields)",
+                    "Refuses if user does not have read permission on asset",
+                    "Refuses if user does not have write permission on asset",
+                    "Updates all fields"
+                ]
+            },
+            "SetAssetArchived": {
+                "purpose": "Sets the archived status of an asset",
+                "params": {
+                    "asset" : {
+                        "type": "number|Asset",
+                        "comment": "The id or Asset object to set the archived of"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or User object requesting the archival/removal from archive"
+                    },
+                    "status" : {
+                        "type": "boolean",
+                        "comment": "Whether or not the asset is to be archived"
+                    }
+                },
+                "tests": [
+                    "Undefined if user or asset does not exist",
+                    "Refuses if user does not have read permission on assets",
+                    "Refuses if user does not have write permission on assets",
+                    "Sets archived to status"
+                ]
+            },
+            "ArchiveAsset": {
+                "purpose": "Sets an asset to be archived. Alias for SetAssetArchived (status=true)",
+                "params": {
+                    "asset" : {
+                        "type": "number|Asset",
+                        "comment": "The id or Asset object to be archived"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or User object setting the archival"
+                    }
+                },
+                "tests": [
+                    "Undefined if user or asset does not exist",
+                    "Refuses if user does not have read permission on assets",
+                    "Refuses if user does not have write permission on assets",
+                    "Sets archived to true"
+                ]
+            },
+            "UnarchiveAsset": {
+                "purpose": "Removes an asset from archived. Alias for SetAssetArchived(status=false)",
+                "params": {
+                    "asset" : {
+                        "type": "number|Asset",
+                        "comment": "The id or Asset to remove from archive"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or User removing the object from the archive"
+                    }
+                },
+                "tests": [
+                    "Undefined if user or asset does not exist",
+                    "Refuses if user does not have read permission on assets",
+                    "Refuses if user does not have write permission on assets",
+                    "Sets archived to false"
+                ]
+            }
+        },
+        "dependencies": {
+            "Asset": "../data/asset",
+            "{default as User}": "../data/user_account",
             "* as Data": "../data"
         }
     }

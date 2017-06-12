@@ -95,7 +95,8 @@ CREATE TABLE customer_contact (
     last_name varchar(180) NOT NULL,
     phone varchar(12) NOT NULL,
     phone_extension varchar(10),
-    about varchar(2000)
+    about varchar(2000),
+    is_deleted boolean DEFAULT FALSE
 );
 CREATE TABLE employee (
     id integer PRIMARY KEY REFERENCES user_account(id) ON DELETE CASCADE,
@@ -148,7 +149,8 @@ CREATE TABLE service (
     name varchar(64) NOT NULL,
     description varchar(360),
     price money NOT NULL,
-    default_quantity numeric(9, 2) NOT NULL
+    default_quantity numeric(9, 2) NOT NULL,
+    is_archived boolean DEFAULT FALSE
 );
 CREATE TABLE transaction (
     id serial PRIMARY KEY,
@@ -238,7 +240,8 @@ CREATE TABLE asset (
     name varchar(64) UNIQUE NOT NULL,
     description varchar(340),
     purchase_value money NOT NULL CONSTRAINT purchase_value CHECK (purchase_value > '-1.00'),
-    serial_key varchar(300)
+    serial_key varchar(300),
+    is_archived boolean DEFAULT FALSE
 );
 CREATE TABLE asset_tag (
     id serial PRIMARY KEY,

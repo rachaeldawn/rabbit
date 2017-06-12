@@ -7,8 +7,10 @@ var Customer = (function () {
 }());
 var custy = {
     name: "jonathan",
+    age: 23,
     george: 33
 };
 function DoThing(obj) {
     console.log(obj);
 }
+DoThing(custy);

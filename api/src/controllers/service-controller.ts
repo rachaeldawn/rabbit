@@ -10,6 +10,9 @@ import * as Data from "../data"
  * 	ListServices: Gets a list of services alphabetically ordered. Bind to default.
  * 	PageServices: Gets a page of services. Bind to default.
  * 	UpdateService: Updates a service object.
+ * 	ArchiveService: Sets a service to archived. Alias for SetServiceArchive = true
+ * 	UnarchiveService: Sets a service to active. Alias for SetServiceArchived = false
+ * 	SetServiceArchived: Sets whether or not the service is archived
  * Private Functions: 
  */
 /*
@@ -55,6 +58,31 @@ export function PageServices(amt: number , page: number , user: number|User ) {
  * @param user: The user id or object requesting an update on the service (default: undefined)
  */
 export function UpdateService(service: number|Service , obj: Object , user: number|User ) {
+	throw 'Not implemented'
+}
+/*
+ * Purpose: Sets a service to archived. Alias for SetServiceArchive = true
+ * @param service: The id or service object to set to archived (default: undefined)
+ * @param user: The id or User object archiving the service (default: undefined)
+ */
+export function ArchiveService(service: number|Service , user: number|User ) {
+	throw 'Not implemented'
+}
+/*
+ * Purpose: Sets a service to active. Alias for SetServiceArchived = false
+ * @param service: The id or Service object to remove from archive (default: undefined)
+ * @param user: The id or User object removing the object from the archive (default: undefined)
+ */
+export function UnarchiveService(service: number|Service , user: number|User ) {
+	throw 'Not implemented'
+}
+/*
+ * Purpose: Sets whether or not the service is archived
+ * @param service: The id or Service object to set the archive status on (default: undefined)
+ * @param user: The user object setting the archive status (default: undefined)
+ * @param status: Whether or not the object is to be archived (default: undefined)
+ */
+export function SetServiceArchived(service: number|Service , user: number|User , status: boolean ) {
 	throw 'Not implemented'
 }
 

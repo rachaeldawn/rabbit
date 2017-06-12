@@ -5,16 +5,18 @@
  * @property phone: Phone number of the contact
  * @property phone_extension: The phone extension of the contact
  * @property about: A max 2000 character length about to describe who the contact is, what they're permitted to authorize/do, and any other relevant details.
+ * @property is_deleted: Whether or not the contact is deleted. Default false.
  */
 export const tablename = 'customer_contact'
 export default class CustomerContact {
-	constructor(id, first_name, last_name, phone, phone_extension, about){
+	constructor(id, first_name, last_name, phone, phone_extension, about, is_deleted){
 		this.id = id
 		this.first_name = first_name
 		this.last_name = last_name
 		this.phone = phone
 		this.phone_extension = phone_extension
 		this.about = about
+		this.is_deleted = is_deleted
 	}
 }
 

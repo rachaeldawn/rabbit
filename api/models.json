@@ -6,10 +6,9 @@
             "name":           "A 64 character name of the asset being tracked. Must be unique.",
             "description":    "A max 340 character description of the asset",
             "purchase_value": "What the asset cost to purchase",
-            "serial_key":     "An optional string for the serial, or serial key, that was purchased."
-        },
-        "DeleteMethod": "archive",
-        "SupportTag": true
+            "serial_key":     "An optional string for the serial, or serial key, that was purchased.",
+            "is_archived":    "Whether or not the asset is removed from the system. Default false."
+        }
     },
         
     "asset_tag": {
@@ -103,7 +102,8 @@
             "last_name":          "Last name of the contact",
             "phone":              "Phone number of the contact",
             "phone_extension":    "The phone extension of the contact",
-            "about":              "A max 2000 character length about to describe who the contact is, what they're permitted to authorize/do, and any other relevant details."
+            "about":              "A max 2000 character length about to describe who the contact is, what they're permitted to authorize/do, and any other relevant details.",
+            "is_deleted":         "Whether or not the contact is deleted. Default false."
         }
     },
     "employee": {
@@ -306,7 +306,8 @@
             "name":               "A max 64 character long code for the service. (SKU)",
             "description":        "A max 360 character long description of what the service is. ",
             "price":              "The default price to be used in the price * quantity equation.",
-            "default_quantity":   "The default quantity of the service to be used in the price * quantity equation."
+            "default_quantity":   "The default quantity of the service to be used in the price * quantity equation.",
+            "is_archived":        "Whether or not the service is still able to be used. Default false."
         }
     },
 

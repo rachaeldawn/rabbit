@@ -33,4 +33,22 @@ describe('#ServiceController', function() {
 		it(`Refuses bad form update object (no valid fields)`)
 		it(`Updates the service`)
 	})
+	describe(`ArchiveService`, function() {
+		it(`Undefined if user or service are undefined`)
+		it(`Refuses if user does not have read permission on services`)
+		it(`Refuses if user does not have write permission on services`)
+		it(`Sets service to archived`)
+	})
+	describe(`UnarchiveService`, function() {
+		it(`Undefined if user or service are undefined`)
+		it(`Refuses if user does not have read permission on services`)
+		it(`Refuses if user does not have write permission on services`)
+		it(`Sets service to unarchived`)
+	})
+	describe(`SetServiceArchived`, function() {
+		it(`Undefined if user or service are undefined`)
+		it(`Refuses if user does not have read permission on services`)
+		it(`Refuses if user does not have write permission on services`)
+		it(`Sets service to status`)
+	})
 })
