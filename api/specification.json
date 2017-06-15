@@ -833,7 +833,7 @@
                 "params": {
                     "notification" : {
                         "type": "Notification|Notification[]",
-                        "comment": ""
+                        "comment": "The notification(s) to set as read"
                     },
                     "user" : {
                         "type": "number|User",
@@ -842,6 +842,24 @@
                 },
                 "tests": [
                     "Rejects if the notification does not belong to the user",
+                    "Undefined if the notification does not exist"
+                ]
+            },
+            "SetUnread": {
+                "purpose": "Sets a message as unread",
+                "params": {
+                    "notification" : {
+                        "type": "Notification|Notification[]",
+                        "comment": "The notifications to set as unread"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or User object setting the notification to unread"
+                    }
+                },
+                "tests": [
+                    "Rejects if the notification does not belong to the user",
+                    "Undefined if the user does not exist",
                     "Undefined if the notification does not exist"
                 ]
             }
@@ -4189,5 +4207,358 @@
             "{default as User}": "../data/user_account",
             "* as Data": "../data"
         }
+    },
+    "BulletController": {
+        "filename": "bullet-controller",
+        "folder": "controllers",
+        "type": "functional",
+        "functions": {
+            "CreateBullet": {
+                "purpose": "Creates a new global bullet",
+                "params": {
+                    "msg" : {
+                        "type": "string",
+                        "comment": "The message to be posted to the global space"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or User object attempting to post a new global message"
+                    }
+                },
+                "tests": [
+                    "Undefined if user does not exist",
+                    "Undefined if msg is under 5 characters",
+                    "Refuses if user is not an employee",
+                    "Creates a new bullet"
+                ]
+            },
+            "UpdateBullet": {
+                "purpose": "Updates a bullet object",
+                "params": {
+                    "bullet" : {
+                        "type": "number|Bullet",
+                        "comment": "The id or Bullet object to update"
+                    },
+                    "obj" : {
+                        "type": "Object",
+                        "comment": "The update object. Supports field message/msg"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or User object attempting to update the bullet"
+                    }
+                },
+                "tests": [
+                    "Undefined if user does not exist",
+                    "Undefined if new message is under 5 characters",
+                    "Refuses if user is not an employee",
+                    "Refuses if user did not originally create the bullet"
+                ]
+            },
+            "GetBullet": {
+                "purpose": "Gets a single bullet object",
+                "params": {
+                    "bullet" : {
+                        "type": "number|Bullet",
+                        "comment": "The id or Bullet object to retrieve"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or User object requesting the bullet"
+                    },
+                    "populated" : {
+                        "type": "boolean",
+                        "comment": "Whether or not the bullet object should have the comments attached to it as well.",
+                        "default": false
+                    }
+                },
+                "tests": [
+                    "Undefined if bullet or user does not exist",
+                    "Refuses if user is not an employee",
+                    "Returns bullet object",
+                    "Returns bullet object with comments if populated true"
+                ]
+            },
+            "ListBullets": {
+                "purpose": "Gets a list of bullets. Alias for PageBullets(page=1)",
+                "params": {
+                    "amt" : {
+                        "type": "number",
+                        "comment": "The amount of bullets to get. Max 100"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or User object requesting the listing"
+                    },
+                    "populated" : {
+                        "type": "boolean",
+                        "comment": "Whether or not the listing should also have comments populated in each object.",
+                        "default": false
+                    }
+                },
+                "tests": [
+                    "Undefined if user does not exist",
+                    "Refuses if user is not an employee",
+                    "Caps out at 100",
+                    "Returns a list of bullets",
+                    "Returns a list of populated bullets if populated true"
+                ]
+            },
+            "PageBullets": {
+                "purpose": "Gets a page of bullets",
+                "params": {
+                    "amt" : {
+                        "type": "number",
+                        "comment": "The amount of bullets to get (max 100)"
+                    },
+                    "page" : {
+                        "type": "number",
+                        "comment": "The page to get (starting point 1)"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or User object requesting the page"
+                    },
+                    "populated" : {
+                        "type": "boolean",
+                        "comment": "Whether or not the bullets should come with comments filled in the object",
+                        "default": false
+                    }
+                },
+                "tests": [
+                    "Undefined if user does not exist",
+                    "Refuses if user is not an employee",
+                    "Caps out at 100",
+                    "Returns a page of bullets",
+                    "Returns a page of populated bullets if populated true"            
+                ]
+            },
+            "DeleteBullet": {
+                "purpose": "Deletes a bullet",
+                "params": {
+                    "bullet" : {
+                        "type": "number|Bullet",
+                        "comment": "The id or Bullet object being deleted"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or User object deleting the bullet"
+                    }
+                },
+                "tests": [
+                    "Undefined if user or bullet does not exist",
+                    "Refuses if user does did not create the bullet",
+                    "Refuses if user is not an employee",
+                    "Deletes the bullet (DB deletes comments automatically)"
+                ]
+            },
+            "CreateComment": {
+                "purpose": "Creates a new comment on a bullet",
+                "params": {
+                    "message" : {
+                        "type": "string",
+                        "comment": "The message to be posted"
+                    },
+                    "bullet" : {
+                        "type": "number|Bullet",
+                        "comment": "The id or Bullet being commented on"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or User object posting the comment"
+                    }
+                },
+                "tests": [
+                    "Undefined if user or bullet does not exist",
+                    "Refuses if user is not an employee",
+                    "Posts a new comment"
+                ]
+            },
+            "UpdateComment": {
+                "purpose": "Updates a single comment message",
+                "params": {
+                    "msg" : {
+                        "type": "string",
+                        "comment": "The new message contents"
+                    },
+                    "comment" : {
+                        "type": "number|BulletComment",
+                        "comment": "The id or comment being updated"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or User object updating the comment"
+                    }
+                },
+                "tests": [
+                    "Undefined if comment or user does not exist",
+                    "Refuses if user did not originally post comment",
+                    "Updates the comment"
+                ]
+            },
+            "ListComments": {
+                "purpose": "Gets a list of comments",
+                "params": {
+                    "amt" : {
+                        "type": "number",
+                        "comment": "The quantity of comments to retrieve"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or User object requesting the comments"
+                    },
+                    "bullet" : {
+                        "type": "number|Bullet",
+                        "comment": "The optional bullet to get the comments on",
+                        "default": -1
+                    }
+                },
+                "tests": [
+                    "Undefined if user does not exist",
+                    "Undefined if bullet is specified, and bullet does not exist",
+                    "Refuses if user is not an employee",
+                    "Returns a list of comments",
+                    "Caps out at 100"
+                ]
+            },
+            "PageComments": {
+                "purpose": "Gets a page of contents, optionally on a bullet",
+                "params": {
+                    "amt" : {
+                        "type": "number",
+                        "comment": "The quantity of comments in a page to retrieve"
+                    },
+                    "page" : {
+                        "type": "number",
+                        "comment": "The page number to get (starting point 1)"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or User object requesting the comments"
+                    },
+                    "bullet" : {
+                        "type": "number|Bullet",
+                        "comment": "The optional bullet to get the comments on",
+                        "default": -1
+                    }
+                },
+                "tests": [
+                    "Undefined if user does not exist",
+                    "Undefined if bullet is specified, and bullet does not exist",
+                    "Refuses if user is not an employee",
+                    "Returns a page of comments",
+                    "Caps out at 100"
+                ]
+            },
+            "ListCommentsByUser": {
+                "purpose": "Gets comments posted by a user. Alias for PageCommentsByUser(page = 1)",
+                "params": {
+                    "amt" : {
+                        "type": "number",
+                        "comment": "The amount of comments to get"
+                    },
+                    "target" : {
+                        "type": "number|User",
+                        "comment": "The user to get the posts of"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The user requesting the listk"
+                    }
+                },
+                "tests": [
+                    "Undefined if target or user does not exist",
+                    "Refuses if user is not an employee",
+                    "Returns amt of comments",
+                    "Caps out at max 100"
+                ]
+            },
+            "PageCommentsByUser": {
+                "purpose": "Gets a page of comments posted by a user",
+                "params": {
+                    "amt" : {
+                        "type": "number",
+                        "comment": "The amount of comments in a page to get"
+                    },
+                    "page" : {
+                        "type": "number",
+                        "comment": "The page number to get (starting point 1)"
+                    },
+                    "target" : {
+                        "type": "number|User",
+                        "comment": "The id or User object to get the comments of"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or User requesting the listing"
+                    }
+                },
+                "tests": [
+                    "Undefined if target or user does not exist",
+                    "Refuses if user is not an employee",
+                    "Gets a page of comments",
+                    "Caps out at max 100"
+                ]
+            },
+            "ListBulletsByUser": {
+                "purpose": "Gets a list of bullets that a user posted. Alias for PageBulletsByUser(page = 1)",
+                "params": {
+                    "amt" : {
+                        "type": "number",
+                        "comment": "The amount of bullets to retrieve"
+                    },
+                    "target" : {
+                        "type": "number|User",
+                        "comment": "The target id or user object to get the bullets of"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or User object requesting the bullets"
+                    }
+                },
+                "tests": [
+                    "Undefined if target or user does not exist",
+                    "Refuses if user is not an employee",
+                    "Returns list of bullets",
+                    "Caps out at 100"
+                ]
+            },
+            "PageBulletsByUser": {
+                "purpose": "Gets a page of bullets from a user",
+                "params": {
+                    "amt" : {
+                        "type": "number",
+                        "comment": "The amount of bullets in a page to retrieve"
+                    },
+                    "page" : {
+                        "type": "number",
+                        "comment": "The page of bullets to get. Starting point 1"
+                    },
+                    "target" : {
+                        "type": "number|User",
+                        "comment": "The id or User object to get the bullets of"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or User object requesting the page"
+                    }
+                },
+                "tests": [
+                    "Undefined if target or user does not exist",
+                    "Refuses if user is not an employee",
+                    "Returns page of bullets",
+                    "Caps out at 100"
+                ]
+            }
+        },
+        "dependencies": {
+            "Bullet": "../data/bullet",
+            "BulletComment": "../data/bullet_comment",
+            "{default as User}": "../data/user_account",
+            "* as Data": "../data"
+        },
+        "todo": [
+            "Implement liking systems"
+        ]
     }
 }

@@ -47,6 +47,17 @@
             "time_stamp":     "A timestamp of when the sticky note was created"
         }
     },
+
+    "bullet_comment": {
+        "Purpose": "A comment on a sticky note in the global bulletin board",
+        "Fields": {
+            "id": "The id of the comment",
+            "bullet_id": "The id of the bullet this comment was posted on",
+            "user_id": "The id of the user that posted this comment",
+            "message": "A max 512 character long comment",
+            "time_stamp": "When the comment was posted"
+        }
+    },
         
     "calendar_event": {
         "Purpose": "An event on either a personal calendar, or globally amongst all employees.",

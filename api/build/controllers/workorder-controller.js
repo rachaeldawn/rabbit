@@ -44,7 +44,15 @@ function ConvertEstimateToWorkorder(estimate, user) {
     throw 'Not implemented';
 }
 exports.ConvertEstimateToWorkorder = ConvertEstimateToWorkorder;
-function GetWorkorder(workorder, user) {
+function GetWorkorder(workorder, user, populated) {
     throw 'Not implemented';
 }
 exports.GetWorkorder = GetWorkorder;
+function ListWorkorders(amt, user, populated) {
+    throw 'Not implemented';
+}
+exports.ListWorkorders = ListWorkorders;
+function PageWorkorders(amt, page, user, populated) {
+    throw 'Not implemented';
+}
+exports.PageWorkorders = PageWorkorders;

@@ -94,4 +94,16 @@ describe('#WorkorderController', function () {
         it("Refuses if the user does not have read permissions on the invoice");
         it("Gets a populated version of the workorder");
     });
+    describe("ListWorkorders", function () {
+        it("Undefined  if user does not exist");
+        it("Refuses if user does not have read permission on Workorders");
+        it("Returns list of workorders");
+        it("Returns list of workorders with populated items if populated true");
+    });
+    describe("PageWorkorders", function () {
+        it("Undefined  if user does not exist");
+        it("Refuses if user does not have read permission on Workorders");
+        it("Returns list of workorders");
+        it("Returns list of workorders with populated items if populated true");
+    });
 });

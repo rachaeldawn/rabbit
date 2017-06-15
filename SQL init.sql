@@ -29,6 +29,15 @@ CREATE TYPE payroll_entry_type as ENUM (
     'deduction',
     'vacation'
 );
+CREATE TYPE weekday AS enum (
+    'sunday'
+    'monday',
+    'tuesday',
+    'wednesday',
+    'thursday',
+    'friday',
+    'saturday'
+);
 
 CREATE TABLE tag (
     id serial PRIMARY KEY,
@@ -308,6 +317,13 @@ CREATE TABLE bullet (
     message varchar(1200) NOT NULL CONSTRAINT message CHECK (char_length(message) > 5),
     time_stamp timestamp WITH TIME ZONE NOT NULL DEFAULT NOW()
 );
+CREATE TABLE bullet_comment (
+    id serial PRIMARY KEY,
+    bullet_id integer REFERENCES bullet(id) NOT NULL ON DELETE CASCADE,
+    user_id integer REFERENCES user_account(id) NOT NULL,
+    message varchar(512) NOT NULL CONSTRAINT message CHECK (char_length(message) > 5),
+    time_stamp timestamp WITH TIME ZONE NOT NULL DEFAULT NOW()
+);
 CREATE TABLE calendar_event (
     id serial PRIMARY KEY,
     user_id integer REFERENCES user_account(id),
@@ -317,6 +333,12 @@ CREATE TABLE calendar_event (
     start_time time,
     end_time time
 );
+CREATE TABLE calendar_recurrence (
+    id SERIAL PRIMARY KEY,
+    event_id integer references calendar_event,
+    weekday_recurrence weekday,
+    
+)
 CREATE TABLE taskboard (
     id serial PRIMARY KEY, 
     name varchar(40) NOT NULL,

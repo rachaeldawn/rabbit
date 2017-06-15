@@ -23,7 +23,9 @@ import Customer from "../data/customer"
  * 	RemoveWorkorderContact: Removes a contact from a workorder
  * 	AddTransaction: Adds a transaction to a workorder
  * 	ConvertEstimateToWorkorder: Converts an estimate into a workorder
- * 	GetWorkorder: Gets a populated workorder for use
+ * 	GetWorkorder: Gets a workorder
+ * 	ListWorkorders: Gets a list of Workorders. Alias for PageWorkorders(page = 1)
+ * 	PageWorkorders: Gets a page of workorders.
  * Private Functions: 
  */
 /*
@@ -121,11 +123,31 @@ export function ConvertEstimateToWorkorder(estimate: number|Estimate , user: num
 	throw 'Not implemented'
 }
 /*
- * Purpose: Gets a populated workorder for use
- * @param workorder: The id or workorder object to get the populated version of (default: undefined)
+ * Purpose: Gets a workorder
+ * @param workorder: The id or workorder object to retrieve (default: undefined)
  * @param user: The user requesting the workorder (default: undefined)
+ * @param populated: Whether or not he workorders should also have items, transactions, contacts, etc (default: false)
  */
-export function GetWorkorder(workorder: number|Workorder , user: number|User ) {
+export function GetWorkorder(workorder: number|Workorder , user: number|User , populated: boolean ) {
+	throw 'Not implemented'
+}
+/*
+ * Purpose: Gets a list of Workorders. Alias for PageWorkorders(page = 1)
+ * @param amt: The amount of workorders to get (max 100) (default: undefined)
+ * @param user: The id or User object requesting the listing (default: undefined)
+ * @param populated: Whether or not the workorders should also have items, transactions, contacts, etc (default: false)
+ */
+export function ListWorkorders(amt: number , user: number|User , populated: boolean ) {
+	throw 'Not implemented'
+}
+/*
+ * Purpose: Gets a page of workorders.
+ * @param amt: The amount of workorders to get (max 100) (default: undefined)
+ * @param page: The page number to get (starting point 1) (default: undefined)
+ * @param user: The id or User object requesting the workorders (default: undefined)
+ * @param populated: Whether or not he workorders should also have items, transactions, contacts, etc (default: false)
+ */
+export function PageWorkorders(amt: number , page: number , user: number|User , populated: boolean ) {
 	throw 'Not implemented'
 }
 
