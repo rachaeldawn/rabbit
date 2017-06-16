@@ -15,7 +15,7 @@
         }
     },
     "PaymentController": {
-        "filename": "payment-controller",
+        "filename": "payment",
         "folder": "controllers",
         "type": "functional",
         "functions": {
@@ -125,7 +125,7 @@
         }
     },
     "UserController": {
-        "filename": "user-controller",
+        "filename": "user",
         "folder": "controllers",
         "type": "functional",
         "functions": {
@@ -340,7 +340,7 @@
         }
     },
     "PermissionController": {
-        "filename": "permission-controller",
+        "filename": "permission",
         "folder": "controllers",
         "type": "functional",
         "functions": {
@@ -461,7 +461,7 @@
         }
     },
     "CommunicationController": {
-        "filename": "communication-controller",
+        "filename": "communication",
         "folder": "controllers",
         "type": "functional",
         "functions": {
@@ -759,7 +759,7 @@
         }
     },
     "NotificationController": {
-        "filename": "notification-controller",
+        "filename": "notification",
         "folder": "controllers",
         "type": "functional",
         "functions": {
@@ -829,7 +829,7 @@
                 ]
             },
             "SetRead": {
-                "purpose": "Sets a notification (or notification set) as read",
+                "purpose": "Sets a notification as read. Alias for SetNotificationStatus(status = false)",
                 "params": {
                     "notification" : {
                         "type": "Notification|Notification[]",
@@ -846,10 +846,10 @@
                 ]
             },
             "SetUnread": {
-                "purpose": "Sets a message as unread",
+                "purpose": "Sets a message as unread. Alias for SetNotificationStatus(status = false)",
                 "params": {
                     "notification" : {
-                        "type": "Notification|Notification[]",
+                        "type": "Notification",
                         "comment": "The notifications to set as unread"
                     },
                     "user" : {
@@ -862,6 +862,28 @@
                     "Undefined if the user does not exist",
                     "Undefined if the notification does not exist"
                 ]
+            },
+            "SetNotificationStatus": {
+                "purpose": "Sets notification(s) read status (true=read)",
+                "params": {
+                    "notification" : {
+                        "type": "Notification",
+                        "comment": "The notification or array of notifications to set to status"
+                    },
+                    "status" : {
+                        "type": "boolean",
+                        "comment": "The status to set the isread to"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The user setting the status"
+                    }
+                },
+                "tests": [
+                    "Rejects if the notification does not belong to the user",
+                    "Undefined if notification does not exist",
+                    "Undefined if the user does not exist"
+                ]
             }
         },
         "dependencies": {
@@ -870,7 +892,7 @@
         }
     },
     "AuthorizationController": {
-        "filename": "authorization-controller",
+        "filename": "authorization",
         "folder": "controllers",
         "type": "functional",
         "functions": {
@@ -1035,7 +1057,7 @@
         }
     },
     "TaskboardController": {
-        "filename": "taskboard-controller",
+        "filename": "taskboard",
         "folder": "controllers",
         "type": "functional",
         "functions": {
@@ -1349,7 +1371,7 @@
         }
     },
     "WorkorderController": {
-        "filename": "workorder-controller",
+        "filename": "workorder",
         "folder": "controllers",
         "type": "functional",
         "functions": {
@@ -1699,7 +1721,7 @@
         }
     },
     "EstimateController": {
-        "filename": "estimate-controller",
+        "filename": "estimate",
         "folder": "controllers",
         "type": "functional",
         "functions": {
@@ -1893,7 +1915,7 @@
         }
     },
     "EmployeeController": {
-        "filename": "employee-controller",
+        "filename": "employee",
         "folder": "controllers",
         "type": "functional",
         "functions": {
@@ -2162,7 +2184,7 @@
         }
     },
     "TagController": {
-        "filename": "tag-controller",
+        "filename": "tag",
         "folder": "controllers",
         "type": "functional",
         "functions": {
@@ -2243,7 +2265,7 @@
         }
     },
     "ServiceController": {
-        "filename": "service-controller",
+        "filename": "service",
         "folder": "controllers",
         "type": "functional",
         "functions": {
@@ -2434,7 +2456,7 @@
         }
     },
     "PurchaseOrderController": {
-        "filename": "purchase-order-controller",
+        "filename": "purchase-order",
         "folder": "controllers",
         "type": "functional",
         "functions": {
@@ -2674,7 +2696,7 @@
         }
     },
     "PayrollController": {
-        "filename": "payroll-controller",
+        "filename": "payroll",
         "folder": "controllers",
         "type": "functional",
         "functions": {
@@ -3004,7 +3026,7 @@
         }
     },
     "ExpenseController": {
-        "filename": "expense-controller",
+        "filename": "expense",
         "folder": "controllers",
         "type": "functional",
         "functions": {
@@ -3338,7 +3360,7 @@
         }
     },
     "JournalController": {
-        "filename": "journal-controller",
+        "filename": "journal",
         "folder": "controllers",
         "type": "functional",
         "functions": {
@@ -3704,7 +3726,7 @@
         }
     },
     "CustomerController": {
-        "filename": "customer-controller",
+        "filename": "customer",
         "folder": "controllers",
         "type": "functional",
         "functions": {
@@ -4023,7 +4045,7 @@
         }
     },
     "AssetController": {
-        "filename": "asset-controller",
+        "filename": "asset",
         "folder": "controllers",
         "type": "functional",
         "functions": {
@@ -4209,7 +4231,7 @@
         }
     },
     "BulletController": {
-        "filename": "bullet-controller",
+        "filename": "bullet",
         "folder": "controllers",
         "type": "functional",
         "functions": {
@@ -4560,5 +4582,89 @@
         "todo": [
             "Implement liking systems"
         ]
-    }
+    },
+    "Locker": {
+        "filename": "lock",
+        "folder": "controllers",
+        "type": "functional",
+        "functions": {
+            "LockObject": {
+                "purpose": "Activates a lock on an object",
+                "params": {
+                    "target" : {
+                        "type": "Object",
+                        "comment": "The object to lock. Requires tablename."
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or User object locking the target"
+                    }
+                },
+                "tests": [
+                    "undefined if user or target does not exist",
+                    "Refuses if target does not have a tablename attribute",
+                    "Undefined if obj does not have an id",
+                    "Undefined if target tablename does not exist",
+                    "Refuses if there is already a lock on the object",
+                    "Locks object"
+                ]
+            },
+            "UnlockObject": {
+                "purpose": "Removes a lock from an object",
+                "params": {
+                    "target" : {
+                        "type": "Object",
+                        "comment": "The object to unlock. Requires tablename"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or User object unlocking"
+                    }
+                },
+                "tests": [
+                    "Undefined if user or target does not exist",
+                    "Undefined if obj does not have an id",
+                    "Undefined if lock is not active",
+                    "Refuses if user does not have force permission for locking or is not the locker",
+                    "Undefined if target tablename does not exist",
+                    "Unlocks target"
+                ]
+            },
+            "IsLocked": {
+                "purpose": "Checks whether or not there is an active lock on an object",
+                "params": {
+                    "obj" : {
+                        "type": "Object",
+                        "comment": "The object to check"
+                    }
+                },
+                "tests": [
+                    "Undefined if obj does not exist",
+                    "Undefined if obj does not have a tablename",
+                    "Undefined if obj does not have an id",
+                    "Returns whether or not there is a lock"
+                ]
+            },
+            "ForceUnlock": {
+                "purpose": "Forces the unlock of an object",
+                "params": {
+                    "target" : {
+                        "type": "Object",
+                        "comment": "The object to force the removal of the lock on"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or User object forcing the lock removal"
+                    }
+                },
+                "tests": [
+                    "Undefined if User or target do not exist",
+                    "Undefined if target lacks tablename or id",
+                    "Undefined if there is no lock",
+                    "Refuses if user does not have force permission on lock",
+                    "Forcefully removes lock"
+                ]
+            },
+        }
+    },
 }

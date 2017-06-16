@@ -64,6 +64,17 @@ CREATE TABLE user_account_password (
     salt varchar NOT NULL,
     iterations integer NOT NULL
 );
+CREATE TABLE user_account_stats (
+    id integer PRIMARY KEY REFERENCES user_account(id) ON DELETE CASCADE,
+    like_count integer NOT NULL DEFAULT 0,
+    comment_count integer NOT NULL DEFAULT 0,
+    bullet_count integer NOT NULL DEFAULT 0,
+    message_count integer NOT NULL DEFAULT 0,
+    CONSTRAINT like_count_positive CHECK (like_count > -1),
+    CONSTRAINT comment_count_positive CHECK (comment_count > -1),
+    CONSTRAINT bullet_count_positive CHECK (bullet_count > -1),
+    CONSTRAINT message_count_positive CHECK (message_count > -1)
+);
 CREATE TABLE conversation (
     id serial PRIMARY KEY,
     creator_id integer references user_account(id) NOT NULL
@@ -190,10 +201,14 @@ CREATE TABLE estimate_item (
     service_id integer REFERENCES service(id) NOT NULL,
     quantity numeric(9, 2)
 );
-CREATE TABLE estimate_contact(
+CREATE TABLE estimate_contact (
     id serial PRIMARY KEY,
     estimate_id integer REFERENCES estimate(id) ON DELETE CASCADE,
     contact_id integer REFERENCES customer_contact(id)
+);
+CREATE TABLE estimate_lock (
+    id INTEGER PRIMARY KEY REFERENCES estimate(id) ON DELETE CASCADE NOT NULL,
+    user_id integer REFERENCES user_account(id) NOT NULL,
 );
 CREATE TABLE workorder (
     id serial PRIMARY KEY,
@@ -202,7 +217,6 @@ CREATE TABLE workorder (
     open_date TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
     close_date TIMESTAMP WITH TIME ZONE
 );
-
 CREATE TABLE workorder_contact (
     id serial PRIMARY KEY,
     workorder_id integer REFERENCES workorder(id) ON DELETE CASCADE,
@@ -220,6 +234,10 @@ CREATE TABLE workorder_transaction (
     contact_id integer REFERENCES customer_contact(id) NOT NULL,
     transaction_id integer REFERENCES transaction(id) NOT NULL
 );
+CREATE TABLE workorder_lock (
+    id integer PRIMARY KEY REFERENCES workorder(id) ON DELETE CASCADE NOT NULL,
+    user_id integer REFERENCES user_account(id) ON DELETE CASCADE NOT NULL
+);
 CREATE TABLE purchase_order (
     id serial PRIMARY KEY,
     memo VARCHAR(400),
@@ -230,6 +248,10 @@ CREATE TABLE purchase_order (
 CREATE TABLE purchase_order_tag (
     id integer REFERENCES purchase_order(id),
     tag_id integer REFERENCES tag(id)
+);
+CREATE TABLE purchase_order_lock (
+    id integer PRIMARY KEY REFERENCES purchase_order(id) ON DELETE CASCADE NOT NULL,
+    user_id integer REFERENCES user_account(id) NOT NULL
 );
 CREATE TABLE purchase_order_item (
     id serial PRIMARY KEY,
@@ -278,6 +300,10 @@ CREATE TABLE bill_transaction (
     id integer REFERENCES bill(id) ON DELETE RESTRICT,
     transaction_id integer REFERENCES transaction(id)
 );
+CREATE TABLE bill_lock (
+    id integer REFERENCES bill(id) ON DELETE CASCADE NOT NULL,
+    user_id integer references user_account(id) NOT NULL
+);
 CREATE TABLE pay_period (
     id serial PRIMARY KEY,
     start_date date NOT NULL,
@@ -300,6 +326,10 @@ CREATE TABLE payroll_transaction (
     id integer REFERENCES payroll(id) ON DELETE RESTRICT,
     transaction_id integer REFERENCES transaction(id),
     memo varchar(400)
+);
+CREATE TABLE payroll_lock (
+    id integer REFERENCES payroll(id) ON DELETE CASCADE NOT NULL,
+    user_id integer REFERENCES user_account ON DELETE CASCADE NOT NULL
 );
 CREATE TABLE user_permission (
     id serial PRIMARY KEY, 
@@ -324,6 +354,13 @@ CREATE TABLE bullet_comment (
     message varchar(512) NOT NULL CONSTRAINT message CHECK (char_length(message) > 5),
     time_stamp timestamp WITH TIME ZONE NOT NULL DEFAULT NOW()
 );
+CREATE TABLE bullet_stats (
+    id integer REFERENCES bullet(id) NOT NULL ON DELETE CASCADE,
+    like_count integer NOT NULL DEFAULT 0,
+    reply_count integer NOT NULL DEFAULT 0,
+    CONSTRAINT like_count_positive CHECK (like_count > -1),
+    CONSTRAINT reply_count_positive CHECK (reply_count > -1)
+);
 CREATE TABLE calendar_event (
     id serial PRIMARY KEY,
     user_id integer REFERENCES user_account(id),
@@ -333,12 +370,13 @@ CREATE TABLE calendar_event (
     start_time time,
     end_time time
 );
+-- TODO
 CREATE TABLE calendar_recurrence (
     id SERIAL PRIMARY KEY,
     event_id integer references calendar_event,
     weekday_recurrence weekday,
     
-)
+);
 CREATE TABLE taskboard (
     id serial PRIMARY KEY, 
     name varchar(40) NOT NULL,
