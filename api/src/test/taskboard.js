@@ -1,4 +1,4 @@
-var TaskboardController = require("../controllers/taskboard-controller")
+var TaskboardController = require("../controllers/taskboard")
 describe('#TaskboardController', function() {
 	describe(`CreateTaskboard`, function() {
 		it(`Undefined if user does not exist`)

@@ -1,4 +1,4 @@
-var TagController = require("../controllers/tag-controller")
+var TagController = require("../controllers/tag")
 describe('#TagController', function() {
 	describe(`TagObject`, function() {
 		it(`Refuses bad form color object`)

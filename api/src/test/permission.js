@@ -1,4 +1,4 @@
-var PermissionController = require("../controllers/permission-controller")
+var PermissionController = require("../controllers/permission")
 describe('#PermissionController', function() {
 	describe(`CreatePermission`, function() {
 		it(`Creates the permission for usage`)

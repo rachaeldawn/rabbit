@@ -1,4 +1,4 @@
-var ServiceController = require("../controllers/service-controller")
+var ServiceController = require("../controllers/service")
 describe('#ServiceController', function() {
 	describe(`CreateService`, function() {
 		it(`Refuses missing parameters`)

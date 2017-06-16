@@ -1,4 +1,4 @@
-var CustomerController = require("../controllers/customer-controller")
+var CustomerController = require("../controllers/customer")
 describe('#CustomerController', function() {
 	describe(`CreateCustomer`, function() {
 		it(`Refuses invalid token`)

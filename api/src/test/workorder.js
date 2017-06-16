@@ -1,4 +1,4 @@
-var WorkorderController = require("../controllers/workorder-controller")
+var WorkorderController = require("../controllers/workorder")
 describe('#WorkorderController', function() {
 	describe(`CreateWorkorder`, function() {
 		it(`Undefined if the customer does not exist`)

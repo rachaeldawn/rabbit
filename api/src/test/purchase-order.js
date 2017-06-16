@@ -1,4 +1,4 @@
-var PurchaseOrderController = require("../controllers/purchase-order-controller")
+var PurchaseOrderController = require("../controllers/purchase-order")
 describe('#PurchaseOrderController', function() {
 	describe(`CreatePurchaseOrder`, function() {
 		it(`Undefined if user does not exist`)

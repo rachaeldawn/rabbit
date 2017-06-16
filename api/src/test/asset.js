@@ -1,4 +1,4 @@
-var AssetController = require("../controllers/asset-controller")
+var AssetController = require("../controllers/asset")
 describe('#AssetController', function() {
 	describe(`CreateAsset`, function() {
 		it(`Undefined if User does not exist`)

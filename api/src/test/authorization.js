@@ -1,4 +1,4 @@
-var AuthorizationController = require("../controllers/authorization-controller")
+var AuthorizationController = require("../controllers/authorization")
 describe('#AuthorizationController', function() {
 	describe(`Authorize`, function() {
 		it(`Generates a new hex transient token on validation`)

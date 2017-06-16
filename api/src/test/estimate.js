@@ -1,4 +1,4 @@
-var EstimateController = require("../controllers/estimate-controller")
+var EstimateController = require("../controllers/estimate")
 describe('#EstimateController', function() {
 	describe(`CreateEstimate`, function() {
 		it(`Undefined if user does not exist`)

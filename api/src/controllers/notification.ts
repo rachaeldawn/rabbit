@@ -8,7 +8,9 @@ import Notification from "../data/notification"
  * 	CreateNotification: Creates a notification for a user (if it can not be derived)
  * 	RemoveNotification: Removes a notification that has been viewed
  * 	CacheNotifications: Caches all notifications for performance sake by pulling all of them from the database, and finding the notifications that need to exist.
- * 	SetRead: Sets a notification (or notification set) as read
+ * 	SetRead: Sets a notification as read. Alias for SetNotificationStatus(status = false)
+ * 	SetUnread: Sets a message as unread. Alias for SetNotificationStatus(status = false)
+ * 	SetNotificationStatus: Sets notification(s) read status (true=read)
  * Private Functions: 
  */
 /*
@@ -42,11 +44,28 @@ export function CacheNotifications() {
 	throw 'Not implemented'
 }
 /*
- * Purpose: Sets a notification (or notification set) as read
- * @param notification:  (default: undefined)
+ * Purpose: Sets a notification as read. Alias for SetNotificationStatus(status = false)
+ * @param notification: The notification(s) to set as read (default: undefined)
  * @param user: The id or user object setting the notification to read (default: undefined)
  */
 export function SetRead(notification: Notification|Notification[] , user: number|User ) {
+	throw 'Not implemented'
+}
+/*
+ * Purpose: Sets a message as unread. Alias for SetNotificationStatus(status = false)
+ * @param notification: The notifications to set as unread (default: undefined)
+ * @param user: The id or User object setting the notification to unread (default: undefined)
+ */
+export function SetUnread(notification: Notification , user: number|User ) {
+	throw 'Not implemented'
+}
+/*
+ * Purpose: Sets notification(s) read status (true=read)
+ * @param notification: The notification or array of notifications to set to status (default: undefined)
+ * @param status: The status to set the isread to (default: undefined)
+ * @param user: The user setting the status (default: undefined)
+ */
+export function SetNotificationStatus(notification: Notification , status: boolean , user: number|User ) {
 	throw 'Not implemented'
 }
 

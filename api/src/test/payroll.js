@@ -1,4 +1,4 @@
-var PayrollController = require("../controllers/payroll-controller")
+var PayrollController = require("../controllers/payroll")
 describe('#PayrollController', function() {
 	describe(`CreatePeriod`, function() {
 		it(`Creates a new pay period`)

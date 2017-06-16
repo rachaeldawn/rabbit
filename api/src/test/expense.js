@@ -1,4 +1,4 @@
-var ExpenseController = require("../controllers/expense-controller")
+var ExpenseController = require("../controllers/expense")
 describe('#ExpenseController', function() {
 	describe(`CreateExpense`, function() {
 		it(`Undefined if user does not exist`)

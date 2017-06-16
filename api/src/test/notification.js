@@ -1,4 +1,4 @@
-var NotificationController = require("../controllers/notification-controller")
+var NotificationController = require("../controllers/notification")
 describe('#NotificationController', function() {
 	describe(`GetNotifications`, function() {
 		it(`Gets notifications for user`)
@@ -23,5 +23,15 @@ describe('#NotificationController', function() {
 	describe(`SetRead`, function() {
 		it(`Rejects if the notification does not belong to the user`)
 		it(`Undefined if the notification does not exist`)
+	})
+	describe(`SetUnread`, function() {
+		it(`Rejects if the notification does not belong to the user`)
+		it(`Undefined if the user does not exist`)
+		it(`Undefined if the notification does not exist`)
+	})
+	describe(`SetNotificationStatus`, function() {
+		it(`Rejects if the notification does not belong to the user`)
+		it(`Undefined if notification does not exist`)
+		it(`Undefined if the user does not exist`)
 	})
 })

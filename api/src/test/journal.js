@@ -1,4 +1,4 @@
-var JournalController = require("../controllers/journal-controller")
+var JournalController = require("../controllers/journal")
 describe('#JournalController', function() {
 	describe(`CreateJournal`, function() {
 		it(`Undefined if user does not exist`)

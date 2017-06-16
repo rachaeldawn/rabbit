@@ -1,4 +1,4 @@
-var EmployeeController = require("../controllers/employee-controller")
+var EmployeeController = require("../controllers/employee")
 describe('#EmployeeController', function() {
 	describe(`ClockIn`, function() {
 		it(`Refuses if the user is not an employee`)

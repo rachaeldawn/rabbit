@@ -1,4 +1,4 @@
-var CommunicationController = require("../controllers/communication-controller")
+var CommunicationController = require("../controllers/communication")
 describe('#CommunicationController', function() {
 	describe(`SendMessage`, function() {
 		it(`Undefined if user does not exist`)

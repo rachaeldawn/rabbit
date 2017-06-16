@@ -1,6 +1,6 @@
-var BulletController = require("../controllers/bullet-controller")
+var BulletController = require("../controllers/bullet")
 describe('#BulletController', function() {
-	describe(`NewBullet`, function() {
+	describe(`CreateBullet`, function() {
 		it(`Undefined if user does not exist`)
 		it(`Undefined if msg is under 5 characters`)
 		it(`Refuses if user is not an employee`)
@@ -38,7 +38,7 @@ describe('#BulletController', function() {
 		it(`Refuses if user is not an employee`)
 		it(`Deletes the bullet (DB deletes comments automatically)`)
 	})
-	describe(`NewComment`, function() {
+	describe(`CreateComment`, function() {
 		it(`Undefined if user or bullet does not exist`)
 		it(`Refuses if user is not an employee`)
 		it(`Posts a new comment`)

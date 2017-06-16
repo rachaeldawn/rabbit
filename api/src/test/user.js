@@ -1,4 +1,4 @@
-var UserController = require("../controllers/user-controller")
+var UserController = require("../controllers/user")
 describe('#UserController', function() {
 	describe(`RegisterUserAccount`, function() {
 		it(`Creates a new user`)

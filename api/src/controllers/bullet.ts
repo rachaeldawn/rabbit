@@ -6,13 +6,13 @@ import * as Data from "../data"
 
 /*
  * Exported Functions: 
- * 	NewBullet: Creates a new global bullet
+ * 	CreateBullet: Creates a new global bullet
  * 	UpdateBullet: Updates a bullet object
  * 	GetBullet: Gets a single bullet object
  * 	ListBullets: Gets a list of bullets. Alias for PageBullets(page=1)
  * 	PageBullets: Gets a page of bullets
  * 	DeleteBullet: Deletes a bullet
- * 	NewComment: Creates a new comment on a bullet
+ * 	CreateComment: Creates a new comment on a bullet
  * 	UpdateComment: Updates a single comment message
  * 	ListComments: Gets a list of comments
  * 	PageComments: Gets a page of contents, optionally on a bullet
@@ -27,7 +27,7 @@ import * as Data from "../data"
  * @param msg: The message to be posted to the global space (default: undefined)
  * @param user: The id or User object attempting to post a new global message (default: undefined)
  */
-export function NewBullet(msg: string , user: number|User ) {
+export function CreateBullet(msg: string , user: number|User ) {
 	throw 'Not implemented'
 }
 /*
@@ -81,7 +81,7 @@ export function DeleteBullet(bullet: number|Bullet , user: number|User ) {
  * @param bullet: The id or Bullet being commented on (default: undefined)
  * @param user: The id or User object posting the comment (default: undefined)
  */
-export function NewComment(message: string , bullet: number|Bullet , user: number|User ) {
+export function CreateComment(message: string , bullet: number|Bullet , user: number|User ) {
 	throw 'Not implemented'
 }
 /*

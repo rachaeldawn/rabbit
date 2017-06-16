@@ -1,4 +1,4 @@
-var PaymentController = require("../controllers/payment-controller")
+var PaymentController = require("../controllers/payment")
 describe('#PaymentController', function() {
 	describe(`ReceivePayment`, function() {
 		it(`Errors on invalid id`)

@@ -1554,6 +1554,7 @@
                     "Undefined if the workorder does not exist",
                     "Undefined if the contact does not exist",
                     "Refuses if the user does not have write permissions on the invoice",
+                    "Refuses if user is not the one with the lock",
                     "Refuses if the user does not have read permissions on the invoice",
                     "Adds the contact to the workorder"
                 ]
@@ -1580,6 +1581,7 @@
                     "Undefined if the contact does not exist",
                     "Refuses if the user does not have write permissions on the invoice",
                     "Refuses if the user does not have read permissions on the invoice",
+                    "Refuses if user is not the one with the lock",
                     "Removes the contact from the workorder"
                 ]
             },
@@ -1626,6 +1628,7 @@
                     "Undefined if the estimate does not exist",
                     "Refuses if the user does not have permission to create invoices",
                     "Creates a workorder based on the estimate",
+                    "Refuses if user is not the one with the lock",
                     "New estimate contains all items of estimate",
                     "New estimate contains all contacts of estimate"
                 ]
@@ -1780,6 +1783,7 @@
                     "Refuses if the user does not have read permissions on the invoice",
                     "Undefined if the service does not exist",
                     "Undefined if the estimate does not exist",
+                    "Refuses if user is not the one with the lock",                    
                     "Adds item to the estimate"
                 ]
             },
@@ -1805,6 +1809,7 @@
                     "Undefined if the item does not exist on the estimate",
                     "Refuses if the user does not have write permissions on the estimate",
                     "Refuses if the user does not have read permissions on the estimate",
+                    "Refuses if user is not the one with the lock",                    
                     "Removes the item from the estimate"
                 ]
             },
@@ -1874,6 +1879,7 @@
                     "Undefined if the estimate does not exist",
                     "Refuses if the user does not have read permissions",
                     "Refuses if the user does not have write permissions",
+                    "Refuses if user is not the one with the lock",
                     "Refuses if the user is not an employee",
                     "Adds the contact to the estimate"
                 ]
@@ -1899,6 +1905,7 @@
                     "Refuses if the user does not have write permissions on the estimate",
                     "Refuses if the user does not have read permissions on the estimate",
                     "Ignores if the contact is not in the estimate",
+                    "Refuses if user is not the one with the lock",
                     "Undefined if the estimate does not exist",
                     "Removes the contact from the estimate"
                 ]
@@ -4665,6 +4672,21 @@
                     "Forcefully removes lock"
                 ]
             },
+            "GetUserLocked": {
+                "purpose": "Gets the person who has the lock",
+                "params": {
+                    "target" : {
+                        "type": "Object",
+                        "comment": "The target to check the lock for"
+                    }
+                },
+                "tests": [
+                    "Undefined if target does not exist",
+                    "Undefined if target does not have tablename or id",
+                    "Undefined if target tablename does not exist",
+                    "Returns id of user that holds the lock"
+                ]
+            }
         }
-    },
+    }
 }
