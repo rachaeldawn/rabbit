@@ -109,6 +109,22 @@
             "* as Data": "../data"
         }
     },
+    "PaymentRouter": {
+        "filename": "payment",
+        "folder": "routers",
+        "type": "router",
+        "post": {
+            "/receive": "Receive a payment",
+            "/validatetoken": "Validates a token",
+            "/refund": "Refunds a payment",
+            "/adjust": "Adjusts a payment",
+            "/events": "Checks for new events",
+            "/balance": "Gets the balance of what stripe owes us"
+        },
+        "dependencies": {
+            "* as PaymentController": "../controllers/payment"
+        }
+    },
     "UserController": {
         "filename": "user",
         "folder": "controllers",
@@ -178,7 +194,8 @@
                 "tests": [
                     "Properly activates a user",
                     "Refuses a non-existent user id",
-                    "Ignores users that are already active"
+                    "Ignores users that are already active",
+                    "Refuses users that never finished registration"
                 ]
             },
             "DeactivateUser": {
@@ -321,6 +338,18 @@
             "* as crypto": "crypto",
             "{default as User}": "../data/user_account",
             "* as Data": "../data"
+        }
+    },
+    "UserRouter": {
+        "filename": "user",
+        "folder": "router",
+        "type": "router",
+        "post": {
+            "/register": "Register for a new user account",
+            "/register/finish": "Finish a registration",
+            "/user/deactivate": "Deactivates a user",
+            "/user/activate": "Activates an inactive user",
+            "/user/reset": "Resets a user password"
         }
     },
     "PermissionController": {
@@ -742,6 +771,25 @@
             "* as Data": "../data"
         }
     },
+    "CommunicationRouter": {
+        "filename": "communication",
+        "folder": "routers",
+        "type": "router",
+        "post": {
+            "/message/send": "Sends a new message",
+            "/conversation/get": "Gets a single conversation",
+            "/conversation/list": "Gets a list of conversations",
+            "/conversation/page": "Gets a page of conversations",
+            "/conversation/participants": "Gets the participants in a conversation",
+            "/conversation/participant/add": "Adds a participant to a conversation",
+            "/conversation/unread": "Gets the unread conversations for a user",
+            "/message/list": "Gets a list of messages for a conversation",
+            "/message/page": "Gets a page of messages for a conversation",
+            "/message/read": "Sets a message to read",
+            "/message/receipts": "Gets the receipts for a message",
+            "/message/unread": "Sets a message to unread"
+        }
+    },
     "NotificationController": {
         "filename": "notification",
         "folder": "controllers",
@@ -873,6 +921,16 @@
         "dependencies": {
             "{default as User}": "../data/user_account",
             "Notification": "../data/notification"
+        }
+    },
+    "NotificationRouter": {
+        "filename": "notification",
+        "folder": "routers",
+        "type": "router",
+        "post": {
+            "/all": "Gets all notifications for a user",
+            "/unread": "Sets a notification to unread",
+            "/read": "Sets a notification to read"
         }
     },
     "AuthorizationController": {
@@ -1038,6 +1096,16 @@
         "dependencies": {
             "* as crypto": "crypto",
             "{default as User}": "../data/user_account"
+        }
+    },
+    "AuthorizationRouter": {
+        "filename": "authorization",
+        "folder": "routers",
+        "type": "router",
+        "post": {
+            "/login": "Log in a user",
+            "/logout": "Log a user out",
+            "/token": "Get a login token"
         }
     },
     "TaskboardController": {
@@ -1352,6 +1420,38 @@
             "Tasklist": "../data/tasklist",
             "{default as Task}": "../data/tasklist_task",
             "* as PermissionController": "./permission"
+        },
+        "todo": [
+            "Add alias for toggling task status",
+            "Add alias for setting task status finished",
+            "Add alias for setting task status unfinished",
+            "Add tagging functionality",
+            "Add getting of a task parent"
+        ]
+    },
+    "TaskboardRouter": {
+        "filename": "taskboard",
+        "folder": "router",
+        "type": "router",
+        "post": {
+            "/taskboard": "Get a taskboard",
+            "/taskboard/create": "Create a new taskboard",
+            "/taskboard/delete": "Delete a taskboard",
+            "/tasklist/create": "Create a new tasklist in a taskboard",
+            "/tasklist/delete": "Delete a tasklist",
+            "/tasklist/move": "Move a tasklist to another board",
+            "/tasklist/rename": "Change a tasklist name",
+            "/tasklist/tasks": "Get the tasks in a tasklist",
+            "/tasklist": "Get a tasklist",
+            "/task/create": "Create a new task",
+            "/task/toggle": "Toggles a task status",
+            "/task/finished": "Sets a task to finished",
+            "/task/unfinished": "Sets a task to unfinished",
+            "/task": "Gets a single task",
+            "/task/text": "Set the text of a task",
+            "/task/delete": "Delete a task",
+            "/task/parent": "Get a task parent",
+            "/task/parent/set": "Set a task parent"
         }
     },
     "WorkorderController": {
