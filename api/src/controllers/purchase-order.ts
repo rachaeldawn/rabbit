@@ -3,6 +3,7 @@ import PurchaseOrderItem from "../data/purchase_order_item"
 import {default as User} from "../data/user_account"
 import Tag from "../data/tag"
 import * as Data from "../data"
+import * as LockController from "./lock"
 
 
 /*
@@ -14,6 +15,8 @@ import * as Data from "../data"
  * 	UpdateItem: Updates an item on a purchase order
  * 	UpdateMemo: Updates the memo of a purchase order
  * 	ListPurchaseOrders: Gets a list of purchase orders
+ * 	LockPurchaseOrder: Request for locking a purchase order
+ * 	ReleaseLock: Release a lock on a purchase order
  * 	PagePurchaseOrders: Gets a page of purchase orders
  * 	DeletePurchaseOrder: Deletes a purchase order 
  * Private Functions: 
@@ -80,6 +83,22 @@ export function UpdateMemo(memo: string , po: number|PurchaseOrder , user: numbe
  * @param user: The id or User object requesting the purchase orders (default: undefined)
  */
 export function ListPurchaseOrders(amt: number , user: number|User ) {
+	throw 'Not implemented'
+}
+/*
+ * Purpose: Request for locking a purchase order
+ * @param workorder: The id or Workorder object to lock (default: undefined)
+ * @param user: The id or User object requesting the lock (default: undefined)
+ */
+export function LockPurchaseOrder(workorder: number|PurchaseOrder , user: number|User ) {
+	throw 'Not implemented'
+}
+/*
+ * Purpose: Release a lock on a purchase order
+ * @param po: The id or Purchase Order object to release the lock on (default: undefined)
+ * @param user: The id or User object attempting to release the lock (default: undefined)
+ */
+export function ReleaseLock(po: number|PurchaseOrder , user: number|User ) {
 	throw 'Not implemented'
 }
 /*

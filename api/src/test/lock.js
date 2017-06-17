@@ -29,4 +29,10 @@ describe('#Locker', function() {
 		it(`Refuses if user does not have force permission on lock`)
 		it(`Forcefully removes lock`)
 	})
+	describe(`GetUserLocked`, function() {
+		it(`Undefined if target does not exist`)
+		it(`Undefined if target does not have tablename or id`)
+		it(`Undefined if target tablename does not exist`)
+		it(`Returns id of user that holds the lock`)
+	})
 })

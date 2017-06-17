@@ -85,4 +85,16 @@ describe('#PayrollController', function() {
 		it(`Returns normal list if populated false`)
 		it(`Returns populated list if populated true`)
 	})
+	describe(`LockPayroll`, function() {
+		it(`Undefined if user or payroll objects do not exist`)
+		it(`Refuses if user does not have write permission on payroll`)
+		it(`Refuses if user does not have read permission on payroll`)
+		it(`Refuses if lock already exists on payroll object`)
+		it(`Returns true if user already has lock, or object becomes locked`)
+	})
+	describe(`ReleasePayroll`, function() {
+		it(`Undefined if user or payroll object does not exist`)
+		it(`Refuses if user does not own lock, and does not possess force unlock permission`)
+		it(`Releases lock`)
+	})
 })

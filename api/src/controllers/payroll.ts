@@ -4,6 +4,8 @@ import PayrollItem from "../data/payroll_item"
 import PayrollTransaction from "../data/payroll_transaction"
 import PayPeriod from "../data/pay_period"
 import Employee from "../data/employee"
+import * as Data from "../data"
+import * as LockController from "./lock"
 
 
 /*
@@ -20,6 +22,8 @@ import Employee from "../data/employee"
  * 	ListPayroll: Gets a list of max 100 payroll objects
  * 	PagePayPeriod: Gets a page of Pay Periods
  * 	PagePayroll: Gets a page of Payroll objects
+ * 	LockPayroll: Locks a payroll object to a single user
+ * 	ReleasePayroll: Releases the payroll object from lock
  * Private Functions: 
  */
 /*
@@ -132,6 +136,22 @@ export function PagePayPeriod(amt: number , page: number , user: number|User , p
  * @param populated: Whether or not the results should be populated with Items as well (default: false)
  */
 export function PagePayroll(amt: number , page: number , user: number|User , populated: boolean ) {
+	throw 'Not implemented'
+}
+/*
+ * Purpose: Locks a payroll object to a single user
+ * @param payroll: The id or Payroll object to lock (default: undefined)
+ * @param user: The id or User object requesting the lock (default: undefined)
+ */
+export function LockPayroll(payroll: number|Payroll , user: number|User ) {
+	throw 'Not implemented'
+}
+/*
+ * Purpose: Releases the payroll object from lock
+ * @param payroll: The id or Payroll object to release (default: undefined)
+ * @param user: The id or User object releasing the payroll object from lock (default: undefined)
+ */
+export function ReleasePayroll(payroll: number|Payroll , user: number|User ) {
 	throw 'Not implemented'
 }
 

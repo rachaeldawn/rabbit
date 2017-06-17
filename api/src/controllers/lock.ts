@@ -6,6 +6,7 @@
  * 	UnlockObject: Removes a lock from an object
  * 	IsLocked: Checks whether or not there is an active lock on an object
  * 	ForceUnlock: Forces the unlock of an object
+ * 	GetUserLocked: Gets the person who has the lock
  * Private Functions: 
  */
 /*
@@ -37,6 +38,13 @@ export function IsLocked(obj: Object ) {
  * @param user: The id or User object forcing the lock removal (default: undefined)
  */
 export function ForceUnlock(target: Object , user: number|User ) {
+	throw 'Not implemented'
+}
+/*
+ * Purpose: Gets the person who has the lock
+ * @param target: The target to check the lock for (default: undefined)
+ */
+export function GetUserLocked(target: Object ) {
 	throw 'Not implemented'
 }
 

@@ -3,7 +3,6 @@ describe('#UserController', function() {
 	describe(`RegisterUserAccount`, function() {
 		it(`Creates a new user`)
 		it(`Hashes the password`)
-		it(`Takes at least 400ms to generate`)
 		it(`Sends iterations and password to hasher`)
 		it(`Sets the user account as inactive`)
 	})

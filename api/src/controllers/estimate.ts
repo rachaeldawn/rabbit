@@ -5,11 +5,14 @@ import CustomerContact from "../data/customer_contact"
 import EstimateItem from "../data/estimate_item"
 import {default as User} from "../data/user_account"
 import Service from "../data/service"
+import * as LockController from "../data/lock"
 
 
 /*
  * Exported Functions: 
  * 	CreateEstimate: Creates an estimate. Allows customers to see what things should cost before they commit.
+ * 	LockEstimate: Locks estimate. Alias for lock
+ * 	ReleaseLock: Release the lock on an estimate
  * 	AddItem: Adds an item to the estimate
  * 	RemoveItem: Removes an item from an estimate
  * 	SetValidityPeriod: Sets the validity period of the estimate. Must be greater than 0
@@ -26,6 +29,22 @@ import Service from "../data/service"
  * @param items: An array of service Ids or service objects to add to the estimate. Optional parameter (default: null)
  */
 export function CreateEstimate(customer: number|Customer , user: number|User , validity_period: number  = 14, items: Service[] ) {
+	throw 'Not implemented'
+}
+/*
+ * Purpose: Locks estimate. Alias for lock
+ * @param estimate: The id or Estimate object to lock (default: undefined)
+ * @param user: The id or User object locking the estimate (default: undefined)
+ */
+export function LockEstimate(estimate: number|Estimate , user: number|User ) {
+	throw 'Not implemented'
+}
+/*
+ * Purpose: Release the lock on an estimate
+ * @param estimate: The id or Estimate object to release from lock (default: undefined)
+ * @param user: The id or User object releasing the lock (default: undefined)
+ */
+export function ReleaseLock(estimate: number|Estimate , user: number|User ) {
 	throw 'Not implemented'
 }
 /*
