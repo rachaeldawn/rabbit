@@ -1,14 +1,4 @@
-var Customer = (function () {
-    function Customer(name, age) {
-        this.name = name;
-        this.age = age;
-    }
-    return Customer;
-}());
-var custy = {
-    name: "jonathan",
-    george: 33
-};
-function DoThing(obj) {
-    console.log(obj);
-}
+"use strict";
+exports.__esModule = true;
+var Data = require("./data");
+Object.keys(Data).forEach(function (val) { return console.log(val); });

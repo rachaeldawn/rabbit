@@ -1351,7 +1351,7 @@
             "{default as Participant}": "../data/taskboard_participant",
             "Tasklist": "../data/tasklist",
             "{default as Task}": "../data/tasklist_task",
-            "* as PermissionController": "./permission-controller"
+            "* as PermissionController": "./permission"
         }
     },
     "WorkorderController": {
@@ -1949,7 +1949,7 @@
             "EstimateItem": "../data/estimate_item",
             "{default as User}": "../data/user_account",
             "Service": "../data/service",
-            "* as LockController": "../data/lock"
+            "* as LockController": "./lock"
         }
     },
     "EmployeeController": {
@@ -4807,6 +4807,10 @@
                     "Returns id of user that holds the lock"
                 ]
             }
+        },
+        "dependencies": {
+            "{default as User}": "../data/user_account",
+            "* as Data": "../data"
         }
     }
 }

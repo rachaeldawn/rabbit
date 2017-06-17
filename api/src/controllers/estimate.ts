@@ -5,7 +5,7 @@ import CustomerContact from "../data/customer_contact"
 import EstimateItem from "../data/estimate_item"
 import {default as User} from "../data/user_account"
 import Service from "../data/service"
-import * as LockController from "../data/lock"
+import * as LockController from "./lock"
 
 
 /*

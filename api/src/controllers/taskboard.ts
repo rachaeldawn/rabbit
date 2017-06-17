@@ -3,7 +3,7 @@ import Taskboard from "../data/taskboard"
 import {default as Participant} from "../data/taskboard_participant"
 import Tasklist from "../data/tasklist"
 import {default as Task} from "../data/tasklist_task"
-import * as PermissionController from "./permission-controller"
+import * as PermissionController from "./permission"
 
 
 /*
