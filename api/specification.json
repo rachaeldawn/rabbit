@@ -1,19 +1,4 @@
 {
-    "PrimaryRouter": {
-        "filename": "router",
-        "folder": "",
-        "type": "router",
-        "post": {
-            "/:Type/:Function": "Routing made easy. All params are received by JSON.",
-            "/:Type/List/:Amount": "List amount",
-            "/:Type/Page/:Amount/:Page": "Pages number Page, amount Amount",
-            "/:Type/Tag/:Function": "Perform function on Tag. Tag must be supported.",
-            "/:Type/Page/Tagged/:Amount/:Page": "Pages tagged Type, Quantity Amount, page number Page",
-            "/:Type/Tag/Page/:Amount/:Page": "Perform function on Tagged Type. Tag must be supported.",
-            "/:Type/Tag/List/:Amount": "Perform function on Tag. Tag must be supported.",
-            "/:Type/:Function/Tag": "Perform function on Tagged Type. Tag must be supported."
-        }
-    },
     "PaymentController": {
         "filename": "payment",
         "folder": "controllers",
@@ -144,7 +129,6 @@
               "tests": [
                   "Creates a new user",
                   "Hashes the password",
-                  "Takes at least 400ms to generate",
                   "Sends iterations and password to hasher",
                   "Sets the user account as inactive"
               ]
@@ -1482,6 +1466,8 @@
                     "Refuses if the user does not have permission to modify the invoice",
                     "Undefined if user does not exist",
                     "Refuses if the user is not an employee",
+                    "Refuses if there is no lock",
+                    "Refuses if lock is not owned by user",
                     "Refuses if the employee can not be found using the user id",
                     "Undefined if the service does not exist",
                     "Undefined if the workorder does not exist",
@@ -1508,6 +1494,8 @@
                     "Undefined if user does not exist",
                     "Undefined if the workorder does not exist",
                     "Undefined if the workorder item does not exist",
+                    "Refuses if there is no lock",
+                    "Refuses if lock is not owned by user",
                     "Refuses if the employee can not be found using the user id",
                     "Refuses if the user does not have permission to modify the invoice",
                     "Removes from the workorder"
@@ -1529,7 +1517,8 @@
                     "Undefined if user does not exist",
                     "Refuses if the user does not have permission to modify the invoice",
                     "Undefined if the workorder does not exist",
-                    "Refuses if another user has the lock on the invoice",
+                    "Refuses if there is no lock",
+                    "Refuses if lock is not owned by user",
                     "Automatically releases any locks after closure"
                 ]
             },
@@ -1554,7 +1543,8 @@
                     "Undefined if the workorder does not exist",
                     "Undefined if the contact does not exist",
                     "Refuses if the user does not have write permissions on the invoice",
-                    "Refuses if user is not the one with the lock",
+                    "Refuses if there is no lock",
+                    "Refuses if lock is not owned by user",
                     "Refuses if the user does not have read permissions on the invoice",
                     "Adds the contact to the workorder"
                 ]
@@ -1581,7 +1571,8 @@
                     "Undefined if the contact does not exist",
                     "Refuses if the user does not have write permissions on the invoice",
                     "Refuses if the user does not have read permissions on the invoice",
-                    "Refuses if user is not the one with the lock",
+                    "Refuses if there is no lock",
+                    "Refuses if lock is not owned by user",
                     "Removes the contact from the workorder"
                 ]
             },
@@ -1628,7 +1619,8 @@
                     "Undefined if the estimate does not exist",
                     "Refuses if the user does not have permission to create invoices",
                     "Creates a workorder based on the estimate",
-                    "Refuses if user is not the one with the lock",
+                    "Refuses if there is no lock",
+                    "Refuses if lock is not owned by user",
                     "New estimate contains all items of estimate",
                     "New estimate contains all contacts of estimate"
                 ]
@@ -1720,7 +1712,8 @@
             "Estimate": "../data/estimate",
             "WorkorderItem": "../data/workorder_item",
             "Service": "../data/service",
-            "Customer" : "../data/customer"
+            "Customer" : "../data/customer",
+            "* as LockControllerr": "./lock"
         }
     },
     "EstimateController": {
@@ -1760,6 +1753,37 @@
                     "Creates the estimate"
                 ]
             },
+            "LockEstimate": {
+                "purpose": "Locks estimate. Alias for lock",
+                "params": {
+                    "estimate" : {
+                        "type": "number|Estimate",
+                        "comment": "The id or Estimate object to lock"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or User object locking the estimate"
+                    }
+                }
+            },
+            "ReleaseLock": {
+                "purpose": "Release the lock on an estimate",
+                "params": {
+                    "estimate" : {
+                        "type": "number|Estimate",
+                        "comment": "The id or Estimate object to release from lock"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or User object releasing the lock"
+                    }
+                },
+                "tests": [
+                    "Undefined if user or estimate does not exist",
+                    "Refuses if user does not own the lock, and does not have force unlock permission",
+                    "Releases lock"
+                ]
+            },
             "AddItem": {
                 "purpose": "Adds an item to the estimate",
                 "params": {
@@ -1783,7 +1807,8 @@
                     "Refuses if the user does not have read permissions on the invoice",
                     "Undefined if the service does not exist",
                     "Undefined if the estimate does not exist",
-                    "Refuses if user is not the one with the lock",                    
+                    "Refuses if there is no lock",
+                    "Refuses if lock is not owned by user",                   
                     "Adds item to the estimate"
                 ]
             },
@@ -1809,7 +1834,8 @@
                     "Undefined if the item does not exist on the estimate",
                     "Refuses if the user does not have write permissions on the estimate",
                     "Refuses if the user does not have read permissions on the estimate",
-                    "Refuses if user is not the one with the lock",                    
+                    "Refuses if there is no lock",
+                    "Refuses if lock is not owned by user",                  
                     "Removes the item from the estimate"
                 ]
             },
@@ -1835,6 +1861,8 @@
                     "Refuses if the user does not have write permissions on the estimate",
                     "Refuses if the user does not have read permissions on the estimate",
                     "Refuses if the validity period is not above 0",
+                    "Refuses if there is no lock",
+                    "Refuses if lock is not owned by user",   
                     "Sets the validity period"
                 ]
             },
@@ -1879,7 +1907,8 @@
                     "Undefined if the estimate does not exist",
                     "Refuses if the user does not have read permissions",
                     "Refuses if the user does not have write permissions",
-                    "Refuses if user is not the one with the lock",
+                    "Refuses if there is no lock",
+                    "Refuses if lock is not owned by user",   
                     "Refuses if the user is not an employee",
                     "Adds the contact to the estimate"
                 ]
@@ -1905,7 +1934,8 @@
                     "Refuses if the user does not have write permissions on the estimate",
                     "Refuses if the user does not have read permissions on the estimate",
                     "Ignores if the contact is not in the estimate",
-                    "Refuses if user is not the one with the lock",
+                    "Refuses if there is no lock",
+                    "Refuses if lock is not owned by user",   
                     "Undefined if the estimate does not exist",
                     "Removes the contact from the estimate"
                 ]
@@ -1918,7 +1948,8 @@
             "CustomerContact": "../data/customer_contact",
             "EstimateItem": "../data/estimate_item",
             "{default as User}": "../data/user_account",
-            "Service": "../data/service"
+            "Service": "../data/service",
+            "* as LockController": "../data/lock"
         }
     },
     "EmployeeController": {
@@ -2527,6 +2558,8 @@
                     "Refuses if the user does not have read permissions on purchase orders",
                     "Refuses if the user is not an employee",
                     "Refuses if there are missing fields",
+                    "Refuses if there is no lock",
+                    "Refuses if lock is not owned by user",   
                     "Undefined if the PO does not exist",
                     "Creates new item",
                     "Adds item to the PO"
@@ -2553,6 +2586,8 @@
                     "Refuses if the user does not have write permissions on purchase order",
                     "Refuses if the user does not have read permissions on purchase order",
                     "Refuses if the user is not an employee",
+                    "Refuses if there is no lock",
+                    "Refuses if lock is not owned by user",   
                     "Removes item from invoice"
                 ]
             },
@@ -2597,7 +2632,9 @@
                     "Refuses bad form update object (no valid fields)",
                     "Refuses if user does not have read permissions on PO",
                     "Refuses if user does not have write permissions on PO",
-                    "Updates poitem"
+                    "Refuses if there is no lock",
+                    "Refuses if lock is not owned by user",   
+                    "Updates po item"
                 ]
             },
             "UpdateMemo": {
@@ -2622,6 +2659,8 @@
                     "Refuses if the user does not have write permissions on purchase orders",
                     "Undefined if the purchase order does not exist",
                     "Refuses if memo is longer than 400 characters",
+                    "Refuses if there is no lock",
+                    "Refuses if lock is not owned by user",   
                     "Updates memo on a purchase order"
                 ]
             },
@@ -2641,6 +2680,44 @@
                     "Returns a list of Purchase Orders",
                     "Undefined if user does not exist",
                     "Refuses if user does not have read permissions on purchase orders"
+                ]
+            },
+            "LockPurchaseOrder": {
+                "purpose": "Request for locking a purchase order",
+                "params": {
+                    "workorder" : {
+                        "type": "number|PurchaseOrder",
+                        "comment": "The id or Workorder object to lock"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or User object requesting the lock"
+                    }
+                },
+                "tests": [
+                    "Refuses if there is already a lock on the object",
+                    "Refuses if user does not have write permission on purchase orders",
+                    "Ignores if user does not exist",
+                    "Returns true if locked"
+                ]
+            },
+            "ReleaseLock": {
+                "purpose": "Release a lock on a purchase order",
+                "params": {
+                    "po" : {
+                        "type": "number|PurchaseOrder",
+                        "comment": "The id or Purchase Order object to release the lock on"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or User object attempting to release the lock"
+                    }
+                },
+                "tests": [
+                    "Undefined if user does not exist",
+                    "Undefined if po does not exist",
+                    "Refuses if user is not the owner of the lock, and does not have force unlock",
+                    "Unlocks purchase order"
                 ]
             },
             "PagePurchaseOrders": {
@@ -2689,6 +2766,8 @@
                     "Undefined if user does not exist",
                     "Undefined if purchase order does not exist",
                     "Refuses if items exist in PO and force is false",
+                    "Refuses if there is no lock",
+                    "Refuses if lock is not owned by user",   
                     "Deletes purchase order",
                     "Deletes attached items when force is true"
                 ]
@@ -2699,7 +2778,8 @@
             "PurchaseOrderItem": "../data/purchase_order_item",
             "{default as User}": "../data/user_account",
             "Tag": "../data/tag",
-            "* as Data": "../data"
+            "* as Data": "../data",
+            "* as LockController": "./lock"
         }
     },
     "PayrollController": {
@@ -3021,6 +3101,44 @@
                     "Returns normal list if populated false",
                     "Returns populated list if populated true"
                 ]
+            },
+            "LockPayroll": {
+                "purpose": "Locks a payroll object to a single user",
+                "params": {
+                    "payroll" : {
+                        "type": "number|Payroll",
+                        "comment": "The id or Payroll object to lock"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or User object requesting the lock"
+                    }
+                },
+                "tests": [
+                    "Undefined if user or payroll objects do not exist",
+                    "Refuses if user does not have write permission on payroll",
+                    "Refuses if user does not have read permission on payroll",
+                    "Refuses if lock already exists on payroll object",
+                    "Returns true if user already has lock, or object becomes locked"
+                ]
+            },
+            "ReleasePayroll": {
+                "purpose": "Releases the payroll object from lock",
+                "params": {
+                    "payroll" : {
+                        "type": "number|Payroll",
+                        "comment": "The id or Payroll object to release"
+                    },
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or User object releasing the payroll object from lock"
+                    }
+                },
+                "tests": [
+                    "Undefined if user or payroll object does not exist",
+                    "Refuses if user does not own lock, and does not possess force unlock permission",
+                    "Releases lock"                    
+                ]
             }
         },
         "dependencies": {
@@ -3029,7 +3147,9 @@
             "PayrollItem": "../data/payroll_item",
             "PayrollTransaction": "../data/payroll_transaction",
             "PayPeriod": "../data/pay_period",
-            "Employee": "../data/employee"
+            "Employee": "../data/employee",
+            "* as Data": "../data",
+            "* as LockController": "./lock"
         }
     },
     "ExpenseController": {
