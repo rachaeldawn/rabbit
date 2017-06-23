@@ -1,5 +1,8 @@
-var TaskboardController = require("../controllers/taskboard");
-describe('#TaskboardController', function () {
+var TaskboardRouter = require("../router/taskboard");
+describe('#TaskboardRouter', function () {
+});
+ction();
+{
     describe("CreateTaskboard", function () {
         it("Undefined if user does not exist");
         it("Refuses if the user is not an employee");
@@ -92,4 +95,4 @@ describe('#TaskboardController', function () {
         it("Removes parent if parent is undefined or null");
         it("Sets parent to the new parent if defined");
     });
-});
+}

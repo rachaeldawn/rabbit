@@ -1,5 +1,8 @@
-var UserController = require("../controllers/user");
-describe('#UserController', function () {
+var UserRouter = require("../router/user");
+describe('#UserRouter', function () {
+});
+ction();
+{
     describe("RegisterUserAccount", function () {
         it("Creates a new user");
         it("Hashes the password");
@@ -18,6 +21,7 @@ describe('#UserController', function () {
         it("Properly activates a user");
         it("Refuses a non-existent user id");
         it("Ignores users that are already active");
+        it("Refuses users that never finished registration");
     });
     describe("DeactivateUser", function () {
         it("Deactivates user");
@@ -58,4 +62,4 @@ describe('#UserController', function () {
         it("Updates from database");
         it("Errors if user does not exist in database");
     });
-});
+}

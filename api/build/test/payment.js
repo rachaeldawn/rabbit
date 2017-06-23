@@ -1,5 +1,8 @@
-var PaymentController = require("../controllers/payment");
-describe('#PaymentController', function () {
+var PaymentRouter = require("../routers/payment");
+describe('#PaymentRouter', function () {
+});
+tion();
+{
     describe("ReceivePayment", function () {
         it("Errors on invalid id");
         it("Adds transaction to database");
@@ -28,4 +31,4 @@ describe('#PaymentController', function () {
     describe("GetBalance", function () {
         it("Retrieves proper balance");
     });
-});
+}

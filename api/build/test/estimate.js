@@ -1,5 +1,8 @@
-var EstimateController = require("../controllers/estimate");
-describe('#EstimateController', function () {
+var EstimateRouter = require("../routers/estimate");
+describe('#EstimateRouter', function () {
+});
+tion();
+{
     describe("CreateEstimate", function () {
         it("Undefined if user does not exist");
         it("Refuses if the user is not an employee");
@@ -74,4 +77,4 @@ describe('#EstimateController', function () {
         it("Undefined if the estimate does not exist");
         it("Removes the contact from the estimate");
     });
-});
+}

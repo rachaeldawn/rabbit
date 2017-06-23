@@ -1,5 +1,8 @@
-var ExpenseController = require("../controllers/expense");
-describe('#ExpenseController', function () {
+var ExpenseRouter = require("../routers/expense");
+describe('#ExpenseRouter', function () {
+});
+tion();
+{
     describe("CreateExpense", function () {
         it("Undefined if user does not exist");
         it("Refuses if user does not have write permission on expenses");
@@ -86,4 +89,4 @@ describe('#ExpenseController', function () {
         it("Refuses if user does not have write permission on expense");
         it("Sets the expense is_active to Status");
     });
-});
+}

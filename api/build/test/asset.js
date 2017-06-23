@@ -1,5 +1,8 @@
-var AssetController = require("../controllers/asset");
-describe('#AssetController', function () {
+var AssetRouter = require("../routers/asset");
+describe('#AssetRouter', function () {
+});
+tion();
+{
     describe("CreateAsset", function () {
         it("Undefined if User does not exist");
         it("Refuse if user does not have write permission on Assets");
@@ -46,4 +49,4 @@ describe('#AssetController', function () {
         it("Refuses if user does not have write permission on assets");
         it("Sets archived to false");
     });
-});
+}

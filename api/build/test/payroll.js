@@ -1,5 +1,8 @@
-var PayrollController = require("../controllers/payroll");
-describe('#PayrollController', function () {
+var PayrollRouter = require("../routers/payroll");
+describe('#PayrollRouter', function () {
+});
+tion();
+{
     describe("CreatePeriod", function () {
         it("Creates a new pay period");
         it("Refuses if there's an existing period in that timeframe");
@@ -97,4 +100,4 @@ describe('#PayrollController', function () {
         it("Refuses if user does not own lock, and does not possess force unlock permission");
         it("Releases lock");
     });
-});
+}

@@ -1,5 +1,8 @@
-var EmployeeController = require("../controllers/employee");
-describe('#EmployeeController', function () {
+var EmployeeRouter = require("../routers/employee");
+describe('#EmployeeRouter', function () {
+});
+tion();
+{
     describe("ClockIn", function () {
         it("Refuses if the user is not an employee");
         it("Undefined if user does not exist");
@@ -74,4 +77,4 @@ describe('#EmployeeController', function () {
         it("Caps out at 100");
         it("Returns a list of populated employee objects");
     });
-});
+}

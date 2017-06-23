@@ -1,5 +1,8 @@
-var JournalController = require("../controllers/journal");
-describe('#JournalController', function () {
+var JournalRouter = require("../routers/journal");
+describe('#JournalRouter', function () {
+});
+tion();
+{
     describe("CreateJournal", function () {
         it("Undefined if user does not exist");
         it("Refuses if user is not an employee");
@@ -104,4 +107,4 @@ describe('#JournalController', function () {
         it("Moves entries where destination and entry both belong to user");
         it("Returns object {succeeded[], failed[]} format");
     });
-});
+}

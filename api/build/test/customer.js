@@ -1,5 +1,8 @@
-var CustomerController = require("../controllers/customer");
-describe('#CustomerController', function () {
+var CustomerRouter = require("../routers/customer");
+describe('#CustomerRouter', function () {
+});
+tion();
+{
     describe("CreateCustomer", function () {
         it("Refuses invalid token");
         it("Refuses missing required fields");
@@ -77,4 +80,4 @@ describe('#CustomerController', function () {
         it("Refuses if user is not the customer that the contact belongs to, or an employee with read/write permissions on customers");
         it("Sets contact to deleted");
     });
-});
+}

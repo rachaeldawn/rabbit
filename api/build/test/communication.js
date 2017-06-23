@@ -1,5 +1,8 @@
-var CommunicationController = require("../controllers/communication");
-describe('#CommunicationController', function () {
+var CommunicationRouter = require("../routers/communication");
+describe('#CommunicationRouter', function () {
+});
+tion();
+{
     describe("SendMessage", function () {
         it("Undefined if user does not exist");
         it("Undefined if conversation does not exist");
@@ -89,4 +92,4 @@ describe('#CommunicationController', function () {
         it("ignores non-existent users");
         it("Gets only conversations for the user");
     });
-});
+}

@@ -1,5 +1,8 @@
-var PurchaseOrderController = require("../controllers/purchase-order");
-describe('#PurchaseOrderController', function () {
+var PurchaseOrderRouter = require("../routers/purchase-order");
+describe('#PurchaseOrderRouter', function () {
+});
+tion();
+{
     describe("CreatePurchaseOrder", function () {
         it("Undefined if user does not exist");
         it("Refuses if the user is not an employee");
@@ -85,9 +88,11 @@ describe('#PurchaseOrderController', function () {
         it("Undefined if user does not exist");
         it("Undefined if purchase order does not exist");
         it("Refuses if items exist in PO and force is false");
+        it("Refuses if there are payments on the PO");
+        it("Refuses if the PO has existed for more than 10 minutes");
         it("Refuses if there is no lock");
         it("Refuses if lock is not owned by user");
         it("Deletes purchase order");
         it("Deletes attached items when force is true");
     });
-});
+}

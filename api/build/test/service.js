@@ -1,5 +1,8 @@
-var ServiceController = require("../controllers/service");
-describe('#ServiceController', function () {
+var ServiceRouter = require("../routers/service");
+describe('#ServiceRouter', function () {
+});
+tion();
+{
     describe("CreateService", function () {
         it("Refuses missing parameters");
         it("Refuses invalid types");
@@ -51,4 +54,4 @@ describe('#ServiceController', function () {
         it("Refuses if user does not have write permission on services");
         it("Sets service to status");
     });
-});
+}

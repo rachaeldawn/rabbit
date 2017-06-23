@@ -1,5 +1,8 @@
-var NotificationController = require("../controllers/notification");
-describe('#NotificationController', function () {
+var NotificationRouter = require("../routers/notification");
+describe('#NotificationRouter', function () {
+});
+tion();
+{
     describe("GetNotifications", function () {
         it("Gets notifications for user");
         it("Ignores nonexistent users");
@@ -34,4 +37,4 @@ describe('#NotificationController', function () {
         it("Undefined if notification does not exist");
         it("Undefined if the user does not exist");
     });
-});
+}

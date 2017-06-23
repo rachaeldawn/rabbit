@@ -32,17 +32,17 @@ async function startGenerator(data) {
             }
             var files = []
             for(var k in data) {
-                if(!fs.existsSync(path.join(__dirname, 'src', data[k].folder)))
-                    fs.mkdirSync(path.join(__dirname, 'src', data[k].folder))
-                if(!fs.existsSync(path.join(__dirname, 'src', 'test')))
-                    fs.mkdirSync(path.join(__dirname, 'src', 'test'))
+                // Create folders if they don't already exist
+                !fs.existsSync(path.join(__dirname, 'src', data[k].folder)) && fs.mkdirSync(path.join(__dirname, 'src', data[k].folder))
+                !fs.existsSync(path.join(__dirname, 'src', 'test')) && fs.mkdirSync(path.join(__dirname, 'src', 'test'))
+                !fs.existsSync(path.join(__dirname, 'src', 'test', data[k].folder)) && fs.mkdirSync(path.join(__dirname, 'src', 'test', data[k].folder))
                 fs.writeFile(path.join(__dirname, 'src', data[k].folder, data[k].filename) + '.ts', generateClassFile(data[k], k), function(err) {
                     if(err) {
                         reject(err)
                         return
                     }
                 })
-                fs.writeFile(path.join(__dirname, 'src', 'test', data[k].filename + '.js'), generateTestFile(data[k], k), function(err){
+                fs.writeFile(path.join(__dirname, 'src', 'test', data[k].folder, data[k].filename + '.js'), generateTestFile(data[k], k), function(err){
                     if(err) {
                         reject(err)
                         return
@@ -62,14 +62,10 @@ var tabber = function(tabLevel) {
     return ret
 }
 
-function LinesToString(Lines) {
-    return Lines.reduce(
-        function (prev, cur) {
-            prev += cur + '\n'
-            return prev
-        }, ''
-    )
-}
+var LinesToString = Lines => Lines.reduce((prev, cur) => {
+        prev += cur + '\n'
+        return prev
+    }, '')
 
 function generateClassFile(obj, key) {
     console.log("Generating: " + key)
@@ -253,20 +249,21 @@ function generateTestFile(obj, key) {
     var tabs = function() {
         return tabber(tabLevel)
     }
-    Lines.push(`var ${key} = require("../${obj.folder + '/' || ''}${obj.filename}")`)
+    Lines.push(`var ${key} = require("../../${obj.folder + '/' || ''}${obj.filename}")`)
     Lines.push(`describe('#${key}', function() {`)
     tabLevel += 1
     for(var funcName in obj.functions) {
-        if(funcName != 'constructor') {
-            Lines.push(tabs() + 'describe(`' + funcName + '`, function() {')
-            tabLevel += 1
-            for(var test in obj.functions[funcName].tests) {
-                Lines.push(tabs() + 'it(`' + obj.functions[funcName].tests[test] + '`)')
-                //Lines.push(`${tabs()}it('${obj.functions[funcName].tests[test]}')`)
-            }
-            tabLevel -= 1
-            Lines.push(`${tabs()}})`)
+        if(funcName == 'constructor') continue
+
+        Lines.push(`${tabs()}describe(\`${funcName}\`, function() {`)
+        //Lines.push("" + tabs() + 'describe(`' + funcName + '`, function() {')
+        tabLevel += 1
+        for(var test in obj.functions[funcName].tests) {
+            //Lines.push(tabs() + 'it(`' + obj.functions[funcName].tests[test] + '`)')
+            Lines.push(`${tabs()}it('${obj.functions[funcName].tests[test]}')`)
         }
+        tabLevel -= 1
+        Lines.push(`${tabs()}})`)
     }
     tabLevel -= 1
     Lines.push('})')

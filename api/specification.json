@@ -342,7 +342,7 @@
     },
     "UserRouter": {
         "filename": "user",
-        "folder": "router",
+        "folder": "routers",
         "type": "router",
         "post": {
             "/register": "Register for a new user account",
@@ -776,18 +776,19 @@
         "folder": "routers",
         "type": "router",
         "post": {
+            "/message": "Gets a single message",
             "/message/send": "Sends a new message",
-            "/conversation/get": "Gets a single conversation",
-            "/conversation/list": "Gets a list of conversations",
-            "/conversation/page": "Gets a page of conversations",
-            "/conversation/participants": "Gets the participants in a conversation",
-            "/conversation/participant/add": "Adds a participant to a conversation",
-            "/conversation/unread": "Gets the unread conversations for a user",
             "/message/list": "Gets a list of messages for a conversation",
             "/message/page": "Gets a page of messages for a conversation",
             "/message/read": "Sets a message to read",
             "/message/receipts": "Gets the receipts for a message",
-            "/message/unread": "Sets a message to unread"
+            "/message/unread": "Sets a message to unread",
+            "/conversation": "Gets a single conversation",
+            "/conversation/list": "Gets a list of conversations",
+            "/conversation/page": "Gets a page of conversations",
+            "/conversation/participants": "Gets the participants in a conversation",
+            "/conversation/participant/add": "Adds a participant to a conversation",
+            "/conversation/unread": "Gets the unread conversations for a user"
         }
     },
     "NotificationController": {
@@ -928,7 +929,7 @@
         "folder": "routers",
         "type": "router",
         "post": {
-            "/all": "Gets all notifications for a user",
+            "/": "Gets all notifications for a user",
             "/unread": "Sets a notification to unread",
             "/read": "Sets a notification to read"
         }
@@ -1431,7 +1432,7 @@
     },
     "TaskboardRouter": {
         "filename": "taskboard",
-        "folder": "router",
+        "folder": "routers",
         "type": "router",
         "post": {
             "/taskboard": "Get a taskboard",
@@ -1816,6 +1817,37 @@
             "* as LockControllerr": "./lock"
         }
     },
+    "WorkorderRouter": {
+        "filename": "workorder",
+        "folder": "routers",
+        "type": "router",
+        "post": {
+            "/": "Load a workorder",
+            "/page": "Get a page of workorders",
+            "/list": "Get a list of workorders",
+            "/create": "Create a new workorder",
+            "/close": "Close a workorder",
+            "/convert": "Convert an estimate to a workorder",
+            "/lock": "Open a workorder. (lock)",
+            "/lock/status": "Get whether or not it is locked",
+            "/lock/release": "Release the lock on a workorder",
+            "/lock/user": "Who locked the workorder?",
+            "/item": "Get a workorder item",
+            "/item/list": "List the items on the workorder",
+            "/item/add": "Add an item to the workorder",
+            "/item/remove": "Remove an item from the workorder",
+            "/item/update": "Update an item on the workorder",
+            "/contact": "Get a contact on a workorder",
+            "/contact/add": "Add a contact to the workorder",
+            "/contact/remove": "Remove a contact from the workorder",
+            "/transaction": "Get a single transaction on a workorder",
+            "/transaction/add": "Add a transaction to the workorder",
+            "/transaction/adjust": "Adjust a transaction on the workorder",
+            "/transaction/remove": "Remove a transaction from a workorder (-amt)",
+            "/transaction/list": "Get all transactions on a workorder"
+        },
+        "note": "Pretend everything is prefixed with workorder"
+    },
     "EstimateController": {
         "filename": "estimate",
         "folder": "controllers",
@@ -2050,6 +2082,32 @@
             "{default as User}": "../data/user_account",
             "Service": "../data/service",
             "* as LockController": "./lock"
+        }
+    },
+    "EstimateRouter": {
+        "filename": "estimate",
+        "folder": "routers",
+        "type": "router",
+        "post": {
+            "/": "Load an estimate",
+            "/page": "Load a page of estimates",
+            "/list": "Load a list of estimates",
+            "/create": "Create a new estimate",
+            "/close": "Close an estimate",
+            "/lock": "Open an estimate",
+            "/lock/status": "Check whether the estimate is locked",
+            "/lock/release": "Close an estimate",
+            "/lock/user": "Get used id that locked invoice",
+            "/item": "Get an item on an estimate",
+            "/item/list": "Get all items on the estimate",
+            "/item/add": "Add an item to the estimate",
+            "/item/remove": "Remove an item from the estimate",
+            "/item/update": "Update an item on the estimate",
+            "/contact": "Get a contact on an estimate",
+            "/contact/add": "Add a contact to the estimate",
+            "/contact/remove": "Remove a contact from the estimate",
+            "/period": "Get the validity period",
+            "/period/set": "Set the validity period"
         }
     },
     "EmployeeController": {
@@ -2319,6 +2377,21 @@
             "{default as User}": "../data/user_account",
             "{default as Workday}": "../data/employee_workday",
             "* as Data": "../data"
+        }
+    },
+    "EmployeeRouter": {
+        "filename": "employee",
+        "folder": "routers",
+        "type": "router",
+        "post": {
+            "/ClockIn": "Clock an employee in",
+            "/ClockOut": "Clock an employee out",
+            "/employee": "Get an employee",
+            "/employee/create": "Add an employee",
+            "/employee/user": "Get the employee from a user id",
+            "/employee/fire": "Fire an employee",
+            "/employee/list": "List employees",
+            "/employee/page": "Get a page of employees"
         }
     },
     "TagController": {
@@ -2591,6 +2664,20 @@
             "Service": "../data/service",
             "{default as User}": "../data/user_account",
             "* as Data": "../data"
+        }
+    },
+    "ServiceRouter": {
+        "filename": "service",
+        "folder": "routers",
+        "type": "router",
+        "post": {
+            "/": "Get a service",
+            "/create": "Create a new service",
+            "/list": "Get a list of services",
+            "/page": "Get a page of services",
+            "/update": "Update a service",
+            "/archive": "Archive a service",
+            "/unarchive": "Remove a service from archival"
         }
     },
     "PurchaseOrderController": {
@@ -2866,6 +2953,8 @@
                     "Undefined if user does not exist",
                     "Undefined if purchase order does not exist",
                     "Refuses if items exist in PO and force is false",
+                    "Refuses if there are payments on the PO",
+                    "Refuses if the PO has existed for more than 10 minutes",
                     "Refuses if there is no lock",
                     "Refuses if lock is not owned by user",   
                     "Deletes purchase order",
@@ -2880,6 +2969,26 @@
             "Tag": "../data/tag",
             "* as Data": "../data",
             "* as LockController": "./lock"
+        }
+    },
+    "PurchaseOrderRouter": {
+        "filename": "purchase-order",
+        "folder": "routers",
+        "type": "router",
+        "post": {
+            "/": "Get a purchase order",
+            "/list": "Get a list of purchase orders",
+            "/page": "Get a page of purchase orders",
+            "/lock": "Lock a purchase order (open it)",
+            "/release": "Release a purchase order from the lock",
+            "/delete": "Delete a purchase order (deletes only if it has not been processed)",
+            "/item": "Get an item on a purchase order",
+            "/item/add": "Add a new item to the purchase order",
+            "/item/list": "Get all items on the purchase order",
+            "/item/update": "Update a single item on the purchase order",
+            "/item/remove": "Remove an item from the purchase order",
+            "/memo": "Get the memo from a purchase order",
+            "/memo/set": "Set the memo on a purchase order"
         }
     },
     "PayrollController": {
@@ -3252,6 +3361,29 @@
             "* as LockController": "./lock"
         }
     },
+    "PayrollRouter": {
+        "filename": "payroll",
+        "folder": "routers",
+        "type": "router",
+        "post": {
+            "/": "Get a payroll object (for an employee)",
+            "/create": "Create a payroll object for an employee",
+            "/list": "Get a list of payroll objects",
+            "/page": "Get a page of payroll objects",
+            "/lock": "Lock a payroll for editing",
+            "/release": "Release the lock from a payroll",
+            "/item": "Get a single payroll item",
+            "/item/list": "Get all items on a payroll",
+            "/item/add": "Add an item to the payroll",
+            "/item/remove": "Remove an item from a payroll",
+            "/item/update": "Update an item on a payroll",
+            "/period": "Get a pay period",
+            "/period/create": "Create a new pay period",
+            "/period/list": "Get a list of pay periods",
+            "/period/page": "Get a page of pay periods",
+            "/period/update": "Update a pay period"
+        }
+    },
     "ExpenseController": {
         "filename": "expense",
         "folder": "controllers",
@@ -3565,6 +3697,26 @@
             "Expense": "../data/expense",
             "{default as User}": "../data/user_account",
             "* as Data": "../data"
+        }
+    },
+    "ExpenseRouter": {
+        "filename": "expense",
+        "folder": "routers",
+        "type": "router",
+        "post": {
+            "/": "Get an expense",
+            "/create": "Create a new expense",
+            "/list": "Get a list of expenses",
+            "/page": "Get a page of expenses",
+            "/update": "Update an expense",
+            "/activate": "Activate an expense",
+            "/deactivate": "Deactivate an expense",
+            "/bill": "Get a single bill",
+            "/bill/create": "Create a new bill",
+            "/bill/page": "Get a page of bills",
+            "/bill/list": "Get a list of bills",
+            "/bill/update": "Update a bill object",
+            "/bill/adjust": "Adjust a bill object"
         }
     },
     "iJournalEntryMoveBatch": {
@@ -3952,6 +4104,24 @@
             "* as Data": "../data"
         }
     },
+    "JournalRouter": {
+        "filename": "journal",
+        "folder": "routers",
+        "type": "router",
+        "post": {
+            "/": "Get a single journal",
+            "/list": "Get a list of journals",
+            "/page": "Get a page of journals",
+            "/update": "Update a journal",
+            "/delete": "Delete a journal",
+            "/entry": "Get a single entry",
+            "/entry/list": "Get a list of entries",
+            "/entry/page": "Get a page of entries",
+            "/entry/update": "Update a single entry",
+            "/entry/delete": "Delete a single entry",
+            "/entry/move": "Move an entry to another journal"
+        }
+    },
     "CustomerController": {
         "filename": "customer",
         "folder": "controllers",
@@ -4271,6 +4441,24 @@
             "* as Data": "../data"
         }
     },
+    "CustomerRouter": {
+        "filename": "customer",
+        "folder": "routers",
+        "type": "router",
+        "post": {
+            "/": "Get a customer",
+            "/create": "Create a new customer",
+            "/update": "Update a customer",
+            "/list": "Get a list of customers",
+            "/page": "Get a page of customers",
+            "/contact": "Get a customer contact",
+            "/contact/create": "Create a new customer contact",
+            "/contact/page": "Get a page of customer contacts",
+            "/contact/list": "Get a list of customer contacts",
+            "/contact/update": "Update a customer contact",
+            "/contact/delete": "Delete a customer contact"
+        }
+    },
     "AssetController": {
         "filename": "asset",
         "folder": "controllers",
@@ -4455,6 +4643,20 @@
             "Asset": "../data/asset",
             "{default as User}": "../data/user_account",
             "* as Data": "../data"
+        }
+    },
+    "AssetRouter": {
+        "filename": "asset",
+        "folder": "routers",
+        "type": "router",
+        "post": {
+            "/": "Get a single asset",
+            "/create": "Create a new asset",
+            "/update": "Update an asset",
+            "/archive": "Archive an asset",
+            "/unarchive": "Unarchive an asset",
+            "/list": "Get a list of assets",
+            "/page": "Get a page of assets"
         }
     },
     "BulletController": {
@@ -4809,6 +5011,28 @@
         "todo": [
             "Implement liking systems"
         ]
+    },
+    "BulletRouter": {
+        "filename": "bullet",
+        "folder": "routers",
+        "type": "router",
+        "post": {
+            "/": "Get a single bullet",
+            "/create": "Create a new bullet",
+            "/update": "Update a single bullet",
+            "/list": "Get a list of bullets",
+            "/page": "Get a page of bullets",
+            "/page/user": "Get a page of bullets by a user",
+            "/list/user": "Get a list of bullets from a user",
+            "/delete": "Delete a bullet",
+            "/comment": "Get a single comment on a bullet",
+            "/comment/create": "Create a new comment on a bullet",
+            "/comment/update": "Update a comment on a bullet",
+            "/comment/list": "Get a list of comments on a bullet",
+            "/comment/page": "Get a page of comments on a bullet",
+            "/comment/page/user": "Get a page of comments by a user",
+            "/comment/list/user": "Get a page of comments by a user"
+        }
     },
     "Locker": {
         "filename": "lock",

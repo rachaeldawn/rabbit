@@ -1,5 +1,8 @@
-var WorkorderController = require("../controllers/workorder");
-describe('#WorkorderController', function () {
+var WorkorderRouter = require("../routers/workorder");
+describe('#WorkorderRouter', function () {
+});
+tion();
+{
     describe("CreateWorkorder", function () {
         it("Undefined if the customer does not exist");
         it("Refuses if the employee can not be found using the user id");
@@ -117,4 +120,4 @@ describe('#WorkorderController', function () {
         it("Returns list of workorders");
         it("Returns list of workorders with populated items if populated true");
     });
-});
+}
