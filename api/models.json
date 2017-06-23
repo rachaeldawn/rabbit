@@ -375,6 +375,7 @@
         "Fields": {
             "id":         "Identifier of a User Account",
             "username":   "What a user will use to log into the system",
+            "email":      "The email address of the user",
             "is_active":  "Indicator of whether or not a user account is active"
         }
     },

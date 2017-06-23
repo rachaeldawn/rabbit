@@ -133,6 +133,10 @@
             "RegisterUserAccount": {
               "purpose": "Register a new user for the system",
               "params": {
+                  "email" : {
+                      "type": "string",
+                      "comment": "The email account to contact the user at"
+                  },
                   "username" : {
                      "type": "string",
                      "comment": "The username that they will be signing up with"
@@ -146,7 +150,8 @@
                   "Creates a new user",
                   "Hashes the password",
                   "Sends iterations and password to hasher",
-                  "Sets the user account as inactive"
+                  "Sets the user account as inactive",
+                  "Sends email with activation token link"
               ]
             },
             "FinishUserRegistration": {
@@ -337,7 +342,9 @@
         "dependencies": {
             "* as crypto": "crypto",
             "{default as User}": "../data/user_account",
-            "* as Data": "../data"
+            "* as Data": "../data",
+            "* as Validator": "validator",
+            "* as Errors": "../errors/controllers/user"
         }
     },
     "UserRouter": {

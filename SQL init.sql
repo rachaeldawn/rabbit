@@ -56,6 +56,7 @@ CREATE TABLE tag (
 CREATE TABLE user_account ( 
     id serial PRIMARY KEY, 
     username varchar(140) UNIQUE NOT NULL,
+    email varchar(300) UNIQUE NOT NULL,
     is_active boolean NOT NULL DEFAULT TRUE
 );
 CREATE TABLE user_account_password (

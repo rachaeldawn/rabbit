@@ -1,6 +1,8 @@
 import * as crypto from "crypto"
 import {default as User} from "../data/user_account"
 import * as Data from "../data"
+import * as Validator from "validator"
+import * as Errors from "../errors/controllers/user"
 
 
 /*
@@ -21,13 +23,28 @@ import * as Data from "../data"
  * 	UpdateCachedUser: Updates a user that was already cached.
  * Private Functions: 
  */
+
+interface iUserCache {
+	[key: string]: User
+}
+
+let UserCache:iUserCache = {}
+
 /*
  * Purpose: Register a new user for the system
  * @param username: The username that they will be signing up with (default: undefined)
  * @param password: The password they will be using (default: undefined)
  */
-export function RegisterUserAccount(username: string , password: string ) {
-	throw 'Not implemented'
+export function RegisterUserAccount(email: string, username: string , password: string) {
+	// TODO: Abstract field validation
+	// Need the regex to validate username. Will abstract later.
+	let validUsername = /[^a-z0-9+]+/
+	username = username.toLowerCase()
+	
+	// Validate the fields that count
+	validator.isEmail(email) && Errors.BadFormEmailError(email)
+	username.length > 140 || validUsername.exec(username) && Errors.BadFormUsernameError(username)
+	password.length < 8 || password.length > 120 && Errors.BadPasswordLength()
 }
 /*
  * Purpose: Verifies a token for registration, and sets a user to active
@@ -87,7 +104,7 @@ export function ResetPassword(newPassword: string , resetToken: string ) {
  * @param algo: The hashing algorithm to be used (default: undefined)
  */
 export function GeneratePassword(password: string , algo: (password: string|Buffer, salt: string|Buffer, iterations: number, keylen: number, digest: string, callback: (err: Error, derivedKey: Buffer) => any) => any ) {
-	throw 'Not implemented'
+	
 }
 /*
  * Purpose: Caches all of the users locally so lookups in the database are not so arduous. To be done ONCE on application startup.

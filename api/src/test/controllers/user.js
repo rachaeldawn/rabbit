@@ -5,6 +5,8 @@ describe('#UserController', function() {
 		it('Hashes the password')
 		it('Sends iterations and password to hasher')
 		it('Sets the user account as inactive')
+		it('Sends email with activation token link')
+		it('Refuses bad form email')
 	})
 	describe(`FinishUserRegistration`, function() {
 		it('Activates user account')
