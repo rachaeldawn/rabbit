@@ -1,7 +1,7 @@
 // TODO: Dependency inject this later from a config file to support _tests vs _production DBs
 
 import { clone, keys, isString, isNumber, isDate, isFunction, has, toLower } from "lodash"
-import * as Validator from "Validator"
+import * as Validator from "validator"
 import * as pg from "pg"
 import * as Errors from "../errors"
 
@@ -297,7 +297,7 @@ function CountsAsNumber(obj) {
 // Abstracted this out because #yolo
 // DO NOT call this if there is already a defined function.
 // Only controllers should be using custom query functions.
-export var Query = async function(str: string, args: any = undefined) {
+export var Query = async function(str: string, args?: any) {
     try {
         var Client = await DataPool.connect()
         var res = await Client.query(str, args)

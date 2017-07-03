@@ -4,7 +4,7 @@ describe('#TagController', function() {
 		it('Refuses bad form color object')
 		it('Refuses bad form name')
 		it('Refuses object without tablename')
-		it('Creates new tag if it doesn't exist')
+		it('Creates new tag if it doesn\'t exist')
 		it('Creates tag pair using tablename')
 	})
 	describe(`UntagObject`, function() {

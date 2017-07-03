@@ -2,7 +2,7 @@ var PayrollController = require("../../controllers/payroll")
 describe('#PayrollController', function() {
 	describe(`CreatePeriod`, function() {
 		it('Creates a new pay period')
-		it('Refuses if there's an existing period in that timeframe')
+		it('Refuses if there\'s an existing period in that timeframe')
 		it('Refuses if the user does not have permission to create new pay periods')
 		it('Refuses if the starting date is in the past')
 		it('Refuses if user does not have write permission on payroll')

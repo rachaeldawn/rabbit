@@ -5,9 +5,10 @@
  */
 export const tablename = 'user_account'
 export default class UserAccount {
-	constructor(id, username, is_active){
+	constructor(id, username, email, is_active){
 		this.id = id
 		this.username = username
+		this.email = email
 		this.is_active = is_active
 	}
 }

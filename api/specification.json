@@ -151,7 +151,8 @@
                   "Hashes the password",
                   "Sends iterations and password to hasher",
                   "Sets the user account as inactive",
-                  "Sends email with activation token link"
+                  "Sends email with activation token link",
+                  "Refuses bad form password"
               ]
             },
             "FinishUserRegistration": {
@@ -220,7 +221,10 @@
             "GetUserStatus": {
                 "purpose": "Retrieves whether or not a user is active",
                 "params": {
-                    
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or User object to get the status of"
+                    },
                 },
                 "tests": [
                     "gets proper status",
@@ -230,6 +234,10 @@
             "CreateUser": {
                 "purpose": "Creates a new user. Utility function for user registration. Returns id",
                 "params": {
+                    "email" : {
+                        "type": "string",
+                        "comment": "The email the user registered with"
+                    },
                     "userName" : {
                         "type": "string",
                         "comment": "The username to be used for logins. No spaces permitted."
@@ -337,7 +345,33 @@
                     "Updates from database",
                     "Errors if user does not exist in database"
                 ]
-            }
+            },
+            "GenerateActivationToken": {
+                "purpose": "Generates a new activation token",
+                "params": {
+                    "email" : {
+                        "type": "string",
+                        "comment": "The email to validate"
+                    }
+                },
+                "tests": [
+                    
+                ]
+            },
+            "SendActivationEmail": {
+                "purpose": "Sends email for user to activate their account",
+                "params": {
+                    "user" : {
+                        "type": "number|User",
+                        "comment": "The id or User object needing activation"
+                    }
+                },
+                "tests": [
+                    "Refuses already activated user",
+                    "Refuses non-existent user",
+                    "Sends email"
+                ]
+            },
         },
         "dependencies": {
             "* as crypto": "crypto",

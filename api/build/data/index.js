@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 exports.__esModule = true;
 var lodash_1 = require("lodash");
-var Validator = require("Validator");
+var Validator = require("validator");
 var pg = require("pg");
 var Errors = require("../errors");
 exports.Models = {};
@@ -340,7 +340,6 @@ function CountsAsNumber(obj) {
     return !lodash_1.isDate(obj) && lodash_1.isNumber(parseFloat(obj)) && ("" + obj).split('.').length <= 2;
 }
 exports.Query = function (str, args) {
-    if (args === void 0) { args = undefined; }
     return __awaiter(this, void 0, void 0, function () {
         var Client, res, err_4;
         return __generator(this, function (_a) {

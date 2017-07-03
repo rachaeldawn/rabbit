@@ -3,7 +3,7 @@ describe('#EmployeeController', function() {
 	describe(`ClockIn`, function() {
 		it('Refuses if the user is not an employee')
 		it('Undefined if user does not exist')
-		it('Returns message saying they're clocked in if there's an active workday going.')
+		it('Returns message saying they\'re clocked in if there\'s an active workday going.')
 	})
 	describe(`ClockOut`, function() {
 		it('Refuses if the user is not an employee')
