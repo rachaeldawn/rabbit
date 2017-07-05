@@ -39,13 +39,15 @@ let UserCache: iUserCache = {}
 export function RegisterUserAccount(email: string, username: string, password: string) {
     // TODO: Abstract field validation
     // Need the regex to validate username. Will abstract later.
+    username == undefined && Errors.BadFormUsernameError(username)
+    email == undefined && Errors.BadFormEmailError(email)
+    password == undefined && Errors.BadPasswordLength()
     let validUsername = /[(a-zA-Z0-9_)]+/
     username = username.toLowerCase()
     // Validate the fields that count
-    validator.isEmail(email) && Errors.BadFormEmailError(email)
-    username.length > 140 || validUsername.exec(username) && Errors.BadFormUsernameError(username)
+    !Validator.isEmail(email) && Errors.BadFormEmailError(email)
+    username.length > 140 || !validUsername.exec(username) && Errors.BadFormUsernameError(username)
     password.length < 8 || password.length > 120 && Errors.BadPasswordLength()
-    // Nesting so I don't have to figure out how to use user_id twice
     return CreateUser(email, username, password)
             .then(GenerateActivationToken)
             .then(SendActivationEmail)
@@ -71,7 +73,11 @@ export function ValidateActivationToken(userid: number, token: string) {
  * @param userId: The user Id that is to be activated (default: undefined)
  */
 export function ActivateUser(userId: number) {
-    throw 'Not implemented'
+    return LookupUser({id: userId} as iUserLookup)
+        .then((user: User) => {
+            
+        })
+        .catch(err => console.error(err))
 }
 /*
  * Purpose: Deactivates a user that is currently active
@@ -84,8 +90,14 @@ export function DeactivateUser(userId: number) {
  * Purpose: Retrieves whether or not a user is active
  * @param user: The id or User object to get the status of. Optional. If excluded, will get current session's user status.
  */
-export function GetUserStatus(user?: number|User) {
-    throw 'Not implemented'
+export function GetUserStatus(user: number|User) {
+    return new Promise(function(resolve, reject) {
+        user = typeof(user) === typeof(new User()) ? user : new User(user)
+        Data.Sync(user)
+            .then((res: User) => {
+                return res.is_active
+            })
+    })
 }
 /*
  * Purpose: Creates a new user. Utility function for user registration. Returns id
@@ -98,13 +110,12 @@ export function CreateUser(emailaddr: string, userName: string, password: string
         Validator.normalizeEmail(emailaddr, {lowercase: true})
         LookupUser({email: emailaddr, username: userName} as iUserLookup)
             .then(() => reject('User already exists'))
-            .catch(function() {
-                let newUser = new User(-1, userName, emailaddr, false)
-                Data.Save(newUser)
-                    .then(userObj => GeneratePassword(password, userObj as User, crypto.pbkdf2))
-                    .then(() => resolve())
-                    .catch(() => reject('Unable to create user'))
-            })
+            .catch(() => 
+                Data.Save(new User(-1, userName, emailaddr, false))
+                    .then((userObj: User) => GeneratePassword(password, userObj, crypto.pbkdf2))
+                    .then(Data.Save)
+                    .catch(err => reject('Unable to create user. Reason: ' + err))
+            )
     })
 }
 /*
@@ -120,15 +131,14 @@ export function ResetPassword(newPassword: string, resetToken: string) {
  * @param password: The password to be used by the algo (default: undefined)
  * @param algo: The hashing algorithm to be used (default: undefined)
  */
-export function GeneratePassword(password: string, user: number|User, algo: (password: string | Buffer, salt: string | Buffer, iterations: number, keylen: number, digest: string, callback: (err: Error, derivedKey: Buffer) => any) => any) {
+export function GeneratePassword(password: string, user: number|User, algo: (password: string | Buffer, salt: string | Buffer, iterations: number, keylen: number, digest: string, callback: (err: Error, derivedKey: Buffer) => any) => any): Promise<Password> {
     return new Promise(function(resolve, reject) {
         let salt = crypto.randomBytes(32)
         algo(password, salt, 150000, 512, 'sha512', (err, derivedKey) => {
             err && reject(err)
+            resolve(derivedKey.toString('hex'))
             let id = (typeof user === typeof new User()) ? (user as User).id : user
-            Data.Save(new Password(id, derivedKey, salt, 150000))
-                .then(() => resolve(id))
-                .catch(err => reject(err))
+            resolve(new Password(id, derivedKey, salt, 150000))
         })
     })
 }
@@ -174,7 +184,7 @@ export function UpdateCachedUser(user: number | User) {
  */
 export function GenerateActivationToken(user: number|User) {
     return new Promise(function(resolve, reject){
-        resolve(user)
+        reject('Not implemented uet')
     })
 }
 
@@ -199,13 +209,6 @@ interface iUserLookup {
  * @param obj: The search object. Supports fields id, username, email
  */
 export function LookupUser(obj: iUserLookup): Promise<User> {
-    return new Promise(function(resolve, reject){
-        obj.tablename = 'user_account'
-        var myarr = []
-        Data.Search(obj, 1)
-            .then(results => {
-                if(results == undefined || results.length < 1) reject("User not found")
-                resolve(results[0] as User)
-            })
-    })
+    return Data.Search(obj, 1)
+            .then(results => results[0])
 }

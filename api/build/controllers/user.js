@@ -8,10 +8,13 @@ var Validator = require("validator");
 var Errors = require("../errors/controllers/user");
 var UserCache = {};
 function RegisterUserAccount(email, username, password) {
+    username == undefined && Errors.BadFormUsernameError(username);
+    email == undefined && Errors.BadFormEmailError(email);
+    password == undefined && Errors.BadPasswordLength();
     var validUsername = /[(a-zA-Z0-9_)]+/;
     username = username.toLowerCase();
-    validator.isEmail(email) && Errors.BadFormEmailError(email);
-    username.length > 140 || validUsername.exec(username) && Errors.BadFormUsernameError(username);
+    !Validator.isEmail(email) && Errors.BadFormEmailError(email);
+    username.length > 140 || !validUsername.exec(username) && Errors.BadFormUsernameError(username);
     password.length < 8 || password.length > 120 && Errors.BadPasswordLength();
     return CreateUser(email, username, password)
         .then(GenerateActivationToken)
@@ -27,7 +30,9 @@ function ValidateActivationToken(userid, token) {
 }
 exports.ValidateActivationToken = ValidateActivationToken;
 function ActivateUser(userId) {
-    throw 'Not implemented';
+    return LookupUser({ id: userId })
+        .then(function (user) {
+    })["catch"](function (err) { return console.error(err); });
 }
 exports.ActivateUser = ActivateUser;
 function DeactivateUser(userId) {
@@ -35,7 +40,13 @@ function DeactivateUser(userId) {
 }
 exports.DeactivateUser = DeactivateUser;
 function GetUserStatus(user) {
-    throw 'Not implemented';
+    return new Promise(function (resolve, reject) {
+        user = typeof (user) === typeof (new user_account_1["default"]()) ? user : new user_account_1["default"](user);
+        Data.Sync(user)
+            .then(function (res) {
+            return res.is_active;
+        });
+    });
 }
 exports.GetUserStatus = GetUserStatus;
 function CreateUser(emailaddr, userName, password) {
@@ -43,10 +54,9 @@ function CreateUser(emailaddr, userName, password) {
         Validator.normalizeEmail(emailaddr, { lowercase: true });
         LookupUser({ email: emailaddr, username: userName })
             .then(function () { return reject('User already exists'); })["catch"](function () {
-            var newUser = new user_account_1["default"](-1, userName, emailaddr, false);
-            Data.Save(newUser)
+            return Data.Save(new user_account_1["default"](-1, userName, emailaddr, false))
                 .then(function (userObj) { return GeneratePassword(password, userObj, crypto.pbkdf2); })
-                .then(function () { return resolve(); })["catch"](function () { return reject('Unable to create user'); });
+                .then(Data.Save)["catch"](function (err) { return reject('Unable to create user. Reason: ' + err); });
         });
     });
 }
@@ -60,9 +70,9 @@ function GeneratePassword(password, user, algo) {
         var salt = crypto.randomBytes(32);
         algo(password, salt, 150000, 512, 'sha512', function (err, derivedKey) {
             err && reject(err);
+            resolve(derivedKey.toString('hex'));
             var id = (typeof user === typeof new user_account_1["default"]()) ? user.id : user;
-            Data.Save(new user_account_password_1["default"](id, derivedKey, salt, 150000))
-                .then(function () { return resolve(id); })["catch"](function (err) { return reject(err); });
+            resolve(new user_account_password_1["default"](id, derivedKey, salt, 150000));
         });
     });
 }
@@ -89,7 +99,7 @@ function UpdateCachedUser(user) {
 exports.UpdateCachedUser = UpdateCachedUser;
 function GenerateActivationToken(user) {
     return new Promise(function (resolve, reject) {
-        resolve(user);
+        reject('Not implemented uet');
     });
 }
 exports.GenerateActivationToken = GenerateActivationToken;
@@ -100,15 +110,7 @@ function SendActivationEmail(user) {
 }
 exports.SendActivationEmail = SendActivationEmail;
 function LookupUser(obj) {
-    return new Promise(function (resolve, reject) {
-        obj.tablename = 'user_account';
-        var myarr = [];
-        Data.Search(obj, 1)
-            .then(function (results) {
-            if (results == undefined || results.length < 1)
-                reject("User not found");
-            resolve(results[0]);
-        });
-    });
+    return Data.Search(obj, 1)
+        .then(function (results) { return results[0]; });
 }
 exports.LookupUser = LookupUser;

@@ -1,6 +1,3 @@
-DROP SCHEMA rabbitschema CASCADE;
--- SCHEMA: RabbitSchema
-
 CREATE SCHEMA rabbitschema
     AUTHORIZATION "Developer";
 
@@ -209,7 +206,7 @@ CREATE TABLE estimate_contact (
 );
 CREATE TABLE estimate_lock (
     id INTEGER PRIMARY KEY REFERENCES estimate(id) ON DELETE CASCADE NOT NULL,
-    user_id integer REFERENCES user_account(id) NOT NULL,
+    user_id integer REFERENCES user_account(id) NOT NULL
 );
 CREATE TABLE workorder (
     id serial PRIMARY KEY,
@@ -350,13 +347,13 @@ CREATE TABLE bullet (
 );
 CREATE TABLE bullet_comment (
     id serial PRIMARY KEY,
-    bullet_id integer REFERENCES bullet(id) NOT NULL ON DELETE CASCADE,
+    bullet_id integer REFERENCES bullet(id) ON DELETE CASCADE NOT NULL,
     user_id integer REFERENCES user_account(id) NOT NULL,
     message varchar(512) NOT NULL CONSTRAINT message CHECK (char_length(message) > 5),
     time_stamp timestamp WITH TIME ZONE NOT NULL DEFAULT NOW()
 );
 CREATE TABLE bullet_stats (
-    id integer REFERENCES bullet(id) NOT NULL ON DELETE CASCADE,
+    id integer REFERENCES bullet(id) ON DELETE CASCADE NOT NULL,
     like_count integer NOT NULL DEFAULT 0,
     reply_count integer NOT NULL DEFAULT 0,
     CONSTRAINT like_count_positive CHECK (like_count > -1),
@@ -375,8 +372,7 @@ CREATE TABLE calendar_event (
 CREATE TABLE calendar_recurrence (
     id SERIAL PRIMARY KEY,
     event_id integer references calendar_event,
-    weekday_recurrence weekday,
-    
+    weekday_recurrence weekday    
 );
 CREATE TABLE taskboard (
     id serial PRIMARY KEY, 

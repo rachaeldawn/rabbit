@@ -1,0 +1,40 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "0.1.0",
+    "tasks": [
+        {
+            "taskName": "build-api",
+            "command": "tsc",
+            "args": ["--project", "api/src"],
+            "isBuildCommand": true,
+            "problemMatcher": "$tsc",
+            "suppressTaskName": false,
+            "showOutput": "always",
+            "isShellCommand": true
+        }, {
+            "taskName": "build-api-verbose",
+            "command": "tsc",
+            "args": ["--project", "api/src", "--listFiles"],
+            "isBuildCommand": true,
+            "problemMatcher": "$tsc",
+            "suppressTaskName": false,
+            "showOutput": "always",
+            "isShellCommand": true
+        }, {
+            "taskName": "Test Api/Controllers",
+            "command": "mocha",
+            "args": ["./api/build/test/controllers/"],
+            "isShellCommand": true,
+            "isTestCommand": true,
+            "showOutput": "always"
+        }, {
+            "taskName": "Test Api/Routers",
+            "command": "mocha",
+            "args": ["./api/build/test/routers"],
+            "isShellCommand": true,
+            "isTestCommand": true,
+            "showOutput": "always"
+        }
+    ]
+}

@@ -20,6 +20,7 @@ import {default as User} from "../data/user_account"
  * @param persistentToken: The token to be verified (default: undefined)
  * @param transientToken: The transient token to be verified (default: undefined)
  */
+
 export function Authorize(persistentToken: string , transientToken: string ) {
 	throw 'Not implemented'
 }

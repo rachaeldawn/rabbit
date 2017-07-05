@@ -1,14 +1,17 @@
 var UserController = require("../../controllers/user");
+var assert = require('assert');
 describe('#UserController', function () {
     describe("RegisterUserAccount", function () {
-        it('Creates a new user', function () {
-            UserController.RegisterUserAccount();
+        it('Rejects bad form email addresses', function () {
+            assert.throws(function () { return UserController.RegisterUserAccount('\\22@l929292..cca', 'ausername', 'TestPassword1'); }, /Bad form(.*)email/, 'Did not throw bad form error about email address');
         });
-        it('Sends iterations and password to hasher');
-        it('Sets the user account as inactive');
-        it('Sends email with activation token link');
-        it('Refuses bad form email');
-        it('Refuses bad form password');
+        it('Rejects bad form usernames', function () {
+            assert.throws(function () { return UserController.RegisterUserAccount('me@jonathanschmold.ca', ')(8736620o0+\';:', "TestPassword1"); }, /Bad form(.*)user/, 'Did not throw bad form error about usernames');
+        });
+        it('Breaks on missing params', function () {
+            assert.throws(UserController.RegisterUserAccount, /Bad form/, "Did not throw a bad form error");
+        });
+        it('Returns a user id on valid registration');
     });
     describe("FinishUserRegistration", function () {
         it('Activates user account');

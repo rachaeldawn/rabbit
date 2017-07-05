@@ -1,6 +1,7 @@
 /*
  * @property id: Identifier of a User Account
  * @property username: What a user will use to log into the system
+ * @property email: The email address of the user
  * @property is_active: Indicator of whether or not a user account is active
  */
 export const tablename = 'user_account'
