@@ -4,9 +4,9 @@
  * @property description: A max 300 character long description of the expense/bill
  * @property is_active: Whether or not the expense is still current.
  */
-export const tablename = 'expense'
 export default class Expense {
 	constructor(id, name, description, is_active){
+	this.tablename = 'expense'
 		this.id = id
 		this.name = name
 		this.description = description
@@ -14,3 +14,4 @@ export default class Expense {
 	}
 }
 
+Expense.prototype.tablename = 'expense'

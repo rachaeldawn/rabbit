@@ -42,7 +42,7 @@ export function RegisterUserAccount(email: string, username: string, password: s
     username == undefined && Errors.BadFormUsernameError(username)
     email == undefined && Errors.BadFormEmailError(email)
     password == undefined && Errors.BadPasswordLength()
-    let validUsername = /[(a-zA-Z0-9_)]+/
+    let validUsername = /^[(a-zA-Z0-9_)]+$/
     username = username.toLowerCase()
     // Validate the fields that count
     !Validator.isEmail(email) && Errors.BadFormEmailError(email)
@@ -110,12 +110,15 @@ export function CreateUser(emailaddr: string, userName: string, password: string
         Validator.normalizeEmail(emailaddr, {lowercase: true})
         LookupUser({email: emailaddr, username: userName} as iUserLookup)
             .then(() => reject('User already exists'))
-            .catch(() => 
-                Data.Save(new User(-1, userName, emailaddr, false))
+            .catch(() => {
+                var usr = new User(-1, userName, emailaddr, false)
+                console.log('Is user active?' + usr.is_active)
+                return Data.Save(usr)
                     .then((userObj: User) => GeneratePassword(password, userObj, crypto.pbkdf2))
                     .then(Data.Save)
+                    .then(res => res.rows[0].id)
                     .catch(err => reject('Unable to create user. Reason: ' + err))
-            )
+            })
     })
 }
 /*

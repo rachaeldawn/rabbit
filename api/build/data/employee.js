@@ -1,8 +1,8 @@
 "use strict";
 exports.__esModule = true;
-exports.tablename = 'employee';
 var Employee = (function () {
     function Employee(id, first_name, middle_name, last_name, phone, about, home_address, postal_code, sin, birthday, is_active) {
+        this.tablename = 'employee';
         this.id = id;
         this.first_name = first_name;
         this.middle_name = middle_name;
@@ -18,3 +18,4 @@ var Employee = (function () {
     return Employee;
 }());
 exports["default"] = Employee;
+Employee.prototype.tablename = 'employee';

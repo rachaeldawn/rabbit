@@ -4,9 +4,9 @@
  * @property origin: A max 400 character long string indicating to the system where the notification came from
  * @property message: A max 400 character long string indicating what the notification is (shown to user)
  */
-export const tablename = 'notification'
 export default class Notification {
 	constructor(id, user_id, origin, message){
+	this.tablename = 'notification'
 		this.id = id
 		this.user_id = user_id
 		this.origin = origin
@@ -14,3 +14,4 @@ export default class Notification {
 	}
 }
 
+Notification.prototype.tablename = 'notification'

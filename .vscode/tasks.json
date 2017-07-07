@@ -35,6 +35,14 @@
             "isShellCommand": true,
             "isTestCommand": true,
             "showOutput": "always"
-        }
+        }, {
+            "taskName": "Test Api/Data",
+            "command": "mocha",
+            "args": ["./api/build/test"],
+            "isShellCommand": true,
+            "isTestCommand": true,
+            "showOutput": "always"
+        },
+
     ]
 }

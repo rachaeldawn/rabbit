@@ -1,8 +1,8 @@
 "use strict";
 exports.__esModule = true;
-exports.tablename = 'asset';
 var Asset = (function () {
     function Asset(id, name, description, purchase_value, serial_key, is_archived) {
+        this.tablename = 'asset';
         this.id = id;
         this.name = name;
         this.description = description;
@@ -13,3 +13,4 @@ var Asset = (function () {
     return Asset;
 }());
 exports["default"] = Asset;
+Asset.prototype.tablename = 'asset';

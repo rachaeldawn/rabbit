@@ -14,8 +14,8 @@ var StringTooLongError = function(name, max) {
 var UnregisteredModelError = function(obj) {
     throw new Error(`Class '${obj.constructor.name}' is not registered.`)
 }
-var InvalidModelError = function() {
-    throw new Error(`Object does not align with schema.`)
+var InvalidModelError = function(k) {
+    throw new Error(`Object does not align with schema.${k ? 'key: ' + k : ''}`)
 }
 var UnsavedObjectError = function() {
     throw new Error('Object was never saved.')

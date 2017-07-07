@@ -10,9 +10,9 @@
  * @property phone: Full phone number of customer company
  * @property start_date: The date and time that the customer's account is created
  */
-export const tablename = 'customer'
 export default class Customer {
 	constructor(id, company_name, mailing_address, mailing_postal_code, mailing_country, physical_address, physical_postal_code, physical_country, phone, start_date){
+	this.tablename = 'customer'
 		this.id = id
 		this.company_name = company_name
 		this.mailing_address = mailing_address
@@ -26,3 +26,4 @@ export default class Customer {
 	}
 }
 
+Customer.prototype.tablename = 'customer'

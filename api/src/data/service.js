@@ -6,9 +6,9 @@
  * @property default_quantity: The default quantity of the service to be used in the price * quantity equation.
  * @property is_archived: Whether or not the service is still able to be used. Default false.
  */
-export const tablename = 'service'
 export default class Service {
 	constructor(id, name, description, price, default_quantity, is_archived){
+	this.tablename = 'service'
 		this.id = id
 		this.name = name
 		this.description = description
@@ -18,3 +18,4 @@ export default class Service {
 	}
 }
 
+Service.prototype.tablename = 'service'

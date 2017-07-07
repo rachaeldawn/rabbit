@@ -43,54 +43,58 @@ exports.Models = {};
 var DataPool;
 exports.Initialize = function (config) {
     if (config === void 0) { config = undefined; }
-    return __awaiter(this, void 0, void 0, function () {
-        var rows, err_1, k;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    DataPool = new pg.Pool(config || {
-                        database: "rabbit_tests",
-                        host: "192.168.1.189",
-                        port: 5432,
-                        max: 50,
-                        idleTimeoutMillis: 30000,
-                        ssl: true,
-                        user: "Developer",
-                        password: "Fluffeh9985"
-                    });
-                    _a.label = 1;
-                case 1:
-                    _a.trys.push([1, 3, , 4]);
-                    return [4, exports.Query("SELECT * FROM information_schema.columns WHERE table_schema='rabbitschema'")];
-                case 2:
-                    rows = (_a.sent()).rows;
-                    return [3, 4];
-                case 3:
-                    err_1 = _a.sent();
-                    throw err_1;
-                case 4:
-                    for (k in rows) {
-                        if (exports.Models[rows[k].table_name] == undefined)
-                            exports.Models[rows[k].table_name] = {};
-                        exports.Models[rows[k].table_name][rows[k].column_name] = rows[k];
-                    }
-                    return [2];
-            }
+    return new Promise(function (resolve, reject) {
+        return __awaiter(this, void 0, void 0, function () {
+            var rows, err_1, k;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        DataPool = new pg.Pool(config || {
+                            database: "rabbit",
+                            host: "192.168.1.189",
+                            port: 5432,
+                            max: 50,
+                            idleTimeoutMillis: 30000,
+                            ssl: true,
+                            user: "Developer",
+                            password: "Fluffeh9985"
+                        });
+                        _a.label = 1;
+                    case 1:
+                        _a.trys.push([1, 3, , 4]);
+                        return [4, exports.Query("SELECT * FROM information_schema.columns WHERE table_schema='rabbitschema'")];
+                    case 2:
+                        rows = (_a.sent()).rows;
+                        return [3, 4];
+                    case 3:
+                        err_1 = _a.sent();
+                        throw err_1;
+                    case 4:
+                        for (k in rows) {
+                            if (exports.Models[rows[k].table_name] == undefined)
+                                exports.Models[rows[k].table_name] = {};
+                            exports.Models[rows[k].table_name][rows[k].column_name] = rows[k];
+                        }
+                        resolve();
+                        return [2];
+                }
+            });
         });
     });
 };
 exports.Delete = function (obj) {
     return __awaiter(this, void 0, void 0, function () {
-        var res, err_2;
+        var tablename, res, err_2;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     obj.id == -1 && Errors.UnsavedObjectError();
-                    exports.ValidateObject(obj, exports.Models[obj.tablename]);
+                    tablename = obj.prototype.tablename || obj.tablename || Errors.RequiredFieldError('tablename');
+                    exports.ValidateObject(obj, exports.Models[tablename]);
                     _a.label = 1;
                 case 1:
                     _a.trys.push([1, 3, , 4]);
-                    return [4, exports.Query("DELETE FROM " + obj.tablename + " WHERE id=" + obj.id + " RETURNING *")];
+                    return [4, exports.Query("DELETE FROM " + tablename + " WHERE id=" + obj.id + " RETURNING *")];
                 case 2:
                     res = (_a.sent()).rows;
                     return [3, 4];
@@ -107,22 +111,21 @@ exports.Delete = function (obj) {
 exports.Page = function (obj, amt, page, asc) {
     if (asc === void 0) { asc = true; }
     return __awaiter(this, void 0, void 0, function () {
-        var tname;
+        var tablename;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    !obj.prototype.tablename && !obj.tablename && Errors.RequiredFieldError('tablename');
+                    tablename = (obj.prototype ? obj.prototype.tablename : false) || obj.tablename || Errors.RequiredFieldError('tablename');
                     !amt && Errors.RequiredFieldError('amt');
                     amt < 1 && Errors.WrongTypeError('signed integer', 'unsigned integer', 'amt');
                     !lodash_1.isNumber(amt) && Errors.WrongTypeError(typeof amt, 'number', 'amt')(page == undefined || page == null) && Errors.RequiredFieldError('page');
                     !lodash_1.isNumber(page) && Errors.WrongTypeError(typeof page, 'number', 'page');
-                    tname = obj.tablename || obj.prototype.tablename;
                     if (page < 0) {
                         asc = !asc;
                         page = Math.abs(page);
                     }
                     amt = amt > 100 ? amt = 100 : amt;
-                    return [4, exports.Query("SELECT * FROM " + tname + " ORDER BY id " + (asc ? 'ASC' : 'DESC') + " LIMIT " + amt + " " + (amt * page != 0 ? 'OFFSET ' + amt * page : ''))];
+                    return [4, exports.Query("SELECT * FROM " + tablename + " ORDER BY id " + (asc ? 'ASC' : 'DESC') + " LIMIT " + amt + " " + (amt * page != 0 ? 'OFFSET ' + amt * page : ''))];
                 case 1: return [2, (_a.sent()).rows];
             }
         });
@@ -134,10 +137,11 @@ exports.List = function (obj, amt, asc) {
 };
 exports.Save = function (obj) {
     return __awaiter(this, void 0, void 0, function () {
-        var Values, res;
+        var tablename, Values, res;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
+                    tablename = obj.tablename || Errors.RequiredFieldError('tablename');
                     try {
                         ObjectToQueryable(obj);
                     }
@@ -146,7 +150,8 @@ exports.Save = function (obj) {
                     }
                     SanitizeObject(obj);
                     Values = exports.GenerateDefinedValuesArray(obj);
-                    return [4, exports.Query("INSERT INTO " + obj.tablename + " (" + exports.GenerateDefinedKeysString(obj) + ") VALUES (" + exports.GenerateDefinedValuesPlaceholders(Values.length) + ") RETURNING *", Values)];
+                    console.log("INSERT INTO " + tablename + " (" + exports.GenerateDefinedKeysString(obj) + ") VALUES (" + exports.GenerateDefinedValuesPlaceholders(Values.length) + ") RETURNING *", Values);
+                    return [4, exports.Query("INSERT INTO " + tablename + " (" + exports.GenerateDefinedKeysString(obj) + ") VALUES (" + exports.GenerateDefinedValuesPlaceholders(Values.length) + ") RETURNING *", Values)];
                 case 1:
                     res = (_a.sent()).rows[0];
                     SoftClone(obj, res);
@@ -157,17 +162,18 @@ exports.Save = function (obj) {
 };
 exports.Sync = function (obj) {
     return __awaiter(this, void 0, void 0, function () {
-        var DBResult, err_3;
+        var tablename, DBResult, err_3;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    !obj.id && Errors.RequiredFieldError('id');
-                    !lodash_1.isNumber(obj.id) && Errors.WrongTypeError(typeof obj.id, 'number', 'id');
-                    !exports.Models[obj.tablename] && Errors.UnregisteredModelError(obj);
+                    tablename = obj.tablename || Errors.RequiredFieldError('tablename');
+                    obj.id || Errors.RequiredFieldError('id');
+                    lodash_1.isNumber(obj.id) || Errors.WrongTypeError(typeof obj.id, 'number', 'id');
+                    exports.Models[tablename] || Errors.UnregisteredModelError(obj);
                     _a.label = 1;
                 case 1:
                     _a.trys.push([1, 3, , 4]);
-                    return [4, exports.Query("SELECT * FROM " + obj.tablename + " WHERE id=" + obj.id)];
+                    return [4, exports.Query("SELECT * FROM " + tablename + " WHERE id=" + obj.id)];
                 case 2:
                     DBResult = (_a.sent()).rows[0];
                     SoftClone(obj, DBResult);
@@ -185,10 +191,11 @@ exports.Search = function (obj, amt, page, asc) {
     if (page === void 0) { page = 0; }
     if (asc === void 0) { asc = true; }
     return __awaiter(this, void 0, void 0, function () {
+        var tablename;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    !obj.tablename && Errors.RequiredFieldError('tablename');
+                    tablename = obj.tablename || Errors.RequiredFieldError('tablename');
                     !amt && Errors.RequiredFieldError('amt');
                     !lodash_1.isNumber(amt) && Errors.WrongTypeError(typeof amt, 'number', 'amt');
                     !lodash_1.isNumber(page) && Errors.WrongTypeError(typeof page, 'number', 'page');
@@ -200,7 +207,7 @@ exports.Search = function (obj, amt, page, asc) {
                     amt = amt > 100 ? amt = 100 : amt;
                     FormatToQueryable(obj);
                     SanitizeObject(obj);
-                    return [4, exports.Query("SELECT * FROM " + obj.tablename + " WHERE " + exports.GenerateSearchValues(obj) + " ORDER BY id " + (asc ? 'asc' : 'desc') + " LIMIT " + amt + " " + (amt * page > 0 ? 'OFFSET ' + amt * page : ''))];
+                    return [4, exports.Query("SELECT * FROM " + tablename + " WHERE " + exports.GenerateSearchValues(obj) + " ORDER BY id " + (asc ? 'asc' : 'desc') + " LIMIT " + amt + " " + (amt * page > 0 ? 'OFFSET ' + amt * page : ''))];
                 case 1: return [2, (_a.sent()).rows];
             }
         });
@@ -208,11 +215,11 @@ exports.Search = function (obj, amt, page, asc) {
 };
 exports.Update = function (obj) {
     return __awaiter(this, void 0, void 0, function () {
-        var updateObj, Existent, k;
+        var tablename, updateObj, Existent, k;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    (!obj.id || obj.id == -1 || obj.id == undefined) && Errors.RequiredFieldError('id');
+                    tablename = obj.tablename || Errors.RequiredFieldError('tablename')(!obj.id || obj.id == -1 || obj.id == undefined) && Errors.RequiredFieldError('id');
                     try {
                         ObjectToQueryable(obj);
                     }
@@ -221,8 +228,8 @@ exports.Update = function (obj) {
                     }
                     updateObj = {};
                     updateObj.id = obj.id;
-                    updateObj.tablename = obj.tablename;
-                    return [4, exports.Query("SELECT * FROM " + obj.tablename + " WHERE id=" + obj.id)];
+                    updateObj.tablename = tablename;
+                    return [4, exports.Query("SELECT * FROM " + tablename + " WHERE id=" + obj.id)];
                 case 1:
                     Existent = (_a.sent()).rows[0];
                     for (k in Existent) {
@@ -231,7 +238,7 @@ exports.Update = function (obj) {
                     }
                     if (lodash_1.keys(obj).length == 2)
                         return [2];
-                    return [4, exports.Query("UPDATE " + updateObj.tablename + " SET " + exports.GenerateUpdateKVs(updateObj) + " WHERE id=" + updateObj.id + " RETURNING *")];
+                    return [4, exports.Query("UPDATE " + tablename + " SET " + exports.GenerateUpdateKVs(updateObj) + " WHERE id=" + updateObj.id + " RETURNING *")];
                 case 2: return [2, (_a.sent()).rows[0]];
             }
         });
@@ -275,33 +282,34 @@ exports.GenerateSearchValues = function (obj) {
     }, '');
 };
 function ObjectToQueryable(obj) {
-    var tname = lodash_1.clone(obj.tablename) || Errors.RequiredFieldError('tablename');
-    !exports.Models[tname] && Errors.UnregisteredModelError(obj);
-    exports.ValidateObject(obj, exports.Models[tname]);
-    for (var k in obj) {
-        !obj[k] && exports.Models[tname][k].is_nullable == 'NO' && k != 'id' && Errors.RequiredFieldError(k);
+    var tablename = obj.tablename || Errors.RequiredFieldError('tablename');
+    exports.Models[tablename] || Errors.UnregisteredModelError(obj);
+    exports.ValidateObject(obj, exports.Models[tablename]);
+    for (var k in exports.Models[tablename][k]) {
+        obj[k] || exports.Models[tablename][k].is_nullable == 'NO' || k != 'id' || Errors.RequiredFieldError(k);
     }
     FormatToQueryable(obj);
     return obj;
 }
 exports.ObjectToQueryable = ObjectToQueryable;
 function FormatToQueryable(obj) {
-    var tname = obj.tablename;
-    for (var k in exports.Models[obj.tablename]) {
+    var tablename = obj.tablename || Errors.RequiredFieldError('tablename');
+    for (var k in exports.Models[tablename]) {
+        console.log("Validating key " + k + ', ' + obj[k]);
         if (!obj[k] || k == 'id') {
             continue;
         }
-        switch (exports.Models[tname][k].udt_name) {
+        switch (exports.Models[tablename][k].udt_name) {
             case ('int2'):
             case ('int4'):
             case ('int8'):
-                obj[k] = exports.ValidateInteger(obj[k], k, exports.Models[tname][k].udt_name)[3];
+                obj[k] = exports.ValidateInteger(obj[k], k, exports.Models[tablename][k].udt_name)[3];
                 break;
             case ('numeric'):
-                obj[k] = exports.ValidateNumeric(obj[k], k, exports.Models[tname][k].numeric_precision);
+                obj[k] = exports.ValidateNumeric(obj[k], k, exports.Models[tablename][k].numeric_precision);
                 break;
             case ('varchar'):
-                obj[k] = exports.ValidateVarchar(obj[k], k, exports.Models[tname][k].character_maximum_length);
+                obj[k] = exports.ValidateVarchar(obj[k], k, exports.Models[tablename][k].character_maximum_length);
                 break;
             case ('date'):
             case ('timestamp'):
@@ -317,7 +325,7 @@ function FormatToQueryable(obj) {
             case ('text'):
                 obj[k] = exports.ValidateVarchar(obj[k], k);
             default:
-                console.log("Add support for validation to " + exports.Models[tname][k].udt_name);
+                console.log("Add support for validation to " + exports.Models[tablename][k].udt_name);
                 break;
         }
     }
@@ -431,11 +439,11 @@ exports.ValidateMoney = function (obj, name) {
 exports.ValidateBoolean = function (obj, name) {
     !obj && Errors.RequiredFieldError('obj');
     !name && Errors.RequiredFieldError('name');
-    lodash_1.toLower(ValidBooleans[("" + obj)]) == undefined && Errors.WrongTypeError(typeof obj, 'string(bool)|boolean');
-    return ValidBooleans[("" + obj).toLowerCase()];
+    lodash_1.toLower(ValidBooleans[("" + obj)]) == undefined && Errors.WrongTypeError(typeof obj, 'string(bool)|boolean|number');
+    return ValidBooleans[("" + obj).toLowerCase()] || Errors.WrongTypeError(typeof obj, 'string(bool)|boolean|number');
 };
 exports.ValidateObject = function (obj, ref) {
     for (var k in obj)
-        !lodash_1.has(ref, k) && k != 'tablename' && !lodash_1.isFunction(obj[k]) && Errors.InvalidModelError();
+        !lodash_1.has(ref, k) && k != 'tablename' && !lodash_1.isFunction(obj[k]) && Errors.InvalidModelError(k);
 };
 exports.ValidateObjectKey = function (obj, key) { return (obj[key] && key != 'tablename' && key != 'id' && !lodash_1.isFunction(obj[key])); };

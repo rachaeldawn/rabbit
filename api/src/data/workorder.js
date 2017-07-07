@@ -5,9 +5,9 @@
  * @property open_date: Timestamp that defaults to now
  * @property close_date: The timestamp of when the workorder was closed.
  */
-export const tablename = 'workorder'
 export default class Workorder {
 	constructor(id, customer_id, rep_id, open_date, close_date){
+	this.tablename = 'workorder'
 		this.id = id
 		this.customer_id = customer_id
 		this.rep_id = rep_id
@@ -16,3 +16,4 @@ export default class Workorder {
 	}
 }
 
+Workorder.prototype.tablename = 'workorder'

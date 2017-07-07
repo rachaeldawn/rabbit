@@ -1,5 +1,11 @@
 var UserController = require("../../controllers/user")
 var assert = require('assert')
+var Data = require('../../data')
+before('Initialize Data accessors', function(done) {
+    Data.Initialize()
+        .then(() => done())
+})
+
 describe('#UserController', function() {
     describe(`RegisterUserAccount`, function() {
         it('Rejects bad form email addresses', function() {
@@ -11,7 +17,14 @@ describe('#UserController', function() {
         it('Breaks on missing params', function() {
             assert.throws(UserController.RegisterUserAccount, /Bad form/, "Did not throw a bad form error")
         })
-        it('Returns a user id on valid registration')
+        it('Returns a user id on valid registration', function(done) {
+            UserController.RegisterUserAccount('test@gmail.com', 'test3223', 'TestPassword@3#11!')
+                .then((user_id) => {
+                    typeof user_id === typeof 1 && done()
+                    assert(user_id != null, 'There is something wrong')
+                })
+                .catch((err) => done(err))
+        })
     })
     describe(`FinishUserRegistration`, function() {
         it('Activates user account')

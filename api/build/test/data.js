@@ -35,13 +35,14 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 var _this = this;
 var assert = require('assert');
-var Asset = require('../data/asset');
-var Tag = require('../data/tag');
+var Asset = require('../data/asset')["default"];
+var Tag = require('../data/tag')["default"];
 var _ = require('lodash');
 var Data = require('../data');
+var User = require('../data/user_account')["default"];
 var pg = require('pg');
 var DataPool = new pg.Pool({
-    database: "rabbit_tests",
+    database: "rabbit",
     host: "192.168.1.189",
     port: 5432,
     max: 50,
@@ -199,7 +200,7 @@ describe('Validators', function () {
         it('Fails with extra, unaccepted keys', function () {
             var obj = new Asset(-1, 'asset', 'a description', 33.44);
             obj.DangerTag = 3;
-            assert.throws(function () { return Data.ValidateObject(obj, new Asset()); }, /^Error: Object does not align with schema.$/, 'This should break! SQL injection as an object key variable is dangerous');
+            assert.throws(function () { return Data.ValidateObject(obj, new Asset()); }, /Error: Object does not align with schema/, 'This should break! SQL injection as an object key variable is dangerous');
         });
         it('Passes with expected object', function () {
             var obj = new Asset(-1, 'asset', 'descriptin', 33.44);
@@ -259,8 +260,8 @@ describe('Generators', function () {
         });
         it('Generates proper search string', function () {
             var str = Data.GenerateSearchValues(obj);
-            var correct = "name like '%asset%' AND purchase_value = 44.44";
-            assert.ok(str == correct, "Did not generate proper string. \nIs:\t\t" + str + "\nShould be: \t" + correct);
+            var correct = /(name)\ *like\ *'%asset%'\ *AND purchase_value\ *=\ *44.44/;
+            assert.ok(correct.exec(str), "Did not generate proper string. \nIs:\t\t" + str + "\nShould be: \t" + correct);
         });
         it('Ignored undefineds', function () {
             var str = Data.GenerateSearchValues(obj);
@@ -290,6 +291,8 @@ function FailsOnMissing(funcName) {
     assert.throws(function () { return Data[funcName](1); }, 'Needs to fail on first param');
     assert.throws(function () { return Data[funcName](undefined, 1); }, 'Needs to fail on second param');
 }
+var asset = new Asset(-1, 'an asset name', 'an asset description', 44.44);
+var testAsset = new Asset(-1, 'test_asset_update', 'a description', 44.44);
 describe('Accessors', function () {
     before(function () {
         return __awaiter(this, void 0, void 0, function () {
@@ -318,7 +321,6 @@ describe('Accessors', function () {
         });
     });
     describe('Delete', function () {
-        var asset = new Asset(-1, 'an asset name', 'an asset description', 44.44);
         beforeEach(function () {
             return __awaiter(this, void 0, void 0, function () {
                 var res, inserted;
@@ -433,6 +435,14 @@ describe('Accessors', function () {
             })
                 .then(done)["catch"](done);
         });
+        it('Saves ALL fields defined', function (done) {
+            Data.Save(new User(-1, 'condomsauce', 'saucy@salamander.com', false))
+                .then(function (res) {
+                Data.Query("DELETE FROM user_account WHERE username='condomsauce'");
+                console.log(res);
+                done();
+            });
+        });
         it('Sets the id of an object', function (done) {
             var obj = new Asset(-1, 'from_code_asset_id', 'The first asset generated from code again', 343.33);
             Data.Save(obj)
@@ -475,7 +485,6 @@ describe('Accessors', function () {
         });
     });
     describe('Update', function () {
-        var testAsset;
         before('Creating original asset', function (done) {
             testAsset = new Asset(-1, 'test_asset_update', 'a description', 44.44);
             DataPool.connect()

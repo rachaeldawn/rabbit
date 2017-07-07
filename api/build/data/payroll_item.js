@@ -1,8 +1,8 @@
 "use strict";
 exports.__esModule = true;
-exports.tablename = 'payroll_item';
 var PayrollItem = (function () {
     function PayrollItem(id, payroll_id, name, amount, quantity) {
+        this.tablename = 'payroll_item';
         this.id = id;
         this.payroll_id = payroll_id;
         this.name = name;
@@ -12,3 +12,4 @@ var PayrollItem = (function () {
     return PayrollItem;
 }());
 exports["default"] = PayrollItem;
+PayrollItem.prototype.tablename = 'payroll_item';

@@ -1,8 +1,8 @@
 "use strict";
 exports.__esModule = true;
-exports.tablename = 'purchase_order';
 var PurchaseOrder = (function () {
     function PurchaseOrder(id, memo, creator_id, opened_on, completed_on) {
+        this.tablename = 'purchase_order';
         this.id = id;
         this.memo = memo;
         this.creator_id = creator_id;
@@ -12,3 +12,4 @@ var PurchaseOrder = (function () {
     return PurchaseOrder;
 }());
 exports["default"] = PurchaseOrder;
+PurchaseOrder.prototype.tablename = 'purchase_order';

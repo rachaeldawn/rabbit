@@ -4,9 +4,9 @@
  * @property service_id: The id of the service that is being offered
  * @property quantity: The amount of the item estimated in the quantity * price equation
  */
-export const tablename = 'estimate_item'
 export default class EstimateItem {
 	constructor(id, estimate_id, service_id, quantity){
+	this.tablename = 'estimate_item'
 		this.id = id
 		this.estimate_id = estimate_id
 		this.service_id = service_id
@@ -14,3 +14,4 @@ export default class EstimateItem {
 	}
 }
 
+EstimateItem.prototype.tablename = 'estimate_item'

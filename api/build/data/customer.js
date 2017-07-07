@@ -1,8 +1,8 @@
 "use strict";
 exports.__esModule = true;
-exports.tablename = 'customer';
 var Customer = (function () {
     function Customer(id, company_name, mailing_address, mailing_postal_code, mailing_country, physical_address, physical_postal_code, physical_country, phone, start_date) {
+        this.tablename = 'customer';
         this.id = id;
         this.company_name = company_name;
         this.mailing_address = mailing_address;
@@ -17,3 +17,4 @@ var Customer = (function () {
     return Customer;
 }());
 exports["default"] = Customer;
+Customer.prototype.tablename = 'customer';

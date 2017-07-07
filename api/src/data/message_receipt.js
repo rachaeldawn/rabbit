@@ -4,9 +4,9 @@
  * @property received: Timestamp of when the message was received by the user. Null if not received by them.
  * @property read: Timestamp of when the message was read by the user. Null if not read.
  */
-export const tablename = 'message_receipt'
 export default class MessageReceipt {
 	constructor(message_id, recipient_id, received, read){
+	this.tablename = 'message_receipt'
 		this.message_id = message_id
 		this.recipient_id = recipient_id
 		this.received = received
@@ -14,3 +14,4 @@ export default class MessageReceipt {
 	}
 }
 
+MessageReceipt.prototype.tablename = 'message_receipt'

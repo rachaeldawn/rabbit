@@ -1,8 +1,8 @@
 "use strict";
 exports.__esModule = true;
-exports.tablename = 'employee_workday';
 var EmployeeWorkday = (function () {
     function EmployeeWorkday(id, employee_id, clock_in, clock_out) {
+        this.tablename = 'employee_workday';
         this.id = id;
         this.employee_id = employee_id;
         this.clock_in = clock_in;
@@ -11,3 +11,4 @@ var EmployeeWorkday = (function () {
     return EmployeeWorkday;
 }());
 exports["default"] = EmployeeWorkday;
+EmployeeWorkday.prototype.tablename = 'employee_workday';

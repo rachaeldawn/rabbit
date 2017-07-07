@@ -1,8 +1,8 @@
 "use strict";
 exports.__esModule = true;
-exports.tablename = 'service';
 var Service = (function () {
     function Service(id, name, description, price, default_quantity, is_archived) {
+        this.tablename = 'service';
         this.id = id;
         this.name = name;
         this.description = description;
@@ -13,3 +13,4 @@ var Service = (function () {
     return Service;
 }());
 exports["default"] = Service;
+Service.prototype.tablename = 'service';

@@ -1,8 +1,8 @@
 "use strict";
 exports.__esModule = true;
-exports.tablename = 'transaction';
 var Transaction = (function () {
     function Transaction(id, amount, method, paid_on) {
+        this.tablename = 'transaction';
         this.id = id;
         this.amount = amount;
         this.method = method;
@@ -11,3 +11,4 @@ var Transaction = (function () {
     return Transaction;
 }());
 exports["default"] = Transaction;
+Transaction.prototype.tablename = 'transaction';

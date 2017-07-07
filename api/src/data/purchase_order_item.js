@@ -6,9 +6,9 @@
  * @property quantity: The amount of the item to be purchased in the quantity * price equation
  * @property price: The price of the item to be purchased in the quantity * price equation
  */
-export const tablename = 'purchase_order_item'
 export default class PurchaseOrderItem {
 	constructor(id, purchase_order_id, name, description, quantity, price){
+	this.tablename = 'purchase_order_item'
 		this.id = id
 		this.purchase_order_id = purchase_order_id
 		this.name = name
@@ -18,3 +18,4 @@ export default class PurchaseOrderItem {
 	}
 }
 
+PurchaseOrderItem.prototype.tablename = 'purchase_order_item'

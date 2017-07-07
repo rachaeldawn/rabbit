@@ -6,9 +6,9 @@
  * @property can_delete: A true/false on whether or not the user is able to delete on the board
  * @property can_invite: A true/false on whether or not the user is able to add others to the board. Note: User can not grant more permissions than they have.
  */
-export const tablename = 'taskboard_participant'
 export default class TaskboardParticipant {
 	constructor(id, taskboard_id, user_id, can_write, can_delete, can_invite){
+	this.tablename = 'taskboard_participant'
 		this.id = id
 		this.taskboard_id = taskboard_id
 		this.user_id = user_id
@@ -18,3 +18,4 @@ export default class TaskboardParticipant {
 	}
 }
 
+TaskboardParticipant.prototype.tablename = 'taskboard_participant'

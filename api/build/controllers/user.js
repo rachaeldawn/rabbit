@@ -11,7 +11,7 @@ function RegisterUserAccount(email, username, password) {
     username == undefined && Errors.BadFormUsernameError(username);
     email == undefined && Errors.BadFormEmailError(email);
     password == undefined && Errors.BadPasswordLength();
-    var validUsername = /[(a-zA-Z0-9_)]+/;
+    var validUsername = /^[(a-zA-Z0-9_)]+$/;
     username = username.toLowerCase();
     !Validator.isEmail(email) && Errors.BadFormEmailError(email);
     username.length > 140 || !validUsername.exec(username) && Errors.BadFormUsernameError(username);
@@ -54,9 +54,12 @@ function CreateUser(emailaddr, userName, password) {
         Validator.normalizeEmail(emailaddr, { lowercase: true });
         LookupUser({ email: emailaddr, username: userName })
             .then(function () { return reject('User already exists'); })["catch"](function () {
-            return Data.Save(new user_account_1["default"](-1, userName, emailaddr, false))
+            var usr = new user_account_1["default"](-1, userName, emailaddr, false);
+            console.log('Is user active?' + usr.is_active);
+            return Data.Save(usr)
                 .then(function (userObj) { return GeneratePassword(password, userObj, crypto.pbkdf2); })
-                .then(Data.Save)["catch"](function (err) { return reject('Unable to create user. Reason: ' + err); });
+                .then(Data.Save)
+                .then(function (res) { return res.rows[0].id; })["catch"](function (err) { return reject('Unable to create user. Reason: ' + err); });
         });
     });
 }

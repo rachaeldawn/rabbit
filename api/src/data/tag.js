@@ -6,9 +6,9 @@
  * @property green: An integer between 0 and 255 symbolizing the green in RGBA
  * @property opacity: An integer between 0 and 255 symbolizing the opacity in RGBA
  */
-export const tablename = 'tag'
 export default class Tag {
 	constructor(id, name, red, blue, green, opacity){
+	this.tablename = 'tag'
 		this.id = id
 		this.name = name
 		this.red = red
@@ -18,3 +18,4 @@ export default class Tag {
 	}
 }
 
+Tag.prototype.tablename = 'tag'

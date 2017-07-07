@@ -23,7 +23,7 @@ import {default as User} from "../data/user_account"
 
 export function Authorize(persistentToken: string , transientToken: string ) {
 	throw 'Not implemented'
-}
+} 
 /*
  * Purpose: Logs a user in by hashing the password and validating a CSRF token
  * @param username: The user name to log in (escape the HTML chars here) (default: undefined)

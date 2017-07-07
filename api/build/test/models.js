@@ -38,36 +38,34 @@ var GetModels = function () {
         });
     });
 };
-function HasAllProperties() {
-}
 describe('Models', function (done) {
     it('loads models', function (done) {
         GetModels()
             .then(function (Models) {
             return new Promise(function (resolve, reject) {
                 for (var k in Models) {
-                    describe(Models[k].tablename, function () {
-                        var index = clone(k);
-                        var Class = Models[index]["default"];
-                        Class.tablename = Models[index].tablename;
+                    var index = clone(k);
+                    var Class = Models[index]["default"];
+                    describe(Class.prototype.tablename, function () {
                         it('is a class', function () {
                             assert.ok(typeof Class == typeof TestClass, 'needs to be a class');
                         });
                         it('has a tablename', function () {
-                            assert.ok(Class.tablename, 'tablename needs to be added to the protoype');
+                            assert.ok(Class.prototype.tablename, 'tablename needs to be added to the protoype');
                         });
                         it('has properties', function () {
                             assert.ok(Object.keys(new Class()).length > 0, 'properties need to be added');
                         });
                         it('matches schema', function (done) {
-                            Pool.query("SELECT * FROM information_schema.columns WHERE table_schema='rabbitschema' AND table_name='" + Class.tablename + "'")
+                            Pool.query("SELECT * FROM information_schema.columns WHERE table_schema='rabbitschema' AND table_name='" + Class.prototype.tablename + "'")
                                 .then(function (result) {
+                                assert.ok(result.rows.length != 0, 'Model should not exist for table ' + Class.prototype.tablename);
                                 var columns = [];
                                 for (var k in result.rows) {
                                     columns.push(result.rows[k].column_name);
                                 }
-                                var contents = Object.getOwnPropertyNames(new Class());
-                                assert.ok(columns.length == contents.length, "Class for " + Class.tablename + " is out of sync. Has " + contents + ", expects: " + columns);
+                                var contents = Object.getOwnPropertyNames(new Class()).filter(function (val) { return val != 'tablename'; });
+                                assert.ok(columns.length == contents.length, "Class for " + Class.prototype.tablename + " is out of sync. Has " + contents + ", expects: " + columns);
                                 var filtered = contents.reduce(function (prev, current) {
                                     if (prev == undefined) {
                                         prev = [];
@@ -80,7 +78,7 @@ describe('Models', function (done) {
                                     prev.push(current);
                                     return prev;
                                 }, []);
-                                assert.ok(filtered.length == 0, "Class for " + Class.tablename + " is out of sync. Invalids: " + filtered);
+                                assert.ok(filtered.length == 0, "Class for " + Class.prototype.tablename + " is out of sync. Invalids: " + filtered);
                                 done();
                             })["catch"](function (err) { return done(err); });
                         });
@@ -97,6 +95,7 @@ describe('Models', function (done) {
                 .then(function (results) {
                 var resultFilter = {};
                 for (var k in results.rows) {
+                    console.log("Adding row to filter" + results.rows[k].table_name);
                     resultFilter[results.rows[k].table_name] = 1;
                 }
                 var columns = [];
@@ -110,7 +109,7 @@ describe('Models', function (done) {
                     if (cur.endsWith('_tag'))
                         return prev;
                     for (var k in Models) {
-                        if (Models[k].tablename == cur) {
+                        if (Models[k]["default"].prototype.tablename == cur) {
                             return prev;
                         }
                     }

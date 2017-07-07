@@ -62,17 +62,6 @@ CREATE TABLE user_account_password (
     salt varchar NOT NULL,
     iterations integer NOT NULL
 );
-CREATE TABLE user_account_stats (
-    id integer PRIMARY KEY REFERENCES user_account(id) ON DELETE CASCADE,
-    like_count integer NOT NULL DEFAULT 0,
-    comment_count integer NOT NULL DEFAULT 0,
-    bullet_count integer NOT NULL DEFAULT 0,
-    message_count integer NOT NULL DEFAULT 0,
-    CONSTRAINT like_count_positive CHECK (like_count > -1),
-    CONSTRAINT comment_count_positive CHECK (comment_count > -1),
-    CONSTRAINT bullet_count_positive CHECK (bullet_count > -1),
-    CONSTRAINT message_count_positive CHECK (message_count > -1)
-);
 CREATE TABLE conversation (
     id serial PRIMARY KEY,
     creator_id integer references user_account(id) NOT NULL
@@ -140,27 +129,6 @@ CREATE TABLE employee_workday (
     employee_id integer REFERENCES employee(id) NOT NULL,
     clock_in timestamp WITH TIME ZONE DEFAULT NOW() NOT NULL,
     clock_out timestamp WITH TIME ZONE 
-);
--- Work journal is a written rubber duck debugging. Strongly encourage to use this, but not required.
-CREATE TABLE journal (
-    id serial PRIMARY KEY,
-    employee_id integer REFERENCES employee(id) ON DELETE CASCADE NOT NULL,
-    name varchar(120) NOT NULL
-);
--- Tagging a workday means that the entry will be visible by management. 
-CREATE TABLE journal_entry (
-    id serial PRIMARY KEY,
-    journal_id integer REFERENCES journal(id) ON DELETE CASCADE NOT NULL,
-    message varchar(5000) NOT NULL,
-    time_stamp timestamp WITH TIME ZONE  DEFAULT NOW() NOT NULL,
-    -- OPTIONAL --
-    workday_id integer REFERENCES employee_workday(id),
-    CONSTRAINT message CHECK (char_length(message) > 15)
-);
-CREATE TABLE journal_entry_tag (
-    id serial PRIMARY KEY,
-    entry_id integer REFERENCES journal_entry(id) ON DELETE CASCADE NOT NULL,
-    tag_id integer REFERENCES tag(id) NOT NULL
 );
 CREATE TABLE service (
     id serial PRIMARY KEY,
@@ -359,21 +327,7 @@ CREATE TABLE bullet_stats (
     CONSTRAINT like_count_positive CHECK (like_count > -1),
     CONSTRAINT reply_count_positive CHECK (reply_count > -1)
 );
-CREATE TABLE calendar_event (
-    id serial PRIMARY KEY,
-    user_id integer REFERENCES user_account(id),
-    title varchar(80) NOT NULL,
-    message varchar(1200) CONSTRAINT message CHECK (char_length(message) > 5),
-    occurs_on date NOT NULL DEFAULT CURRENT_DATE,
-    start_time time,
-    end_time time
-);
--- TODO
-CREATE TABLE calendar_recurrence (
-    id SERIAL PRIMARY KEY,
-    event_id integer references calendar_event,
-    weekday_recurrence weekday    
-);
+
 CREATE TABLE taskboard (
     id serial PRIMARY KEY, 
     name varchar(40) NOT NULL,

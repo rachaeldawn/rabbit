@@ -1,8 +1,8 @@
 "use strict";
 exports.__esModule = true;
-exports.tablename = 'estimate_item';
 var EstimateItem = (function () {
     function EstimateItem(id, estimate_id, service_id, quantity) {
+        this.tablename = 'estimate_item';
         this.id = id;
         this.estimate_id = estimate_id;
         this.service_id = service_id;
@@ -11,3 +11,4 @@ var EstimateItem = (function () {
     return EstimateItem;
 }());
 exports["default"] = EstimateItem;
+EstimateItem.prototype.tablename = 'estimate_item';

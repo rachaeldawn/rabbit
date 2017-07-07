@@ -1,8 +1,8 @@
 "use strict";
 exports.__esModule = true;
-exports.tablename = 'message';
 var Message = (function () {
     function Message(id, conversation_id, sender_id, message) {
+        this.tablename = 'message';
         this.id = id;
         this.conversation_id = conversation_id;
         this.sender_id = sender_id;
@@ -11,3 +11,4 @@ var Message = (function () {
     return Message;
 }());
 exports["default"] = Message;
+Message.prototype.tablename = 'message';

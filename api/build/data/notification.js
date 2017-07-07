@@ -1,8 +1,8 @@
 "use strict";
 exports.__esModule = true;
-exports.tablename = 'notification';
 var Notification = (function () {
     function Notification(id, user_id, origin, message) {
+        this.tablename = 'notification';
         this.id = id;
         this.user_id = user_id;
         this.origin = origin;
@@ -11,3 +11,4 @@ var Notification = (function () {
     return Notification;
 }());
 exports["default"] = Notification;
+Notification.prototype.tablename = 'notification';

@@ -37,49 +37,6 @@
             "transaction_id": "The id of the transaction to be bound."
         }
     },
-        
-    "bullet": {
-        "Purpose": "A sticky note to be used on the global bulletin-board",
-        "Fields": {
-            "id":             "The id of the specfic sticky note",
-            "user_id":        "The id of the user that made the sticky note",
-            "message":        "A max 1200 character message for the bulletin board. Minimum 5 characters",
-            "time_stamp":     "A timestamp of when the sticky note was created"
-        }
-    },
-
-    "bullet_comment": {
-        "Purpose": "A comment on a sticky note in the global bulletin board",
-        "Fields": {
-            "id": "The id of the comment",
-            "bullet_id": "The id of the bullet this comment was posted on",
-            "user_id": "The id of the user that posted this comment",
-            "message": "A max 512 character long comment",
-            "time_stamp": "When the comment was posted"
-        }
-    },
-
-    "bullet_stats": {
-        "Purpose": "The stats for a single bullet object",
-        "Fields": {
-            "id": "The id of the stats. 1-1 relationship bullet",
-            "like_count": "The amount of likes there are on the bullet",
-            "reply_count": "The amount of replies on the bullet"
-        }
-    },
-        
-    "calendar_event": {
-        "Purpose": "An event on either a personal calendar, or globally amongst all employees.",
-        "Fields": {
-            "id":          "The id of a specific calendar event",
-            "user_id":     "References a specific user. This is null if it is a global event for employees.",
-            "title":       "The title of the event, max 80 characters.",
-            "message":     "Optional message of the event, minimum 5 characters, maximum 1200 characters.",
-            "occurs_on":   "The date the event occurs on",
-            "start_time":  "Optional Start time of the event. ",
-            "end_time":    "Optional End time of the event. If null, and start time does exist, it means it starts at start_time and ends at 23:59 of occurs_on."
-        }
-    },
 
     "conversation": {
         "Purpose": "A conversation between one or more users.",
@@ -162,36 +119,7 @@
             "clock_out":    "When the employee clocks out"
         }
     },
-        
-    "journal": {
-        "Purpose": "Work journal is a written rubber duck debugging. It is strongly encouraged to use this, but not required. An employee can use this to keep note of everything that they are doing, and to remember where they were the previous day. Eventually this will be replaced by storing the files as XML in files, then referencing the locations of the files.",
-        "Fields": {
-            "id":             "Id of a single work-journal (employees can have many)",
-            "employee_id":    "Id of the employee that owns the work journal",
-            "name":           "The name of the work journal"
-        }
-    },
-
-    "journal_entry": {
-        "Purpose": "A single entry within a journal. Tagging an entry with a workday means that this entry will be visible to management.",
-        "Fields": {
-            "id":             "Id of a single entry",
-            "journal_id":     "Id of the journal this entry belongs in",
-            "message":        "The message in the work journal. Must be at least 15 characters.",
-            "time_stamp":     "Default of NOW(), timestamp of when the journal was created. This is not updateable.",
-            "workday_id":     "Id of a workday, in case an employee wishes to tag what they're working on for payroll purposes or future reference. OPTIONAL."
-        }
-    },
-        
-    "journal_entry_tag": {
-        "Purpose": "Permits a tagging system for employees to use for future searching. ",
-        "Fields": {
-            "id":         "Id of a single tag binding",
-            "entry_id":   "Id of the entry to be bound",
-            "tag_id":     "Id of the tag to be bound"
-        }
-    },
-        
+    
     "expense": {
         "Purpose": "Describes a generalized expense (outflow) that is not payroll. Bills, vehicle expenses, etc",
         "Fields": {
@@ -509,6 +437,41 @@
             "user_id": "The user id the notification belongs to",
             "origin": "A max 400 character long string indicating to the system where the notification came from",
             "message": "A max 400 character long string indicating what the notification is (shown to user)"
+        }
+    },
+    "estimate_lock" : {
+        "Purpose": "A lock object to prevent multiple overwrites on estimates",
+        "Fields": {
+            "id": "The id of an estimate, since there will only ever be 1 lock for 1 estimate.",
+            "user_id": "The user that possesses the lock"
+        }
+    },
+    "workorder_lock": {
+        "Purpose": "A lock object to prevent multiple overwrites on workorders",
+        "Fields": {
+            "id": "The id of a workorder, since there will only ever be 1 lock for 1 workorder",
+            "user_id": "The user that possesses the lock"
+        }
+    },
+    "purchase_order_lock": {
+        "Purpose": "A lock object to prevent multiple overwrites on purchase orders",
+        "Fields": {
+            "id": "The id of a workorder, since there will only ever be 1 lock for 1 purchase orders",
+            "user_id": "The user that possesses the lock"
+        }
+    },
+    "bill_lock": {
+        "Purpose": "A lock object to prevent multiple overwrites on bills",
+        "Fields": {
+            "id": "The id of a workorder, since there will only ever be 1 lock for 1 bills",
+            "user_id": "The user that possesses the lock"
+        }
+    },
+    "payroll_lock": {
+        "Purpose": "A lock object to prevent multiple overwrites on payrolls",
+        "Fields": {
+            "id": "The id of a workorder, since there will only ever be 1 lock for 1 payrolls",
+            "user_id": "The user that possesses the lock"
         }
     }
 }

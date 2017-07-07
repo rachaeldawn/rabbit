@@ -1,8 +1,8 @@
 "use strict";
 exports.__esModule = true;
-exports.tablename = 'workorder';
 var Workorder = (function () {
     function Workorder(id, customer_id, rep_id, open_date, close_date) {
+        this.tablename = 'workorder';
         this.id = id;
         this.customer_id = customer_id;
         this.rep_id = rep_id;
@@ -12,3 +12,4 @@ var Workorder = (function () {
     return Workorder;
 }());
 exports["default"] = Workorder;
+Workorder.prototype.tablename = 'workorder';

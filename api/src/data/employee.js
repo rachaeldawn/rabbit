@@ -11,9 +11,9 @@
  * @property birthday: Birthday of employee
  * @property is_active: Whether or not the employee is with us.
  */
-export const tablename = 'employee'
 export default class Employee {
 	constructor(id, first_name, middle_name, last_name, phone, about, home_address, postal_code, sin, birthday, is_active){
+	this.tablename = 'employee'
 		this.id = id
 		this.first_name = first_name
 		this.middle_name = middle_name
@@ -28,3 +28,4 @@ export default class Employee {
 	}
 }
 
+Employee.prototype.tablename = 'employee'
